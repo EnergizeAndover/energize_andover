@@ -1,6 +1,7 @@
 
 from __future__ import absolute_import, unicode_literals
 import os
+import os.path
 
 from django import VERSION as DJANGO_VERSION
 from django.utils.translation import ugettext_lazy as _
@@ -94,7 +95,7 @@ USE_MODELTRANSLATION = False
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['.virajnavkal.com', 'mysite-dev.us-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['energizeandover.hopto.org/', 'www.energizeandover.hopto.org/', 'mysite-dev.us-west-1.elasticbeanstalk.com']
 
 # Elastic Beanstalk health checks contact the application using an internal IP, so that needs to be
 # added to ALLOWED_HOSTS
@@ -185,7 +186,8 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(PROJECT_ROOT, "templates")
+            'var/www/energize_andover/energize_andover/templates',
+            os.path.join(PROJECT_ROOT, "templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -238,7 +240,7 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     # "mezzanine.accounts",
     # "mezzanine.mobile",
-    "energize_andover"
+    "energize_andover",
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
@@ -286,6 +288,8 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
+
+#LOGGING_CONFIG = ''
 
 ##################
 # LOCAL SETTINGS #

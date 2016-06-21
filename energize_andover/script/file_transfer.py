@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from mysite.settings import BASE_DIR
-from energize_andover.script.parse import parse, summarize, save_df
+from energize_andover.energize_andover.script.parse import parse, summarize, save_df
 import os
 from datetime import datetime
 

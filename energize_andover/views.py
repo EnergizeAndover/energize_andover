@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from energize_andover.forms import MetasysUploadForm
-from energize_andover.script.file_transfer import get_transformed_file
+from energize_andover.energize_andover.forms import MetasysUploadForm
+from energize_andover.energize_andover.script.file_transfer import get_transformed_file
 from django.core.urlresolvers import reverse
 
 def index(request):
