@@ -27,20 +27,39 @@ class MetasysUploadForm(forms.Form):
         label='Select a file'
     )
 
+class feild_type:
+    def __init__(self, label, total):
+        self.label = label
+        self.total = total
+
+    def get_total(self):
+        return self.total
+
+    def get_label(self):
+        return self.label
+
+
+
 class GraphUploadForm(forms.Form):
     parsed_file = forms.FileField(
         label='Select a Metasys file'
 
     )
 
-    #graph_period = forms.ChoiceField(
-    #    label='time interval:',
-    #    choices=[(None, 'all data'),
-    #             ('hour', 'hour'),
-    #             ('day', 'day'),
-    #             ('month', 'month'),
-    #             ]
+    graph_period = forms.ChoiceField(
+        label='time interval:',
+        choices=[('min', 'all data'),
+                 ('hour', 'hour'),
+                 ('day', 'day'),
+                 ('month', 'month'),
+                 ]
+    )
+
+    #is_total= forms.BooleanField(
+    #    label='Measre Total',
     #)
+
+
 
     graph_data = forms.ChoiceField(
         label='data to graph:',
@@ -137,6 +156,6 @@ class GraphUploadForm(forms.Form):
                  ('PANEL M1 ELECTRIC METER.Analog Inputs.KVAh.M1-kVAh (Trend1)',
                   'PANEL M1 ELECTRIC METER.Analog Inputs.KVAh.M1-kVAh (Trend1)'),
                  ('PANEL M1 ELECTRIC METER.Analog Inputs.KW_Total.M1-kW-Total (Trend1)',
-                  'PANEL M1 ELECTRIC METER.Analog Inputs.KW_Total.M1-kW-Total (Trend1)')
+                  'PANEL M1 ELECTRIC METER.Analog Inputs.KW_Total.M1-kW-Total (Trend1)'),
                  ]
     )

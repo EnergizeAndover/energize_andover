@@ -7,8 +7,8 @@
   {% csrf_token %}
   <p>{{ form.graph_data.label }}</p>
   <p>{{ form.graph_data }}</p>
-  <!--<p>{{ form.graph_period.label }}</p>
-  <p>{{ form.graph_period }}</p>-->
+  <p>{{ form.graph_period.label }}</p>
+  <p>{{ form.graph_period }}</p>
   <p>
     {{ form.parsed_file.label_tag }} {{ form.parsed_file.help_text }}
     {{ form.parsed_file.errors }} {{ form.parsed_file }}

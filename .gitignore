@@ -63,3 +63,7 @@ local_settings.py
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+/graph.pdf
+/graph_log.csv
+/metasys_log.txt
+/parsed_metasys_log.csv
