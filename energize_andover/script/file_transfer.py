@@ -145,7 +145,7 @@ def _respond_with_parsed_file(ziprtn):
     if ziprtn:
         files= [_temporary_output_file_path(), _temporary_output_graph_path()]
 
-        zip_subdir = os.path.join(BASE_DIR, "Parse_And_Graph")
+        zip_subdir = "Parse_And_Graph"
         zip_filename = "%s.zip" % zip_subdir
 
         s = BytesIO()
