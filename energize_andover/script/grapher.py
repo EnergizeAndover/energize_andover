@@ -24,7 +24,6 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
             Maxdf = df.groupby(df.index, sort=True).max()
             Mindf = df.groupby(df.index, sort=True).min()
             df = Maxdf - Mindf
-
     else:
         if not grouping == 'min':
             index = df.index
