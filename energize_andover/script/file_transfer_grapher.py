@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from mysite.settings import BASE_DIR
 from wsgiref.util import FileWrapper
-from energize_andover.script.grapher import file_parser
-#from energize_andover.energize_andover.script.grapher import file_parser
+#from energize_andover.script.grapher import file_parser
+from energize_andover.energize_andover.script.grapher import file_parser
 import os
 
 
