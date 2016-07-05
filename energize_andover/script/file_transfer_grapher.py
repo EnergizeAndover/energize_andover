@@ -1,14 +1,14 @@
 from django.http import HttpResponse
 from mysite.settings import BASE_DIR
 from wsgiref.util import FileWrapper
-#from energize_andover.script.grapher import file_parser
-from energize_andover.energize_andover.script.grapher import file_parser
+from energize_andover.script.grapher import file_parser
+#from energize_andover.energize_andover.script.grapher import file_parser
 import os
 
 
 TEMPORARY_INPUT_FILENAME = 'graph_log.csv'
 OUTPUT_FILENAME = 'graph.pdf'
-feild_type = dict([('MAIN ELECTRIC METER.Analog Inputs.Energy.Main-kWh-Energy (Trend1)',
+field_type = dict([('MAIN ELECTRIC METER.Analog Inputs.Energy.Main-kWh-Energy (Trend1)',
                    True),
                   ('MAIN ELECTRIC METER.Analog Inputs.KVAR_Present_Demand.Main-kVAR_Present_Demand (Trend1)',
                    False),
@@ -103,43 +103,34 @@ feild_type = dict([('MAIN ELECTRIC METER.Analog Inputs.Energy.Main-kWh-Energy (T
                   ('PANEL M1 ELECTRIC METER.Analog Inputs.KW_Total.M1-kW-Total (Trend1)',
                    False),
                   ])
-#from energize_andover.script.grapher import file_parser
-from energize_andover.energize_andover.script.grapher import file_parser
-import os
-from io import BytesIO
-from reportlab.pdfgen import canvas
-from datetime import datetime
-
-TEMPORARY_INPUT_FILENAME = 'graph_log.csv'
-OUTPUT_FILENAME = 'graph.pdf'
 
 def get_transformed_graph(form_data):
     """Transforms and returns the Metasys log file attached to the form"""
-    _save_input_file(form_data['parsed_file'])
-    _transform_saved_input_file(form_data['graph_data'],
+    _save_input_graph(form_data['parsed_file'])
+    _transform_saved_input_graph(form_data['graph_data'],
                                 form_data['graph_period'],
-                                feild_type[form_data['graph_data']],
+                                field_type[form_data['graph_data']],
     )
     return _respond_with_parsed_file()
 
-def _temporary_input_file_path():
+def _temporary_input_graph_path():
     return os.path.join(BASE_DIR, TEMPORARY_INPUT_FILENAME)
 
-def _temporary_output_file_path():
+def _temporary_output_graph_path():
     return os.path.join(BASE_DIR, OUTPUT_FILENAME)
 
-def _save_input_file(temporary_file):
+def _save_input_graph(temporary_file):
     """Save the uploaded file to disk so it can be handled by the grapher module"""
-    with open(_temporary_input_file_path(), 'wb') as fout:
+    with open(_temporary_input_graph_path(), 'wb') as fout:
         for chunk in temporary_file.chunks():
             fout.write(chunk)
 
-def _transform_saved_input_file(ftg,
+def _transform_saved_input_graph(ftg,
                                 grouping,
                                 total,
                                 ):
-    file_parser(_temporary_input_file_path(),
-                output_file_name=_temporary_output_file_path(),
+    file_parser(_temporary_input_graph_path(),
+                output_file_name=_temporary_output_graph_path(),
                 field_to_graph=ftg,
                 grouping=grouping,
                 total=total,
@@ -148,7 +139,7 @@ def _transform_saved_input_file(ftg,
 
 
 def _respond_with_parsed_file():
-    graph = open(_temporary_output_file_path(), 'rb')
+    graph = open(_temporary_output_graph_path(), 'rb')
     response = HttpResponse(FileWrapper(graph), content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % OUTPUT_FILENAME
     return response

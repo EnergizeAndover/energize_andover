@@ -21,7 +21,10 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
                 for date in index:
                     new_index.append(date[:13])
             df.index = new_index
-            df = df.groupby(df.index, sort=True).max()
+            Maxdf = df.groupby(df.index, sort=True).max()
+            Mindf = df.groupby(df.index, sort=True).min()
+            df = Maxdf - Mindf
+
     else:
         if not grouping == 'min':
             index = df.index
@@ -36,7 +39,7 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
                 for date in index:
                     new_index.append(date[:13])
             df.index = new_index
-            df = df.groupby(df.index, sort=True).sum()
+            df = df.groupby(df.index, sort=True).mean()
     graph = df[field_to_graph]
     if len(graph.index) > 20:
         graph.plot.bar(grid=True,
@@ -52,8 +55,8 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
     plt.title(field_to_graph)
     plt.ylabel('energy in KW')
     plt.xlabel('Dates and Time')
-    if total:
-        plt.ylim(ymin=graph.min())
+    #if total:
+    #    plt.ylim(ymin=graph.min())
     plt.tight_layout()
     plt.savefig(output_file_name, format='pdf')
     plt.cla()

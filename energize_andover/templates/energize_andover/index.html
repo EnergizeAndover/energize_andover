@@ -4,17 +4,46 @@
 <h1>{{ title }}</h1>
 
 <form action="" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p>{{ form.non_field_errors }}</p>
-  <p>{{ form.summarize.label }} {{ form.summarize }}</p>
-  <p>The following options are ignored unless "Group by day" is selected:</p>
-  <p>{{ form.cost.label }}{{ form.cost }}{{form.cost.errors}}</p>
-  <p>{{ form.start_time.label }}{{ form.start_time }}{{form.start_time.errors}}</p>
-  <p>{{ form.end_time.label }}{{ form.end_time }}{{form.end_time.errors}}</p>
-  <p>
-    {{ form.metasys_file.label_tag }} {{ form.metasys_file.help_text }}
-    {{ form.metasys_file.errors }} {{ form.metasys_file }}
-  </p>
-  <p><input type="submit" class="btn btn-default" value="Upload" /></p>
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+    <p>{{ form.summarize.label }} {{ form.summarize }}</p>
+    <p>The following options are ignored unless "Group by day" is selected:</p>
+    <p>{{ form.cost.label }}{{ form.cost }}{{form.cost.errors}}</p>
+    <p>{{ form.start_time.label }}{{ form.start_time }}{{form.start_time.errors}}</p>
+    <p>{{ form.end_time.label }}{{ form.end_time }}{{form.end_time.errors}}</p>
+    <p>
+        {{ form.metasys_file.label_tag }} {{ form.metasys_file.help_text }}
+        {{ form.metasys_file.errors }} {{ form.metasys_file }}
+    </p>
+        <p>{{ form.graph.label }} {{ form.graph }}</p>
+
+    <div id="graph" display="none">
+        <p>{{ form.graph_data.label }}</p>
+        <p>{{ form.graph_data }}</p>
+        <p>{{ form.graph_period.label }}</p>
+        <p>{{ form.graph_period }}</p>
+        <p>
+          {{ form.parsed_file.label_tag }} {{ form.parsed_file.help_text }}
+          {{ form.parsed_file.errors }} {{ form.parsed_file }}
+        </p>
+    </div>
+
+    <p><input type="submit" class="btn btn-default" value="Upload" /></p>
+    <script>
+        function hidegraph() {
+            document.getElementById("graph").style.display = "none";
+        }
+        function showgraph(){
+            document.getElementById("graph").style.display = "visible";
+        }
+        function setgraph(){
+            if document.getElementById("graph").style.display == "none"{
+                showgraph()
+            }
+            else{
+                hidegraph()
+            }
+        }
+    </script>
 </form>
 {% endblock %}
