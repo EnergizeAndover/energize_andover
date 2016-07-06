@@ -67,3 +67,7 @@ local_settings.py
 /graph_log.csv
 /metasys_log.txt
 /parsed_metasys_log.csv
+/graph0.pdf
+/graph3.pdf
+/graph1.pdf
+/graph2.pdf

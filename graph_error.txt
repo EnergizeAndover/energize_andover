@@ -1,0 +1,2 @@
+There was an error when creating your graph please check that the name of the field entered matches the name you wished
+to graph.

@@ -4,8 +4,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total.Main-kW (Trend1)',
-                output_file_name='test.pdf', grouping='min', total=False,):
+def file_parser(file,
+                field_to_graph='',
+                output_file_name='test.pdf',
+                grouping='min',
+                total=False,
+                ):
+    graph_error = False
     df = pd.read_csv(file, header=1, index_col=[0])
     if total:
         if not grouping == 'min':
@@ -21,9 +26,7 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
                 for date in index:
                     new_index.append(date[:13])
             df.index = new_index
-            Maxdf = df.groupby(df.index, sort=True).max()
-            Mindf = df.groupby(df.index, sort=True).min()
-            df = Maxdf - Mindf
+            df = df.groupby(df.index, sort=True).max() - df.groupby(df.index, sort=True).min()
     else:
         if not grouping == 'min':
             index = df.index
@@ -38,8 +41,12 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
                 for date in index:
                     new_index.append(date[:13])
             df.index = new_index
-            df = df.groupby(df.index, sort=True).mean()
-    graph = df[field_to_graph]
+            df = df.groupby(df.index, sort=True).sum()
+    if df.columns.__contains__(field_to_graph):
+        graph = df[field_to_graph]
+    else:
+        graph = df[df.columns[0]]
+        graph_error = True
     if len(graph.index) > 20:
         graph.plot.bar(grid=True,
                        use_index=True,
@@ -51,14 +58,16 @@ def file_parser(file, field_to_graph='MAIN ELECTRIC METER.Analog Inputs.KW_Total
                        figsize=(10, 10)
                        )
     plt.xticks(rotation='vertical')
-    plt.title(field_to_graph)
-    plt.ylabel('energy in KW')
+    if graph.name == field_to_graph:
+        plt.title(graph.name)
+    else:
+        plt.title(field_to_graph +
+                  ' not found first column graphed\n' +
+                  graph.name)
+    plt.ylabel(graph.name)
     plt.xlabel('Dates and Time')
-    #if total:
-    #    plt.ylim(ymin=graph.min())
     plt.tight_layout()
     plt.savefig(output_file_name, format='pdf')
     plt.cla()
     plt.clf()
-    df = []
-    graph = []
+    return graph_error

@@ -20,11 +20,12 @@
     <div id="graph" display="none">
         <p>{{ form.graph_data.label }}</p>
         <p>{{ form.graph_data }}</p>
+        <p>{{ form.total_graph.label }} {{ form.total_graph }}</p>
         <p>{{ form.graph_period.label }}</p>
         <p>{{ form.graph_period }}</p>
         <p>
-          {{ form.parsed_file.label_tag }} {{ form.parsed_file.help_text }}
-          {{ form.parsed_file.errors }} {{ form.parsed_file }}
+        {{ form.parsed_file.label_tag }} {{ form.parsed_file.help_text }}
+        {{ form.parsed_file.errors }} {{ form.parsed_file }}
         </p>
     </div>
 
