@@ -52,6 +52,30 @@ class MetasysUploadForm(forms.Form):
         required=False,
     )
 
+    multiplot = forms.BooleanField(
+        label='Plot on one graph:',
+        required=False
+    )
+
+    y_axis_label = forms.CharField(
+        label="Enter title of Y-axis",
+        required=False,
+    )
+
+    graph_title = forms.CharField(
+        label="Enter title of graph",
+        required=False,
+    )
+
+    graph_type = forms.ChoiceField(
+        label='select graph type:',
+        choices=[('line', 'line plot'),
+                 ('bar', 'vertical bar plot'),
+                 ('barh', 'horizontal bar plot'),
+                 ('area', 'area plot'),
+                 ]
+    )
+
 
 class GraphUploadForm(forms.Form):
     parsed_file = forms.FileField(
@@ -70,8 +94,6 @@ class GraphUploadForm(forms.Form):
         required=False,
     )
 
-
-
     graph_data = forms.CharField(
         label='Data to graph:',
         required=False,
@@ -80,5 +102,29 @@ class GraphUploadForm(forms.Form):
 
     total_graph = forms.BooleanField(
         label="Is the data a running total?:",
-        required = False,
+        required=False,
+    )
+
+    multiplot = forms.BooleanField(
+        label='Plot on one graph:',
+        required=False
+    )
+
+    y_axis_label = forms.CharField(
+        label="Enter title of Y-axis",
+        required=False,
+    )
+
+    graph_title = forms.CharField(
+        label="Enter title of graph",
+        required=False,
+    )
+
+    graph_type = forms.ChoiceField(
+        label='select graph type:',
+        choices=[('line', 'line plot'),
+                 ('bar', 'vertical bar plot'),
+                 ('barh', 'horizontal bar plot'),
+                 ('area', 'area plot'),
+                 ]
     )

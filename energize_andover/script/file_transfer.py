@@ -30,18 +30,28 @@ def get_transformed_file(form_data):
         error = _transform_saved_input_graph(form_data['graph_data'],
                                              'min',
                                              False,
+                                             form_data['multiplot'],
+                                             form_data['graph_title'],
+                                             form_data['y_axis_label'],
+                                             form_data['graph_type'],
                                              )
-        for char in form_data['graph_data']:
-            if char == '/':
-                multi += 1
+        if not form_data['multiplot']:
+            for char in form_data['graph_data']:
+                if char == '/':
+                    multi += 1
     elif form_data['graph']:
         error = _transform_saved_input_graph(form_data['graph_data'],
                                              form_data['graph_period'],
                                              form_data['total_graph'],
+                                             form_data['multiplot'],
+                                             form_data['graph_title'],
+                                             form_data['y_axis_label'],
+                                             form_data['graph_type'],
                                              )
-        for char in form_data['graph_data']:
-            if char == '/':
-                multi += 1
+        if not form_data['multiplot']:
+            for char in form_data['graph_data']:
+                if char == '/':
+                    multi += 1
 
     return _respond_with_parsed_file(form_data['graph'], error=error, multi=multi)
 

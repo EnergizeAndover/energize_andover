@@ -22,13 +22,17 @@ def get_transformed_graph(form_data):
     _save_input_graph(form_data['parsed_file'])
 
     error = _transform_saved_input_graph(form_data['graph_data'],
-                                form_data['graph_period'],
-                                form_data['total_graph'],
-                                 )
-    for char in form_data['graph_data']:
-        if char == PARSE_CHAR:
-            multi += 1
-
+                                         form_data['graph_period'],
+                                         form_data['total_graph'],
+                                         form_data['multiplot'],
+                                         form_data['graph_title'],
+                                         form_data['y_axis_label'],
+                                         form_data['graph_type'],
+                                         )
+    if not form_data['multiplot']:
+        for char in form_data['graph_data']:
+            if char == PARSE_CHAR:
+                multi += 1
     return _respond_with_parsed_file(Errors=error, multi=multi)
 
 def _temporary_input_graph_path():
@@ -47,21 +51,25 @@ def _save_input_graph(temporary_file):
             fout.write(chunk)
 
 def _transform_saved_input_graph(ftg,
-                                grouping,
-                                total,
-                                ):
-    if '/' in ftg:
-        multifield = []
-        count = 0
-        temp = ''
-        error = False
-        for char in ftg:
-            if not char == '/':
-                temp += char
-            else:
-                multifield.append(temp)
-                temp = ''
-        multifield.append(temp)
+                                 grouping,
+                                 total,
+                                 multiplot,
+                                 title,
+                                 ylabel,
+                                 graph_type,
+                                 ):
+    multifield = []
+    count = 0
+    temp = ''
+    error = False
+    for char in ftg:
+        if not char == '/':
+            temp += char
+        else:
+            multifield.append(temp)
+            temp = ''
+    multifield.append(temp)
+    if not multiplot:
         for fields in multifield:
             if count == 0:
                 error = error or file_parser(_temporary_input_graph_path(),
@@ -69,6 +77,9 @@ def _transform_saved_input_graph(ftg,
                                              field_to_graph=fields,
                                              grouping=grouping,
                                              total=total,
+                                             title=title,
+                                             units=ylabel,
+                                             graph_type=graph_type,
                                              )
             else:
                 error = error or file_parser(_temporary_input_graph_path(),
@@ -76,16 +87,23 @@ def _transform_saved_input_graph(ftg,
                                              field_to_graph=fields,
                                              grouping=grouping,
                                              total=total,
+                                             title=title,
+                                             units=ylabel,
+                                             graph_type=graph_type,
                                              )
             count += 1
         return error
     else:
         return file_parser(_temporary_input_graph_path(),
                            output_file_name=_temporary_output_graph_path(),
-                           field_to_graph=ftg,
+                           field_to_graph=multifield,
                            grouping=grouping,
                            total=total,
+                           title=title,
+                           units=ylabel,
+                           graph_type=graph_type,
                            )
+
 
 
 
