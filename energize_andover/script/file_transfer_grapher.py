@@ -3,9 +3,9 @@ from mysite.settings import BASE_DIR
 from wsgiref.util import FileWrapper
 from io import BytesIO
 import zipfile
-from energize_andover.script.grapher import file_parser
+from energize_andover.script.grapher import file_grapher
 #from energize_andover.forms import GraphUploadForm
-#from energize_andover.energize_andover.script.grapher import file_parser
+#from energize_andover.energize_andover.script.grapher import file_grapher
 import os
 
 PARSE_CHAR = '/'
@@ -39,20 +39,25 @@ def get_transformed_graph(form_data):
                 multi += 1
     return _respond_with_parsed_file(Errors=error, multi=multi)
 
+
 def _temporary_input_graph_path():
     return os.path.join(BASE_DIR, TEMPORARY_INPUT_FILENAME)
+
 
 def _graph_error_file_path():
     return os.path.join(BASE_DIR, GRAPHING_ERROR)
 
+
 def _temporary_output_graph_path():
     return os.path.join(BASE_DIR, OUTPUT_FILENAME)
+
 
 def _save_input_graph(temporary_file):
     """Save the uploaded file to disk so it can be handled by the grapher module"""
     with open(_temporary_input_graph_path(), 'wb') as fout:
         for chunk in temporary_file.chunks():
             fout.write(chunk)
+
 
 def _transform_saved_input_graph(ftg,
                                  grouping,
@@ -80,37 +85,37 @@ def _transform_saved_input_graph(ftg,
     if not multiplot:
         for fields in multifield:
             if count == 0:
-                error = error or file_parser(input_file_path,
-                                             output_file_name=_temporary_output_graph_path(),
-                                             field_to_graph=fields,
-                                             grouping=grouping,
-                                             total=total,
-                                             title=title,
-                                             units=ylabel,
-                                             graph_type=graph_type,
-                                             )
+                error = error or file_grapher(input_file_path,
+                                              output_file_name=_temporary_output_graph_path(),
+                                              field_to_graph=fields,
+                                              grouping=grouping,
+                                              total=total,
+                                              title=title,
+                                              units=ylabel,
+                                              graph_type=graph_type,
+                                              )
             else:
-                error = error or file_parser(input_file_path,
-                                             output_file_name=os.path.join(BASE_DIR, OUTPUT_FILE+str(count)+OUTPUT_TYPE),
-                                             field_to_graph=fields,
-                                             grouping=grouping,
-                                             total=total,
-                                             title=title,
-                                             units=ylabel,
-                                             graph_type=graph_type,
-                                             )
+                error = error or file_grapher(input_file_path,
+                                              output_file_name=os.path.join(BASE_DIR, OUTPUT_FILE+str(count)+OUTPUT_TYPE),
+                                              field_to_graph=fields,
+                                              grouping=grouping,
+                                              total=total,
+                                              title=title,
+                                              units=ylabel,
+                                              graph_type=graph_type,
+                                              )
             count += 1
         return error
     else:
-        return file_parser(input_file_path,
-                           output_file_name=_temporary_output_graph_path(),
-                           field_to_graph=multifield,
-                           grouping=grouping,
-                           total=total,
-                           title=title,
-                           units=ylabel,
-                           graph_type=graph_type,
-                           )
+        return file_grapher(input_file_path,
+                            output_file_name=_temporary_output_graph_path(),
+                            field_to_graph=multifield,
+                            grouping=grouping,
+                            total=total,
+                            title=title,
+                            units=ylabel,
+                            graph_type=graph_type,
+                            )
 
 
 
