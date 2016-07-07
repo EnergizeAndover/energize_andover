@@ -28,6 +28,7 @@ def get_transformed_graph(form_data):
                                          form_data['graph_title'],
                                          form_data['y_axis_label'],
                                          form_data['graph_type'],
+                                         _temporary_input_graph_path(),
                                          )
     if not form_data['multiplot']:
         for char in form_data['graph_data']:
@@ -57,6 +58,7 @@ def _transform_saved_input_graph(ftg,
                                  title,
                                  ylabel,
                                  graph_type,
+                                 input_file_path
                                  ):
     multifield = []
     count = 0
@@ -72,7 +74,7 @@ def _transform_saved_input_graph(ftg,
     if not multiplot:
         for fields in multifield:
             if count == 0:
-                error = error or file_parser(_temporary_input_graph_path(),
+                error = error or file_parser(input_file_path,
                                              output_file_name=_temporary_output_graph_path(),
                                              field_to_graph=fields,
                                              grouping=grouping,
@@ -82,7 +84,7 @@ def _transform_saved_input_graph(ftg,
                                              graph_type=graph_type,
                                              )
             else:
-                error = error or file_parser(_temporary_input_graph_path(),
+                error = error or file_parser(input_file_path,
                                              output_file_name=os.path.join(BASE_DIR, OUTPUT_FILE+str(count)+OUTPUT_TYPE),
                                              field_to_graph=fields,
                                              grouping=grouping,
@@ -94,7 +96,7 @@ def _transform_saved_input_graph(ftg,
             count += 1
         return error
     else:
-        return file_parser(_temporary_input_graph_path(),
+        return file_parser(input_file_path,
                            output_file_name=_temporary_output_graph_path(),
                            field_to_graph=multifield,
                            grouping=grouping,
