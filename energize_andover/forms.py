@@ -47,6 +47,11 @@ class MetasysUploadForm(forms.Form):
         required=False,
     )
 
+    parse_symbol = forms.CharField(
+        label='Symbol to separate data types:',
+        required = False
+    )
+
     total_graph = forms.BooleanField(
         label="Is the data a running total:",
         required=False,
@@ -99,6 +104,10 @@ class GraphUploadForm(forms.Form):
         required=False,
     )
 
+    parse_symbol = forms.CharField(
+        label='Symbol to separate data types:',
+        required=False
+    )
 
     total_graph = forms.BooleanField(
         label="Is the data a running total?:",

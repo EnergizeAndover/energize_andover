@@ -4,6 +4,7 @@ from wsgiref.util import FileWrapper
 from io import BytesIO
 import zipfile
 from energize_andover.script.grapher import file_parser
+#from energize_andover.forms import GraphUploadForm
 #from energize_andover.energize_andover.script.grapher import file_parser
 import os
 
@@ -16,6 +17,7 @@ OUTPUT_TYPE = '.pdf'
 
 
 def get_transformed_graph(form_data):
+    PARSE_CHAR = form_data['parse_symbol']
     """Transforms and returns the Metasys log file attached to the form"""
     error = False
     multi = 1
@@ -28,6 +30,7 @@ def get_transformed_graph(form_data):
                                          form_data['graph_title'],
                                          form_data['y_axis_label'],
                                          form_data['graph_type'],
+                                         form_data['parse_symbol'],
                                          _temporary_input_graph_path(),
                                          )
     if not form_data['multiplot']:
@@ -58,14 +61,17 @@ def _transform_saved_input_graph(ftg,
                                  title,
                                  ylabel,
                                  graph_type,
+                                 symbol,
                                  input_file_path
                                  ):
+    PARSE_CHAR = symbol
     multifield = []
     count = 0
     temp = ''
     error = False
+    print(PARSE_CHAR)
     for char in ftg:
-        if not char == '/':
+        if not char == PARSE_CHAR:
             temp += char
         else:
             multifield.append(temp)

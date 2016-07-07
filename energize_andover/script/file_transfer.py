@@ -34,6 +34,7 @@ def get_transformed_file(form_data):
                                              form_data['graph_title'],
                                              form_data['y_axis_label'],
                                              form_data['graph_type'],
+                                             form_data['parse_symbol'],
                                              _temporary_output_file_path()
                                              )
         if not form_data['multiplot']:
@@ -48,6 +49,7 @@ def get_transformed_file(form_data):
                                              form_data['graph_title'],
                                              form_data['y_axis_label'],
                                              form_data['graph_type'],
+                                             form_data['parse_symbol'],
                                              _temporary_output_file_path()
                                              )
         if not form_data['multiplot']:
