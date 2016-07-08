@@ -31,49 +31,40 @@ def file_grapher(file,
     graph_error = False
     graph = pd.DataFrame()
     df = pd.read_csv(file, header=1, index_col=[0])
-    df = df.replace(0, np.NaN)
-    if total:
-        if not grouping == 'min':
-            index = df.index
-            new_index = []
-            if grouping == 'month':
-                for date in index:
-                    new_index.append(date[:7])
-            elif grouping == 'day':
-                for date in index:
-                    new_index.append(date[:10])
-            elif grouping == 'hour':
-                for date in index:
-                    new_index.append(date[:13])
-            df.index = new_index
+    df = df.replace(0, np.NaN) # modify data to condier 0 as empty data
+    # change index based on groupings
+    if not grouping == 'min':
+        index = df.index
+        new_index = []
+        if grouping == 'month':
+            for date in index:
+                new_index.append(date[:7])
+        elif grouping == 'day':
+            for date in index:
+                new_index.append(date[:10])
+        elif grouping == 'hour':
+            for date in index:
+                new_index.append(date[:13])
+        df.index = new_index
+        # change data to difference or average based on total
+        if total:
             df = df.groupby(df.index, sort=True).max() - df.groupby(df.index, sort=True).min()
-    else:
-        if not grouping == 'min':
-            index = df.index
-            new_index = []
-            if grouping == 'month':
-                for date in index:
-                    new_index.append(date[:7])
-            elif grouping == 'day':
-                for date in index:
-                    new_index.append(date[:10])
-            elif grouping == 'hour':
-                for date in index:
-                    new_index.append(date[:13])
-            df.index = new_index
+        else:
             df = df.groupby(df.index, sort=True).mean()
+    # create a data frame to graph based on the strings in fields_to_graph
     for field in field_to_graph:
         if df.columns.__contains__(field):
             graph[field] = df[field]
+        # set data to first column if not in data and indicate error
         else:
             graph[df.columns[0]] = df[df.columns[0]]
             graph_error = True
-
+    # add day of the week to index
     new_index = []
     for time in graph.index:
         new_index.append(add_weekday(time))
     graph.index = new_index
-
+    # create plot based on graph_type and the amount of data
     if len(graph.index) > 80:
         if graph_type == 'bar':
             graph.plot.bar(grid=True,
@@ -126,6 +117,7 @@ def file_grapher(file,
                            use_index=True,
                            figsize=(20, 10)
                            )
+    # improve graphs aesthetics
     plt.xticks(rotation='vertical')
     plt.title(title)
     plt.ylabel(units)
@@ -136,7 +128,13 @@ def file_grapher(file,
     plt.clf()
     return graph_error
 
-
+'''
+    add_weekday: adds the day of the week to date time string
+    Inputs:
+            date(string): date time string to be edited
+    Output:
+            (String) date time string with day of the week
+'''
 def add_weekday(date):
     if len(date) > 13:
         dt = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
