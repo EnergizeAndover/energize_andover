@@ -2,6 +2,7 @@ from django import forms
 import pandas as pd
 from energize_andover.script.file_transfer import _temporary_output_file_path
 
+
 class MetasysUploadForm(forms.Form):
     summarize = forms.BooleanField(
         label='Group by day',
@@ -161,6 +162,7 @@ class SmartGraphUploadForm(forms.Form):
         label='Data to graph:',
         choices=choice_dict,
         required=True,
+        widget=forms.CheckboxSelectMultiple,
     )
 
     parse_symbol = forms.CharField(

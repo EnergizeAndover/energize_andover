@@ -59,17 +59,3 @@ def grapher(request):
     # Render list page with the documents and the form
     return HttpResponse(render(request, 'energize_andover/grapher.html',
                                context={'title': 'Grapher', 'form': form}))
-
-def smart_grapher(request, parse_data=None):
-    #Handle file upload
-    if request.method == 'POST':
-        form = SmartGraphUploadForm(request.POST, request.FILES)
-        print('post is %s' % request.POST)
-        if form.is_valid():
-            return get_transformed_file(parse_data, graphing_data=form.cleaned_data)
-    else:
-        form = SmartGraphUploadForm()
-
-    # Render list page with the documents and the form
-    return HttpResponse(render(request, 'energize_andover/smart_grapher.html',
-                               context={'title': 'Smart Grapher', 'form': form}))
