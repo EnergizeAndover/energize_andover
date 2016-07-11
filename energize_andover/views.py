@@ -1,36 +1,75 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render
-#from energize_andover.energize_andover.forms import MetasysUploadForm, GraphUploadForm
+import requests
+from django.conf.urls import url
+#from energize_andover.energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
 #from energize_andover.energize_andover.script.file_transfer import get_transformed_file
 #from energize_andover.energize_andover.script.file_transfer_grapher import get_transformed_graph
-from energize_andover.forms import MetasysUploadForm, GraphUploadForm
-from energize_andover.script.file_transfer import get_transformed_file
+from energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
+from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file
 from energize_andover.script.file_transfer_grapher import get_transformed_graph
 from django.core.urlresolvers import reverse
 
 def index(request):
     # Handle file upload
-    if request.method == 'POST':
+    if request.method == 'POST' and request.POST.get('form'):
         form = MetasysUploadForm(request.POST, request.FILES)
         print('post is %s' % request.POST)
+
         if form.is_valid():
-            return get_transformed_file(form.cleaned_data)
+
+            data = form.cleaned_data
+            if not data['graph']:
+
+                return get_transformed_file(data)
+            else:
+
+                form2 = SmartGraphUploadForm()
+                get_transformed_file(data)
+                return HttpResponse(render(request, 'energize_andover/index.html',
+                                           context={'title': 'Metasys Parsing',
+                                                    'form2': form2}))
+    elif request.method == 'POST':
+        form2 = SmartGraphUploadForm(request.POST, request.FILES)
+        print('post is %s' % request.POST)
+        if form2.is_valid():
+            return graph_transformed_file(form2.cleaned_data)
+        else:
+            return HttpResponse(render(request, 'energize_andover/index.html',
+                                       context={'title': 'Metasys Parsing',
+                                                'form2': form2}))
     else:
-        form = MetasysUploadForm() # An empty, unbound form
+        form = MetasysUploadForm()  # An empty, unbound form
 
     # Render list page with the documents and the form
     return HttpResponse(render(request, 'energize_andover/index.html',
                                context={'title': 'Metasys Parsing', 'form': form}))
+
+
 def grapher(request):
     #Handle file upload
     if request.method == 'POST':
         form = GraphUploadForm(request.POST, request.FILES)
         print('post is %s' % request.POST)
         if form.is_valid():
-            return get_transformed_graph(form.cleaned_data)
+            return render(get_transformed_graph(form.cleaned_data))
     else:
         form = GraphUploadForm()
 
     # Render list page with the documents and the form
     return HttpResponse(render(request, 'energize_andover/grapher.html',
                                context={'title': 'Grapher', 'form': form}))
+
+def smart_grapher(request, parse_data=None):
+    #Handle file upload
+    if request.method == 'POST':
+        form = SmartGraphUploadForm(request.POST, request.FILES)
+        print('post is %s' % request.POST)
+        if form.is_valid():
+            return get_transformed_file(parse_data, graphing_data=form.cleaned_data)
+    else:
+        form = SmartGraphUploadForm()
+
+    # Render list page with the documents and the form
+    return HttpResponse(render(request, 'energize_andover/smart_grapher.html',
+                               context={'title': 'Smart Grapher', 'form': form}))

@@ -14,8 +14,25 @@ OUTPUT_TYPE = '.pdf'
 TEMPORARY_INPUT_FILENAME = 'metasys_log.txt'
 OUTPUT_FILENAME = 'parsed_metasys_log.csv'
 
+def graph_transformed_file(graph_data):
+    multi = 1
+    error = _transform_saved_input_graph(graph_data['graph_data'],
+                                         graph_data['graph_period'],
+                                         graph_data['total_graph'],
+                                         graph_data['multiplot'],
+                                         graph_data['graph_title'],
+                                         graph_data['y_axis_label'],
+                                         graph_data['graph_type'],
+                                         None,  # graphing_data['parse_symbol'],
+                                         _temporary_output_file_path()
+                                         )
+    if not graph_data['multiplot']:
+        for char in graph_data['graph_data']:
+            if char == '/':
+                multi += 1
+    return _respond_with_parsed_file(True, error=error, multi=multi)
 
-def get_transformed_file(form_data):
+def get_transformed_file(form_data, graphing_data=None):
     error = False
     multi = 1
     """Transforms and returns the Metasys log file attached to the form"""
@@ -26,38 +43,40 @@ def get_transformed_file(form_data):
         start_date=form_data['start_time'],
         end_date=form_data['end_time']
     )
-    if form_data['summarize'] and form_data['graph']:
-        error = _transform_saved_input_graph(form_data['graph_data'],
+    if form_data['summarize'] and graphing_data is not None:
+        error = _transform_saved_input_graph(graphing_data['graph_data'],
                                              'min',
                                              False,
-                                             form_data['multiplot'],
-                                             form_data['graph_title'],
-                                             form_data['y_axis_label'],
-                                             form_data['graph_type'],
-                                             form_data['parse_symbol'],
+                                             graphing_data['multiplot'],
+                                             graphing_data['graph_title'],
+                                             graphing_data['y_axis_label'],
+                                             graphing_data['graph_type'],
+                                             None, #graphing_data['parse_symbol'],
                                              _temporary_output_file_path()
                                              )
-        if not form_data['multiplot']:
-            for char in form_data['graph_data']:
+        if not graphing_data['multiplot']:
+            for char in graphing_data['graph_data']:
                 if char == '/':
                     multi += 1
-    elif form_data['graph']:
-        error = _transform_saved_input_graph(form_data['graph_data'],
-                                             form_data['graph_period'],
-                                             form_data['total_graph'],
-                                             form_data['multiplot'],
-                                             form_data['graph_title'],
-                                             form_data['y_axis_label'],
-                                             form_data['graph_type'],
-                                             form_data['parse_symbol'],
+    elif graphing_data is not None:
+        error = _transform_saved_input_graph(graphing_data['graph_data'],
+                                             graphing_data['graph_period'],
+                                             graphing_data['total_graph'],
+                                             graphing_data['multiplot'],
+                                             graphing_data['graph_title'],
+                                             graphing_data['y_axis_label'],
+                                             graphing_data['graph_type'],
+                                             None, #graphing_data['parse_symbol'],
                                              _temporary_output_file_path()
                                              )
-        if not form_data['multiplot']:
-            for char in form_data['graph_data']:
+        if not graphing_data['multiplot']:
+            for char in graphing_data['graph_data']:
                 if char == '/':
                     multi += 1
-
-    return _respond_with_parsed_file(form_data['graph'], error=error, multi=multi)
+    if graphing_data is None:
+        return _respond_with_parsed_file(form_data['graph'], error=error, multi=multi)
+    else:
+        return None
 
 
 def _temporary_input_file_path():

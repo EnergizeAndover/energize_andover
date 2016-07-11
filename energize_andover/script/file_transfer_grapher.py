@@ -69,19 +69,22 @@ def _transform_saved_input_graph(ftg,
                                  symbol,
                                  input_file_path
                                  ):
-    PARSE_CHAR = symbol
-    multifield = []
-    count = 0
-    temp = ''
-    error = False
-    print(PARSE_CHAR)
-    for char in ftg:
-        if not char == PARSE_CHAR:
-            temp += char
-        else:
-            multifield.append(temp)
-            temp = ''
-    multifield.append(temp)
+    if symbol == None:
+      multifield = ftg
+    else:
+        PARSE_CHAR = symbol
+        multifield = []
+        count = 0
+        temp = ''
+        error = False
+        print(PARSE_CHAR)
+        for char in ftg:
+            if not char == PARSE_CHAR:
+                temp += char
+            else:
+                multifield.append(temp)
+                temp = ''
+        multifield.append(temp)
     if not multiplot:
         for fields in multifield:
             if count == 0:
