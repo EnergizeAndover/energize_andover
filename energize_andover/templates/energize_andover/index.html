@@ -4,7 +4,7 @@
 <h1>{{ title }}</h1>
 {% if form %}
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST" enctype="multipart/form-data" name="parse">
     {% csrf_token %}
     <p>{{ form.non_field_errors }}</p>
     <p>{{ form.summarize.label }} {{ form.summarize }}</p>
@@ -17,17 +17,15 @@
         {{ form.metasys_file.errors }} {{ form.metasys_file }}
     </p>
         <p>{{ form.graph.label }} {{ form.graph }}</p>
-    <p><input type="submit" class="btn btn-default" value="Upload" /></p>
+    <p><input type="submit" class="btn btn-default" value="Upload" name="parse" /></p>
 </form>
 
 {% else %}
 
-<form action="" method="POST" enctype="multipart/form-data" name="form">
+<form action="" method="POST" enctype="multipart/form-data" name="graph">
     {% csrf_token %}
     <p>{{ form2.graph_data.label }}</p>
     <p>{{ form2.graph_data }}</p>
-    <p>{{ form2.parse_symbol.label }}</p>
-    <p>{{ form2.parse_symbol }}</p>
     <p>{{ form2.total_graph.label }} {{ form2.total_graph }}</p>
     <p>{{ form2.multiplot.label }} {{ form2.multiplot }}</p>
     <p>{{ form2.graph_type.label }} {{ form2.graph_type }}</p>
@@ -37,7 +35,7 @@
     <p>{{ form2.y_axis_label.label }}</p>
     <p>{{ form2.y_axis_label }}</p>
 
-    <p><input type="submit" class="btn btn-default" value="Upload" /></p>
+    <p><input type="submit" class="btn btn-default" value="Upload" name="graph"/></p>
 </form>
 
 {% endif %}

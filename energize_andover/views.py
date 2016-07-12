@@ -12,7 +12,10 @@ from django.core.urlresolvers import reverse
 
 def index(request):
     # Handle file upload
-    if request.method == 'POST' and request.POST.get('form'):
+    if request.method == 'POST':
+        print(request.POST.get("parse"))
+    if request.method == 'POST' and request.POST.get('parse'):
+        print(request.POST)
         form = MetasysUploadForm(request.POST, request.FILES)
         print('post is %s' % request.POST)
 
@@ -23,13 +26,12 @@ def index(request):
 
                 return get_transformed_file(data)
             else:
-
                 form2 = SmartGraphUploadForm()
                 get_transformed_file(data)
                 return HttpResponse(render(request, 'energize_andover/index.html',
                                            context={'title': 'Metasys Parsing',
                                                     'form2': form2}))
-    elif request.method == 'POST':
+    elif request.method == 'POST' and request.POST.get('graph'):
         form2 = SmartGraphUploadForm(request.POST, request.FILES)
         print('post is %s' % request.POST)
         if form2.is_valid():

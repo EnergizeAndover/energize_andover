@@ -69,14 +69,14 @@ def _transform_saved_input_graph(ftg,
                                  symbol,
                                  input_file_path
                                  ):
+    count = 0
+    error = False
     if symbol == None:
       multifield = ftg
     else:
         PARSE_CHAR = symbol
         multifield = []
-        count = 0
         temp = ''
-        error = False
         print(PARSE_CHAR)
         for char in ftg:
             if not char == PARSE_CHAR:
