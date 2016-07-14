@@ -1,7 +1,6 @@
 from django import forms
 import pandas as pd
 from energize_andover.script.file_transfer import _temporary_output_file_path
-from .models import SmartGraph
 
 
 class MetasysUploadForm(forms.Form):

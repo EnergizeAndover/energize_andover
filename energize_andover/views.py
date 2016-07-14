@@ -9,7 +9,6 @@ from django.conf.urls import url
 from energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
 from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file, _temporary_output_file_path
 from energize_andover.script.file_transfer_grapher import get_transformed_graph
-from .models import SmartGraph
 from django.core.urlresolvers import reverse
 
 def index(request):
