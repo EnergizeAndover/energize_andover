@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from mysite.settings import BASE_DIR
 from io import BytesIO
 import zipfile
-from energize_andover.script.parse import parse, summarize, save_df
+from energize_andover.script.parse import parse, summarize, save_df, header_parse
 from energize_andover.script.file_transfer_grapher import  _transform_saved_input_graph, _temporary_output_graph_path, _graph_error_file_path
 #from energize_andover.energize_andover.script.file_transfer_grapher import  _transform_saved_input_graph, _temporary_output_graph_path, _graph_error_file_path
 #from energize_andover.energize_andover.script.parse import parse, summarize, save_df
@@ -13,6 +13,7 @@ OUTPUT_FILE = 'graph'
 OUTPUT_TYPE = '.pdf'
 TEMPORARY_INPUT_FILENAME = 'metasys_log.txt'
 OUTPUT_FILENAME = 'parsed_metasys_log.csv'
+TEMPORARY_INPUT_HEADER_FILENAME = 'column_headers.csv'
 
 def graph_transformed_file(graph_data):
     multi = 1
@@ -37,42 +38,14 @@ def get_transformed_file(form_data, graphing_data=None):
     multi = 1
     """Transforms and returns the Metasys log file attached to the form"""
     _save_input_file(form_data['metasys_file'])
+    _save_input_header_file(form_data['columns_file'])
     _transform_saved_input_file(
         return_summarized_data=form_data['summarize'],
         cost=form_data['cost'],
         start_date=form_data['start_time'],
         end_date=form_data['end_time']
     )
-    if form_data['summarize'] and graphing_data is not None:
-        error = _transform_saved_input_graph(graphing_data['graph_data'],
-                                             'min',
-                                             False,
-                                             graphing_data['multiplot'],
-                                             graphing_data['graph_title'],
-                                             graphing_data['y_axis_label'],
-                                             graphing_data['graph_type'],
-                                             None, #graphing_data['parse_symbol'],
-                                             _temporary_output_file_path()
-                                             )
-        if not graphing_data['multiplot']:
-            for char in graphing_data['graph_data']:
-                if char == '/':
-                    multi += 1
-    elif graphing_data is not None:
-        error = _transform_saved_input_graph(graphing_data['graph_data'],
-                                             graphing_data['graph_period'],
-                                             graphing_data['total_graph'],
-                                             graphing_data['multiplot'],
-                                             graphing_data['graph_title'],
-                                             graphing_data['y_axis_label'],
-                                             graphing_data['graph_type'],
-                                             None, #graphing_data['parse_symbol'],
-                                             _temporary_output_file_path()
-                                             )
-        if not graphing_data['multiplot']:
-            for char in graphing_data['graph_data']:
-                if char == '/':
-                    multi += 1
+
     if graphing_data is None:
         return _respond_with_parsed_file(form_data['graph'], error=error, multi=multi)
     else:
@@ -82,9 +55,18 @@ def get_transformed_file(form_data, graphing_data=None):
 def _temporary_input_file_path():
     return os.path.join(BASE_DIR, TEMPORARY_INPUT_FILENAME)
 
+def _temporary_input_header_file_path():
+    return os.path.join(BASE_DIR, TEMPORARY_INPUT_HEADER_FILENAME)
+
 
 def _temporary_output_file_path():
     return os.path.join(BASE_DIR, OUTPUT_FILENAME)
+
+def _save_input_header_file(temporary_file):
+    """Save the uploaded file to disk so it can be handled by the parse module"""
+    with open(_temporary_input_header_file_path(), 'wb') as fout:
+        for chunk in temporary_file.chunks():
+            fout.write(chunk)
 
 
 def _save_input_file(temporary_file):
@@ -96,8 +78,9 @@ def _save_input_file(temporary_file):
 
 def _transform_saved_input_file(return_summarized_data, cost, start_date, end_date):
     df = parse(_temporary_input_file_path())
+    columns = header_parse(_temporary_input_header_file_path())
     if return_summarized_data:
-        df = summarize(df, cost, start_date, end_date)
+        df = summarize(df, columns, start_date, end_date)
     save_df(df, summarize, None, None, _temporary_output_file_path())
 
 

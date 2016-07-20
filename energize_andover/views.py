@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import *
 import pandas as pd
 import requests
 from django.conf.urls import url
@@ -62,3 +63,24 @@ def grapher(request):
     # Render list page with the documents and the form
     return HttpResponse(render(request, 'energize_andover/grapher.html',
                                context={'title': 'Grapher', 'form': form}))
+
+def electrical_mapping(request):
+    schools = School.objects.filter()
+    return render(request, 'energize_andover/Electrical.html',
+                  {'schools': schools})
+
+def school(request, school_id):
+    school_obj = get_object_or_404(School,
+                                   pk=school_id)
+    return render(request, 'energize_andover/School.html',
+                  {'school': school_obj})
+
+def panel(request, panel_id):
+    pass
+
+def room(request, room_id):
+    pass
+
+def circuit(request, circuit_id):
+    pass
+

@@ -1,4 +1,5 @@
 from django import forms
+from .models import School
 import pandas as pd
 from energize_andover.script.file_transfer import _temporary_output_file_path
 
@@ -27,7 +28,12 @@ class MetasysUploadForm(forms.Form):
     )
 
     metasys_file = forms.FileField(
-        label='Select a file'
+        label='Select a file to parse'
+    )
+
+    columns_file = forms.FileField(
+        label='Select a file for column headers',
+        required=False,
     )
 
     graph = forms.BooleanField(
@@ -92,7 +98,6 @@ class GraphUploadForm(forms.Form):
                  ]
     )
 
-
 class SmartGraphUploadForm(forms.Form):
 
 
@@ -152,3 +157,8 @@ class SmartGraphUploadForm(forms.Form):
         self.fields['graph_data'].choices = [(choice, choice) for choice in
                                              pd.read_csv(_temporary_output_file_path(), header=1,
                                                          index_col=[0]).columns]
+
+class NewSchool(forms.ModelForm):
+    class Meta:
+        modle = School
+        fields = ['Name',]
