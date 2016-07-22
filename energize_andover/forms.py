@@ -1,5 +1,5 @@
 from django import forms
-from .models import School
+from .models import *
 import pandas as pd
 from energize_andover.script.file_transfer import _temporary_output_file_path
 
@@ -158,6 +158,53 @@ class SmartGraphUploadForm(forms.Form):
                                              pd.read_csv(_temporary_output_file_path(), header=1,
                                                          index_col=[0]).columns]
 
+
 class NewSchoolForm(forms.Form):
     Name = forms.CharField(required=True)
+
+
+class SchoolForm(forms.ModelForm):
+    class Meta:
+        model = School
+        fields = ['Name']
+
+
+class ClosetForm(forms.ModelForm):
+    class Meta:
+        model = Closet
+        fields = ['Name', 'School']
+
+class PanelForm(forms.ModelForm):
+    class Meta:
+        model = Panel
+        fields = ['Name', 'Voltage', 'Location', 'Panels', 'School', 'Closet']
+
+
+class RoomForm(forms.ModelForm):
+    class Meta:
+        model = Room
+        fields = ['Name', 'OldName', 'Type', 'School', 'Panels']
+        widgets = {'Panels': forms.CheckboxSelectMultiple}
+
+
+class CircuitForm(forms.ModelForm):
+    class Meta:
+        model = Circuit
+        fields = ['Name', 'Number', 'Panel', 'Rooms']
+        widgets = {'Rooms': forms.CheckboxSelectMultiple}
+
+class AdderTypeForm(forms.Form):
+    type = forms.ChoiceField(
+        label='selcet object type to add',
+        choices=[('', ''),
+                 ('closet', 'closet'),
+                 ('school', 'school'),
+                 ('panel', 'panel'),
+                 ('room', 'room'),
+                 ('circuit', 'circuit'),
+                 ],
+        required=True
+    )
+
+
 

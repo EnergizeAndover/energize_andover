@@ -25,7 +25,6 @@ class Closet(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-
     )
 
 
@@ -53,7 +52,7 @@ class Panel(models.Model):
     )
 
 
-    def rooms(self):
+    def Rooms(self):
         return Room.objects.filter(Panel__pk=self.pk)
     def circuits(self):
         return Circuit.objects.filter(Circuits__pk=self.pk)
@@ -72,10 +71,11 @@ class Room(models.Model):
         blank=True,
         null=True,
     )
-    Panels = models.ManyToManyField(Panel,blank=True, null=True,)
-    Circuits = None
+    Panels = models.ManyToManyField(Panel,
+                                    blank=True,)
+
     def panels(self):
-        return Panel.objects.filter(Room__pk=self.pk)
+        return self.Panels.all()
     def school(self):
         return School.objects.filter(Room__pk=self.pk)
     def circuits(self):
@@ -93,15 +93,12 @@ class Circuit(models.Model):
         blank=True,
         null=True,
     )
-    Rooms = models.ManyToManyField(Room, blank=True, null=True,)
-
-    def rooms(self):
-        return Room.objects.filter(Panel__pk=self.pk)
+    Rooms = models.ManyToManyField(Room, blank=True,)
 
     def __str__(self):
-        out = str(self.Panel) + ', circuit' + str(self.Number) + ': '
-        for room in self.Rooms:
-            out += str(room) + ' '
+        out = str(self.Panel) + ', curcuit ' + str(self.Number) + ': '
+        rooms = self.Rooms.all()
+        for room in rooms:
+            out += room.__str__()
         return out
 
-Room.circuits = models.ManyToManyField(Circuit)

@@ -14,8 +14,6 @@ from django.core.urlresolvers import reverse
 
 def index(request):
     # Handle file upload
-    if request.method == 'POST':
-        print(request.POST.get("parse"))
     if request.method == 'POST' and request.POST.get('parse'):
         print(request.POST)
         form = MetasysUploadForm(request.POST, request.FILES)
@@ -114,7 +112,7 @@ def room(request, room_id):
                     'Circuits': Circuits})
 
 def circuit(request, circuit_id):
-    circuit_obj = get_object_or_404(Circuits, pk=circuit_id)
+    circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     Rooms = circuit_obj.rooms()
     return render(request, 'energize_andover/Circuit.html',
                   {'circuit': circuit_obj, 'Rooms': Rooms})
@@ -124,3 +122,96 @@ def closet(request, closet_id):
     panels = Panel.objects.filter(Closet__pk=closet_id)
     return render(request, 'energize_andover/Closet.html',
                   {'closet': closet_obj, 'panels': panels})
+
+def adder(request):
+    if request.method == 'POST':
+        if request.POST.get('start'):
+            print(request.POST)
+            form = AdderTypeForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                if data['type'] == 'school':
+                    form = SchoolForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'school': form, 'title': 'Electrical Mapping Creation'})
+                elif data['type'] == 'closet':
+                    form = ClosetForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'closet': form, 'title': 'Electrical Mapping Creation'})
+                elif data['type'] == 'panel':
+                    form = PanelForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'panel': form, 'title': 'Electrical Mapping Creation'})
+                elif data['type'] == 'room':
+                    form = RoomForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'room': form, 'title': 'Electrical Mapping Creation'})
+                elif data['type'] == 'circuit':
+                    form = CircuitForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'circuit': form, 'title': 'Electrical Mapping Creation'})
+        elif request.POST.get('school'):
+            form = SchoolForm(request.POST, request.FILES)
+            if form.is_valid():
+                new = form.save()
+                new.save()
+                form = AdderTypeForm()
+                return render(request, 'energize_andover/Adder.html',
+                              {'type': form, 'title': 'Electrical Mapping Creation',
+                               'complete': 'school'})
+            else:
+                return render(request, 'energize_andover/Adder.html',
+                              {'school': form, 'title': 'Electrical Mapping Creation'})
+        elif request.POST.get('closet'):
+            form = ClosetForm(request.POST, request.FILES)
+            if form.is_valid():
+                new = form.save()
+                new.save()
+                form = AdderTypeForm()
+                return render(request, 'energize_andover/Adder.html',
+                              {'type': form, 'title': 'Electrical Mapping Creation',
+                               'complete': 'school'})
+            else:
+                return render(request, 'energize_andover/Adder.html',
+                              {'closet': form, 'title': 'Electrical Mapping Creation'})
+        elif request.POST.get('panel'):
+            form = PanelForm(request.POST, request.FILES)
+            if form.is_valid():
+                new = form.save()
+                new.save()
+                form = AdderTypeForm()
+                return render(request, 'energize_andover/Adder.html',
+                              {'type': form, 'title': 'Electrical Mapping Creation',
+                               'complete': 'school'})
+            else:
+                return render(request, 'energize_andover/Adder.html',
+                              {'panel': form, 'title': 'Electrical Mapping Creation'})
+        elif request.POST.get('room'):
+            form = RoomForm(request.POST, request.FILES)
+            if form.is_valid():
+                new = form.save()
+                new.save()
+                form = AdderTypeForm()
+                return render(request, 'energize_andover/Adder.html',
+                              {'type': form, 'title': 'Electrical Mapping Creation',
+                               'complete': 'school'})
+            else:
+                return render(request, 'energize_andover/Adder.html',
+                              {'room': form, 'title': 'Electrical Mapping Creation'})
+        elif request.POST.get('circuit'):
+            form = CircuitForm(request.POST, request.FILES)
+            if form.is_valid():
+                new = form.save()
+                new.save()
+                form = AdderTypeForm()
+                return render(request, 'energize_andover/Adder.html',
+                              {'type': form, 'title': 'Electrical Mapping Creation',
+                               'complete': 'school'})
+            else:
+                return render(request, 'energize_andover/Adder.html',
+                              {'circuit': form, 'title': 'Electrical Mapping Creation'})
+    else:
+        form = AdderTypeForm()
+    return render(request, 'energize_andover/Adder.html',
+                  {'type': form, 'title': 'Electrical Mapping Creation'})
+

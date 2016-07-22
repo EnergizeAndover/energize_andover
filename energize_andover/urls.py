@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^Circuit(?P<circuit_id>[0-9]+)', views.circuit, name='circuit'),
     url(r'^Panel(?P<panel_id>[0-9]+)', views.panel, name='panel'),
     url(r'^Closet(?P<closet_id>[0-9]+)', views.closet, name='closet'),
+    url(r'^MapAdder', views.adder, name='adder'),
 
 ]
