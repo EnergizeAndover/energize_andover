@@ -29,7 +29,7 @@
 
 <form>
 <p>Panels:
-<select>
+<select onchange="location = this.value">
     <option></option>
 {% for panel in Panels %}
     <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option>

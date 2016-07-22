@@ -13,9 +13,10 @@ class School(models.Model):
     def closets(self):
         return Closet.objects.filter(School__pk=self.pk)
 
-
     def __str__(self):
         return self.Name
+
+
 
 class Closet(models.Model):
     Name = models.CharField(max_length=30)

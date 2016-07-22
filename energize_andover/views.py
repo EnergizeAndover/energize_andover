@@ -73,9 +73,8 @@ def electrical_mapping(request):
         else:
             form = NewSchoolForm(request.POST, request.FILES)
             if form.is_valid():
-                newSchool = School
                 data = form.cleaned_data
-                newSchool.Name = data['Name']
+                newSchool = School(Name=data['Name'])
                 newSchool.save()
             else:
                 error ='invalid form'
@@ -106,4 +105,7 @@ def circuit(request, circuit_id):
     pass
 
 def closet(request, closet_id):
-    pass
+    closet_obj = get_object_or_404(Closet, pk=closet_id)
+    panels = Panel.objects.filter(Closet__pk=closet_id)
+    return render(request, 'energize_andover/Closet.html',
+                  {'closet': closet_obj, 'panels': panels})

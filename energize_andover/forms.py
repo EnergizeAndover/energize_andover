@@ -160,10 +160,4 @@ class SmartGraphUploadForm(forms.Form):
 
 class NewSchoolForm(forms.Form):
     Name = forms.CharField(required=True)
-    char1 = forms.CharField(required=False,)
-    char2 = forms.CharField(required=False,)
-    int1 = forms.IntegerField(required=False,)
-    int2 = forms.IntegerField(required=False,)
-    int3 = forms.IntegerField(required=False,)
-    int4 = forms.IntegerField(required=False,)
 
