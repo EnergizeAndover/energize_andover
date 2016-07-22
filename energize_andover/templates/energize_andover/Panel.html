@@ -1,0 +1,45 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1>{{ Panels }}</h1>
+<a href= "localhost/energize_andover/School" + school.pk >School</a>
+
+<li>{{panel.Name }}</li>
+<li>{{panel.Voltage}}</li>
+<li>{{"Parent:" + panel.Parent}}</li>
+<li>{{"Closet:" + panel.Closet}}</li>
+
+<form>
+<p>Rooms:
+<select onchange="location = this.value">
+    <option></option>
+{% for room in Rooms %}
+    <option value="{% url 'energize_andover:room' room.id %}">{{room.Name}}</option></p>
+{% endfor %}
+</select>
+</p>
+
+</form>
+<p>Subpanels:
+<select onchange="location = this.value">
+    <option></option>
+{% for panel in Subpanels %}
+    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option></p>
+{% endfor %}
+</select>
+</p>
+</form>
+
+<form>
+<p>Circuits:
+<select onchange="location = this.value">
+    <option></option>
+{% for circuit in Circuits %}
+    <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.Name}}</option></p>
+{% endfor %}
+</select>
+    <input type = "submit" class "btn btn-default" onclick="location = this.value" />
+</p>
+<p></p>
+</form>
+{% endblock %}
