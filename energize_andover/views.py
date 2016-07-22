@@ -96,13 +96,28 @@ def school(request, school_id):
 
 
 def panel(request, panel_id):
-    pass
+    panel_obj = get_object_or_404(Panel, pk=panel_id)
+    Rooms = panel_obj.rooms()
+    Circuits = panel_obj.circuits()
+    Panels = panel_obj.panels()
+    return render(request, 'energize_andover/Panel.html',
+                  {'Panel' : panel_obj, 'Rooms': Rooms, 'Circuits': Circuits, 'Subpanels' : Panels})
 
 def room(request, room_id):
-    pass
+    room_obj = get_object_or_404(Room, pk=room_id)
+    Panels =  room_obj.panels()
+    #School = room_obj.school()
+    Circuits = room_obj.circuits()
+    return render (request, 'energize_andover/Room.html',
+                   {'room' : room_obj, 'Panels': Panels,
+                    #'School': School,
+                    'Circuits': Circuits})
 
 def circuit(request, circuit_id):
-    pass
+    circuit_obj = get_object_or_404(Circuits, pk=circuit_id)
+    Rooms = circuit_obj.rooms()
+    return render(request, 'energize_andover/Circuit.html',
+                  {'circuit': circuit_obj, 'Rooms': Rooms})
 
 def closet(request, closet_id):
     closet_obj = get_object_or_404(Closet, pk=closet_id)

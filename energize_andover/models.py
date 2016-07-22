@@ -24,6 +24,8 @@ class Closet(models.Model):
         School,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
+
     )
 
 
@@ -35,22 +37,28 @@ class Panel(models.Model):
         'self',
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
     )
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
     )
     Closet = models.ForeignKey(
         Closet,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
     )
 
 
-    def Rooms(self):
+    def rooms(self):
         return Room.objects.filter(Panel__pk=self.pk)
-
+    def circuits(self):
+        return Circuit.objects.filter(Circuits__pk=self.pk)
+    def panels(self):
+        return Panel.objects.filter(Panels__pk=self.pk)
     def __str__(self):
         return self.Name
 
@@ -62,9 +70,16 @@ class Room(models.Model):
         School,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
     )
-    Panels = models.ManyToManyField(Panel,blank=True,)
-
+    Panels = models.ManyToManyField(Panel,blank=True, null=True,)
+    Circuits = None
+    def panels(self):
+        return Panel.objects.filter(Room__pk=self.pk)
+    def school(self):
+        return School.objects.filter(Room__pk=self.pk)
+    def circuits(self):
+        return Circuit.objects.filter(Room__pk=self.pk)
     def __str__(self):
         return self.Name
 
@@ -76,12 +91,17 @@ class Circuit(models.Model):
         Panel,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
     )
-    Rooms = models.ManyToManyField(Room, blank=True,)
+    Rooms = models.ManyToManyField(Room, blank=True, null=True,)
+
+    def rooms(self):
+        return Room.objects.filter(Panel__pk=self.pk)
 
     def __str__(self):
-        out = str(self.Panel) + ', curcuit' + str(self.Number) + ': '
+        out = str(self.Panel) + ', circuit' + str(self.Number) + ': '
         for room in self.Rooms:
             out += str(room) + ' '
         return out
 
+Room.circuits = models.ManyToManyField(Circuit)
