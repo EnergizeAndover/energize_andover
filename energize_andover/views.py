@@ -4,7 +4,7 @@ from .models import *
 import pandas as pd
 import requests
 from django.conf.urls import url
-#from energize_andover.energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
+#from forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
 #from energize_andover.energize_andover.script.file_transfer import get_transformed_file
 #from energize_andover.energize_andover.script.file_transfer_grapher import get_transformed_graph
 from energize_andover.forms import *

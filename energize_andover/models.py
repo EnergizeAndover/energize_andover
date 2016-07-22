@@ -23,7 +23,7 @@ class Closet(models.Model):
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
-        default=1,
+        blank=True,
     )
 
 
@@ -34,17 +34,17 @@ class Panel(models.Model):
     Panels = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
-        default=1
+        blank=True,
     )
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
-        default=1
+        blank=True,
     )
     Closet = models.ForeignKey(
         Closet,
         on_delete=models.CASCADE,
-        default=1,
+        blank=True,
     )
 
 
@@ -61,23 +61,23 @@ class Room(models.Model):
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
-        default=1
+        blank=True,
     )
-    Panels = models.ManyToManyField(Panel,)
+    Panels = models.ManyToManyField(Panel,blank=True,)
 
     def __str__(self):
         return self.Name
 
 
-class Circuits(models.Model):
+class Circuit(models.Model):
     Name = models.CharField(max_length=100)
     Number = models.IntegerField(default=0)
     Panel = models.ForeignKey(
         Panel,
         on_delete=models.CASCADE,
-        default=1
+        blank=True,
     )
-    Rooms = models.ManyToManyField(Room)
+    Rooms = models.ManyToManyField(Room, blank=True,)
 
     def __str__(self):
         out = str(self.Panel) + ', curcuit' + str(self.Number) + ': '
