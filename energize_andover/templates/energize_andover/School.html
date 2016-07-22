@@ -1,10 +1,43 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1>{{ title }}</h1>
+<h1>{{school.Name}}</h1>
 
-<li>{{school.Name}}</li>
+<p></p>
+<form>
+<p>Rooms:
+<select onchange="location = this.value">
+    <option></option>
+{% for room in Rooms %}
+    <option value="{% url 'energize_andover:room' room.id %}">{{room.Name}}</option>
+{% endfor %}
+</select>
+</p>
 
+</form>
 
+<form>
+<p>Closets:
+<select onchange="location = this.value">
+    <option></option>
+    {% for closet in Closets %}
+        <option value="{% url 'energize_andover:closet' closet.id %}">{{closet.Name}}</option>
+    {% endfor %}
+</select>
+</p>
+</form>
+
+<form>
+<p>Panels:
+<select>
+    <option></option>
+{% for panel in Panels %}
+    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option>
+{% endfor %}
+</select>
+   <input type="submit" class="btn btn-default" onclick="location = this.value" />
+</p>
+<p></p>
+</form>
 
 {% endblock %}

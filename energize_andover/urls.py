@@ -6,6 +6,10 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^Graph', views.grapher, name='graph'),
     url(r'^electric', views.electrical_mapping, name='electric'),
-    url(r'^School', views.school, name='school'),
+    url(r'^School(?P<school_id>[0-9]+)', views.school, name='school'),
+    url(r'^Room(?P<room_id>[0-9]+)', views.room, name='room'),
+    url(r'^Circuit(?P<circuit_id>[0-9]+)', views.circuit, name='circuit'),
+    url(r'^Panel(?P<panel_id>[0-9]+)', views.panel, name='panel'),
+    url(r'^Closet(?P<closet_id>[0-9]+)', views.closet, name='closet'),
 
 ]

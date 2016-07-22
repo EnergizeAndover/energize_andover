@@ -7,7 +7,7 @@ from django.conf.urls import url
 #from energize_andover.energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
 #from energize_andover.energize_andover.script.file_transfer import get_transformed_file
 #from energize_andover.energize_andover.script.file_transfer_grapher import get_transformed_graph
-from energize_andover.forms import MetasysUploadForm, GraphUploadForm, SmartGraphUploadForm
+from energize_andover.forms import *
 from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file, _temporary_output_file_path
 from energize_andover.script.file_transfer_grapher import get_transformed_graph
 from django.core.urlresolvers import reverse
@@ -65,15 +65,36 @@ def grapher(request):
                                context={'title': 'Grapher', 'form': form}))
 
 def electrical_mapping(request):
+    if request.method == 'POST':
+        if request.POST.get('Start'):
+            form = NewSchoolForm()
+            return render(request, 'energize_andover/Electrical.html',
+                  {'title': 'Add School', 'form': form})
+        else:
+            form = NewSchoolForm(request.POST, request.FILES)
+            if form.is_valid():
+                newSchool = School
+                data = form.cleaned_data
+                newSchool.Name = data['Name']
+                newSchool.save()
+            else:
+                error ='invalid form'
+                return render(request, 'energize_andover/Electrical.html',
+                              {'form': form, 'error': error})
     schools = School.objects.filter()
     return render(request, 'energize_andover/Electrical.html',
-                  {'schools': schools})
+                  {'title': 'School Select', 'schools': schools})
 
 def school(request, school_id):
     school_obj = get_object_or_404(School,
                                    pk=school_id)
+    Closets = school_obj.closets()
+    Panels = school_obj.panels()
+    Rooms = school_obj.rooms()
     return render(request, 'energize_andover/School.html',
-                  {'school': school_obj})
+                  {'title': 'School Select', 'school': school_obj,
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets})
+
 
 def panel(request, panel_id):
     pass
@@ -84,3 +105,5 @@ def room(request, room_id):
 def circuit(request, circuit_id):
     pass
 
+def closet(request, closet_id):
+    pass

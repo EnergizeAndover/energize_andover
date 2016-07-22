@@ -3,27 +3,49 @@ from django.db import models
 # Create your models here.
 class School(models.Model):
     Name = models.CharField(max_length=30)
-    def get_panels(self):
+
+    def panels(self):
         return Panel.objects.filter(School__pk=self.pk)
-    def get_room(self):
+
+    def rooms(self):
         return Room.objects.filter(School__pk=self.pk)
+
+    def closets(self):
+        return Closet.objects.filter(School__pk=self.pk)
+
 
     def __str__(self):
         return self.Name
 
+class Closet(models.Model):
+    Name = models.CharField(max_length=30)
+    School = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        default=1,
+    )
 
 
 class Panel(models.Model):
     Name = models.CharField(max_length=30)
-    Location = models.CharField(max_length=30)
+    Voltage = models.CharField(max_length=20, default='0')
+    Location = models.CharField(max_length=30, default='')
     Panels = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
+        default=1
     )
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
+        default=1
     )
+    Closet = models.ForeignKey(
+        Closet,
+        on_delete=models.CASCADE,
+        default=1,
+    )
+
 
     def Rooms(self):
         return Room.objects.filter(Panel__pk=self.pk)
@@ -33,11 +55,12 @@ class Panel(models.Model):
 
 class Room(models.Model):
     Name = models.CharField(max_length=30)
-    Oldname = models.CharField(max_length=30)
-    Type = models.CharField(max_length=30)
+    OldName = models.CharField(max_length=30, default='')
+    Type = models.CharField(max_length=30, default='')
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
+        default=1
     )
     Panels = models.ManyToManyField(Panel,)
 
@@ -47,10 +70,11 @@ class Room(models.Model):
 
 class Circuits(models.Model):
     Name = models.CharField(max_length=100)
-    Number = models.IntegerField()
+    Number = models.IntegerField(default=0)
     Panel = models.ForeignKey(
         Panel,
         on_delete=models.CASCADE,
+        default=1
     )
     Rooms = models.ManyToManyField(Room)
 
