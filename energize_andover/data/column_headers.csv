@@ -1,0 +1,48 @@
+inputs,outputs
+KW_A.Trend - Present Value (Trend1),one
+KW_B.Trend - Present Value (Trend1),two
+KW_C.Trend - Present Value (Trend1),three
+KW_Total.Main-kW (Trend1),four
+KW_Present_Demand.Main-kW_Present_Demand (Trend1),five
+Energy.Main-kWh-Energy (Trend1),six
+KVAR_Total.Main-kVAR (Trend1),seven
+KVAR_Present_Demand.Main-kVAR_Present_Demand (Trend1),eight
+KVARh.Main-kVARh (Trend1),nine
+KVA_Total.Main-kVA (Trend1),ten
+KVA_Present_Demand.Main-kVA_Present_Demand (Trend1),eleven
+KVAh.Main-kVAh (Trend1),twelve
+KW_Total.DHB - kW - Present Value (Trend1),thirteen
+Energy.DHB - kWh Total (Trend1),fourteen
+KVAR_Total.DHB-KVAR (Trend1),fifteen
+KVA_Total.DHB-KVA (Trend1),sixteen
+KVAh.DHB-kVAh (Trend1),seventeen
+KW_Total.M1-kW-Total (Trend1),eighteen
+Energy.M1-kWh-Energy (Trend1),nineteen
+KVAR_Total.M1-kVAR-Total (Trend1),twenty
+KVARh.M1-kVARh (Trend1),twenty one
+KVA_Total.M1-kVA-Total (Trend1),twenty two
+KVAh.M1-kVAh (Trend1),twenty three
+KW_Total.DG-kW (Trend1),twenty four
+Energy.DG-kWh-Energy (Trend1),twenty five
+KVAR_Total.DG-kVAR (Trend1),twenty six
+KVARh.DG-kVARh (Trend1),twenty seven
+KVA_Total.DG-kVA (Trend1),twenty eight
+KVAh.DG-kVAh (Trend1),twenty nine
+KW_Total.DE-ATS-kW (Trend1),thirty
+Energy.DE-ATS-Energy-kWh (Trend1),thirty one
+KVAR_Total.DE-ATS-kVAR (Trend1),thirty two
+KVARh.DE-ATS-kVARh (Trend1),thirty three
+KVA_Total.DE-ATS-kVA (Trend1),thirty four
+KVAh.DE-ATS-kVAh (Trend1),thirty five
+KW_Total.CollinCtr-kW (Trend1),thirty six
+Energy.CollinCtr-Energy-kWh (Trend1),thirty seven
+KVAR_Total.CollinCtr-kVAR (Trend1),thirty eight
+KVARh.CollinCtr-kVARh (Trend1),thirty nine
+KVA_Total.CollinCtr-kVA (Trend1),forty
+KVAh.CollinCtr-kVAh (Trend1),forty one
+KW_Total.DL-kW (Trend1),forty two
+Energy.DL-Energy-kWh (Trend1),forty three
+KVAR_Total.DL-kVAR (Trend1),forty four
+KVARh.DL-kVARh (Trend1),forty five
+KVA_Total.DL-kVA (Trend1),
+KVAh.DL-kVAh (Trend1),forty seven
