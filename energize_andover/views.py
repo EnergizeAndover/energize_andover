@@ -10,6 +10,8 @@ from django.conf.urls import url
 from energize_andover.forms import *
 from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file, _temporary_output_file_path
 from energize_andover.script.file_transfer_grapher import get_transformed_graph
+from energize_andover.script.electrical_mapping_parse import create_mapping
+
 from django.core.urlresolvers import reverse
 
 def index(request):
@@ -95,11 +97,20 @@ def school(request, school_id):
 
 def panel(request, panel_id):
     panel_obj = get_object_or_404(Panel, pk=panel_id)
-    Rooms = panel_obj.rooms()
-    Circuits = panel_obj.circuits()
-    Panels = panel_obj.panels()
+    if panel_obj.rooms() is not None:
+        Rooms = panel_obj.rooms()
+    if panel_obj.circuits() is not None:
+        Circuits = panel_obj.circuits()
+    if panel_obj.panels() is not None:
+        Panels = panel_obj.panels()
+    if panel_obj.School is not None:
+        school = panel_obj.School
+    Main = Panel.objects.filter(Name='MSWB')
+    if Main.count()>0:
+        Main = Main[0]
     return render(request, 'energize_andover/Panel.html',
-                  {'Panel' : panel_obj, 'Rooms': Rooms, 'Circuits': Circuits, 'Subpanels' : Panels})
+                  {'panel' : panel_obj, 'Rooms': Rooms, 'Circuits': Circuits,
+                   'Subpanels' : Panels, 'Main' : Main, 'school': school})
 
 def room(request, room_id):
     room_obj = get_object_or_404(Room, pk=room_id)
@@ -215,3 +226,14 @@ def adder(request):
     return render(request, 'energize_andover/Adder.html',
                   {'type': form, 'title': 'Electrical Mapping Creation'})
 
+
+def populate(request):
+    if request.method == 'POST':
+        form = PopulationForm(request.POST, request.FILES)
+        if form.is_valid():
+            create_mapping(form.cleaned_data)
+            return render(request, 'energize_andover/Population.html',)
+    else:
+        form = PopulationForm()
+    return render(request, 'energize_andover/Population.html',
+                  {'form':form})

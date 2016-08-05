@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^Panel(?P<panel_id>[0-9]+)', views.panel, name='panel'),
     url(r'^Closet(?P<closet_id>[0-9]+)', views.closet, name='closet'),
     url(r'^MapAdder', views.adder, name='adder'),
+    url(r'^Populate', views.populate, name='populator'),
 
 ]

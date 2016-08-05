@@ -20,6 +20,7 @@ class School(models.Model):
 
 class Closet(models.Model):
     Name = models.CharField(max_length=30)
+    Old_Name = models.CharField(max_length=20, default='')
     School = models.ForeignKey(
         School,
         on_delete=models.CASCADE,
@@ -52,10 +53,10 @@ class Panel(models.Model):
     )
 
 
-    def Rooms(self):
-        return Room.objects.filter(Panel__pk=self.pk)
+    def rooms(self):
+        return Room.objects.filter(Panels__pk=self.pk)
     def circuits(self):
-        return Circuit.objects.filter(Circuits__pk=self.pk)
+        return Circuit.objects.filter(Panel__pk=self.pk)
     def panels(self):
         return Panel.objects.filter(Panels__pk=self.pk)
     def __str__(self):

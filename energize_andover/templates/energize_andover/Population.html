@@ -1,0 +1,28 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1>{{ title }}</h1>
+{% if form %}
+
+<form action="" method="POST" enctype="multipart/form-data" name="parse">
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+    <p>{{ form.School.label }} {{ form.School }}</p>
+
+    <p>
+        {{ form.Mapping_file.label_tag }} {{ form.Mapping_file.help_text }}
+        {{ form.Mapping_file.errors }} {{ form.Mapping_file }}
+    </p>
+    <p>
+        {{ form.columns_file.label_tag }} {{ form.columns_file.help_text }}
+        {{ form.columns_file.errors }} {{ form.columns_file }}
+    </p>
+    <p><input type="submit" class="btn btn-default" value="Upload" name="parse" /></p>
+</form>
+
+{% else %}
+
+<p>Data Added</p>
+
+{% endif %}
+{% endblock %}

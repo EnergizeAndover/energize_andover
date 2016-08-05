@@ -206,5 +206,17 @@ class AdderTypeForm(forms.Form):
         required=True
     )
 
+class PopulationForm(forms.Form):
+    School = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        label='School: ',
+        required=True,
+    )
+
+    Mapping_file = forms.FileField(
+        label='Select a file to Map from'
+    )
+
+
 
 
