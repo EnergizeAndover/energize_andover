@@ -95,7 +95,7 @@ USE_MODELTRANSLATION = False
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['energizeandover.hopto.org/', 'www.energizeandover.hopto.org/', 'mysite-dev.us-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['energizeandoverdemo.hopto.org/', 'www.energizeandoverdemo.hopto.org/']
 
 # Elastic Beanstalk health checks contact the application using an internal IP, so that needs to be
 # added to ALLOWED_HOSTS
@@ -109,7 +109,7 @@ ALLOWED_HOSTS.append(local_ip)
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = "America/Los_Angeles"
+TIME_ZONE = "America/New_York"
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
@@ -126,7 +126,7 @@ LANGUAGES = (
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
-DEBUG = False
+DEBUG = True
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -186,7 +186,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            'var/www/energize_andover/energize_andover/templates',
+            '/var/www/gismap/energize_andover/templates/',
             os.path.join(PROJECT_ROOT, "templates"),
         ],
         "APP_DIRS": True,
@@ -240,6 +240,7 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     # "mezzanine.accounts",
     # "mezzanine.mobile",
+    
     "energize_andover",
 )
 

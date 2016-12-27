@@ -8,7 +8,8 @@ sys.path.append(workspace)
 sys.path.append(project)
 
 # Add the path to 3rd party django application and to django itself.
-sys.path.append('/var/www/energize_andover/')
+sys.path.append('/var/www/gismap')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
+
