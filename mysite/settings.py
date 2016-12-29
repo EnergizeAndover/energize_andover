@@ -95,7 +95,7 @@ USE_MODELTRANSLATION = False
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['energizeandoverdemo.hopto.org/', 'www.energizeandoverdemo.hopto.org/']
+ALLOWED_HOSTS = ['energizeandover.hopto.org/', 'www.energizeandover.hopto.org/', 'mysite-dev.us-west-1.elasticbeanstalk.com']
 
 # Elastic Beanstalk health checks contact the application using an internal IP, so that needs to be
 # added to ALLOWED_HOSTS
@@ -186,7 +186,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            '/var/www/gismap/energize_andover/templates/',
+            '/var/www/gismap/energize_andover/templates',
             os.path.join(PROJECT_ROOT, "templates"),
         ],
         "APP_DIRS": True,
@@ -240,7 +240,6 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     # "mezzanine.accounts",
     # "mezzanine.mobile",
-    
     "energize_andover",
 )
 

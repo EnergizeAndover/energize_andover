@@ -21,6 +21,11 @@
 <li><a href= "{% url 'energize_andover:panel' pan.id %}" >{{pan}}</a></li>
 {% endfor %}
 {% endif %}
+{% if not panel.Room == None %}
+<p>Closet: <a href= "{% url 'energize_andover:room' panel.Room.id %}" >{{panel.Room.Name}}</a></p>
+{% else %}
+<p>Room: No Room data </p>
+{% endif %}
 
 
 <!--<form>
