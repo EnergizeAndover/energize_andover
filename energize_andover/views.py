@@ -9,8 +9,8 @@ from django.conf.urls import url
 from energize_andover.forms import *
 from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file, _temporary_output_file_path
 from energize_andover.script.file_transfer_grapher import get_transformed_graph
-from energize_andover.script.electrical_mapping_parse import create_mapping
-
+#from energize_andover.script.electrical_mapping_parse import create_mapping
+from energize_andover.script.circuit_room_relationships import parse
 from django.core.urlresolvers import reverse
 
 def index(request):
@@ -86,12 +86,23 @@ def electrical_mapping(request):
 def school(request, school_id):
     school_obj = get_object_or_404(School,
                                    pk=school_id)
+    print(school_obj)
     Closets = school_obj.closets()
     Panels = school_obj.panels()
     Rooms = school_obj.rooms()
+
+    devices = Circuit.objects.all()
+    for i in range (0, len(Panels)):
+        if Panels[i] in devices:
+            devices.remove(Panels[i])
+
+    fdevices = []
+    for i in range(0, len(devices)):
+        if devices[i].Function != "NA":
+            fdevices.append(devices[i])
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
-                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets})
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': fdevices})
 
 
 def panel(request, panel_id):
@@ -102,30 +113,56 @@ def panel(request, panel_id):
         Circuits = panel_obj.circuits()
     if panel_obj.panels() is not None:
         Panels = panel_obj.panels()
+    parray = []
+    for i in range(0, len(Circuits)):
+        parray.append(Circuits[i])
+    #print (parray[len(parray) - 1])
+    print (parray)
+    name = ""
+    rarray = []
+    for i in range(0, len(Panels)):
+        panel = Panels[i]
+        name = panel.FQN[0: panel.FQN.index(panel.Name) - 1]
+        for j in range (0, len(parray)):
+            print (parray[j])
+            if parray[j].FQN == name and parray[j] not in rarray:
+                rarray.append(parray[j])
+    for i in range(0, len(rarray)):
+        print (rarray[i])
+        parray.remove(rarray[i])
+    #print (parray)
     if panel_obj.School is not None:
         school = panel_obj.School
     Main = Panel.objects.filter(Name='MSWB')
     if Main.count()>0:
         Main = Main[0]
+
+    picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
+    print (picture)
     return render(request, 'energize_andover/Panel.html',
-                  {'panel' : panel_obj, 'Rooms': Rooms, 'Circuits': Circuits,
-                   'Subpanels' : Panels, 'Main' : Main, 'school': school})
+                  {'panel' : panel_obj,
+                   'Rooms': Rooms, 'Circuits': parray,
+                   'Subpanels' : Panels, 'Main' : Main, 'school': school,
+                   'picture' : picture})
 
 def room(request, room_id):
     room_obj = get_object_or_404(Room, pk=room_id)
-    Panels =  room_obj.panels()
-    #School = room_obj.school()
+    School = room_obj.school()
+    Panels = room_obj.panels()
     Circuits = room_obj.circuits()
+    #Circuits = Circuit.objects.filter(Rooms = room_obj)
     return render (request, 'energize_andover/Room.html',
-                   {'room' : room_obj, 'Panels': Panels,
-                    #'School': School,
+                   {'room' : room_obj,
+                    "school": School,
+                    'Panels': Panels,
                     'Circuits': Circuits})
 
 def circuit(request, circuit_id):
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     Rooms = circuit_obj.rooms()
+    school = circuit_obj.Panel.School
     return render(request, 'energize_andover/Circuit.html',
-                  {'circuit': circuit_obj, 'Rooms': Rooms})
+                  {'circuit': circuit_obj, 'Rooms': Rooms, 'school' : school})
 
 def closet(request, closet_id):
     closet_obj = get_object_or_404(Closet, pk=closet_id)
@@ -227,10 +264,12 @@ def adder(request):
 
 
 def populate(request):
+
+
     if request.method == 'POST':
         form = PopulationForm(request.POST, request.FILES)
         if form.is_valid():
-            create_mapping(form.cleaned_data)
+            parse(form.cleaned_data)
             return render(request, 'energize_andover/Population.html',)
     else:
         form = PopulationForm()

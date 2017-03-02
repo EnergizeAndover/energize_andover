@@ -1,21 +1,24 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1>{{closet.Name}}</h1>
-
+<h1> Closet: {{closet.Name}} </h1>
+<p>Name: {{closet.Name}}</p>
+<p>Old Name: {{closet.Old_Name}}</p>
 <p></p>
 
+{% if not panels.count == 0 %}
 <form>
 <p>Panels:
 <select onchange="location = this.value">
-    <option></option>
+    <option>FQN (Name)</option>
 {% for panel in panels %}
-    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option>
+    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</option>
 {% endfor %}
 </select>
-
 </p>
-<p></p>
 </form>
+{% else %}
+<p>Panels: No Panel data </p>
+{% endif %}
 
 {% endblock %}

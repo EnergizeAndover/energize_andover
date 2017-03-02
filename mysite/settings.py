@@ -95,7 +95,7 @@ USE_MODELTRANSLATION = False
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['energizeandover.hopto.org/', 'www.energizeandover.hopto.org/', 'mysite-dev.us-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['energizeandover.hopto.org/', 'www.energizeandover.hopto.org/', 'localhost']
 
 # Elastic Beanstalk health checks contact the application using an internal IP, so that needs to be
 # added to ALLOWED_HOSTS

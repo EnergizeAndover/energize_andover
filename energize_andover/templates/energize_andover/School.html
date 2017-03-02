@@ -1,42 +1,65 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1>{{school.Name}}</h1>
+<h1> School: {{school.Name}} </h1>
 
-<p></p>
-<!--<form>
-<p>Rooms:
-<select onchange="location = this.value">
-    <option></option>
-{% for room in Rooms %}
-    <option value="{% url 'energize_andover:room' room.id %}">{{room.Name}}</option>
-{% endfor %}
-</select>
-</p>-->
-
-</form>
-
+{% if not Closets.count == 0 %}
 <form>
 <p>Closets:
 <select onchange="location = this.value">
-    <option></option>
+    <option>Old Name / New Name</option>
     {% for closet in Closets %}
-        <option value="{% url 'energize_andover:closet' closet.id %}">{{closet.Name}}</option>
+        <option value="{% url 'energize_andover:closet' closet.id %}">{{closet.Old_Name}} / {{closet.Name}}</option>
     {% endfor %}
 </select>
 </p>
 </form>
+{% else %}
+<p> Closets: No Closet Data </p>
+{% endif %}
 
+{% if not Panels.count == 0 %}
 <form>
 <p>Panels:
 <select onchange="location = this.value">
-    <option></option>
-{% for panel in Panels %}
-    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option>
+    <option>FQN (Name)</option>
+    {% for panel in Panels %}
+        <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</option>
+    {% endfor %}
+</select>
+</p>
+</form>
+{% else %}
+<p> Panels: No Panel Data </p>
+{% endif %}
+
+{% if not Rooms.count == 0 %}
+<form>
+<p>Rooms:
+<select onchange="location = this.value">
+    <option>Old Name / New Name</option>
+{% for room in Rooms %}
+    <option value="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</option>
 {% endfor %}
 </select>
 </p>
-<p></p>
 </form>
+{% else %}
+<p> Rooms: No Room Data </p>
+{% endif %}
 
+{% if not Devices.count == 0 %}
+<form>
+<p>Devices:
+<select onchange="location = this.value">
+    <option>FQN (Function)</option>
+{% for device in Devices %}
+    <option value="{% url 'energize_andover:circuit' device.id %}">{{device.FQN}} ({{device.Function}})</option>
+{% endfor %}
+</select>
+</p>
+</form>
+{% else %}
+<p> Devices: No Device Data </p>
+{% endif %}
 {% endblock %}

@@ -186,7 +186,6 @@ class RoomForm(forms.ModelForm):
         fields = ['Name', 'OldName', 'Type', 'School', 'Panels']
         widgets = {'Panels': forms.CheckboxSelectMultiple}
 
-
 class CircuitForm(forms.ModelForm):
     class Meta:
         model = Circuit

@@ -1,28 +1,63 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1>{{ Panels }}</h1>
+<h1> Panel: {{panel.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 <p>Name: {{panel.Name }}</p>
+<p>FQN: {{panel.FQN }}</p>
 <p>Voltage: {{panel.Voltage}}</p>
 {% if not panel.Panels == None %}
-<p>Parent: <a href= "{% url 'energize_andover:panel' panel.Panels.id %}" >{{panel.Panels}}</a></p>
+<p>Parent: <a href= "{% url 'energize_andover:panel' panel.Panels.id %}" >{{panel.Panels.FQN}} ({{panel.Panels}})</a></p>
 {% else %}
 <p>Parent: No Parent data </p>
 {% endif %}
 {% if not panel.Closet == None %}
-<p>Closet: <a href= "{% url 'energize_andover:closet' panel.Closet.id %}" >{{panel.Closet.Name}}</a></p>
+<p>Closet: <a href= "{% url 'energize_andover:closet' panel.Closet.id %}" >{{panel.Closet.Old_Name}} / {{panel.Closet.Name}}</a></p>
 {% else %}
 <p>Closet: No Closet data </p>
 {% endif %}
-{% if not panel.panels.count == 0 %}
-<p>Subpanels:</p>
-{% for pan in panel.panels %}
-<li><a href= "{% url 'energize_andover:panel' pan.id %}" >{{pan}}</a></li>
+
+{% if not Circuits.count == 0 %}
+<form>
+<p>Circuits:
+<select onchange="location = this.value">
+    <option>FQN (Name)</option>
+{% for circ in Circuits %}
+    <option value="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}} ({{circ.Name}})</option>
 {% endfor %}
+</select>
+</p>
+</form>
+{% else %}
+<p>Circuit: No Circuit data </p>
 {% endif %}
-{% if not panel.Room == None %}
-<p>Closet: <a href= "{% url 'energize_andover:room' panel.Room.id %}" >{{panel.Room.Name}}</a></p>
+
+{% if not panel.panels.count == 0 %}
+<form>
+<p>Subpanels:
+<select onchange="location = this.value">
+    <option>FQN (Name)</option>
+{% for pan in panel.panels %}
+    <option value="{% url 'energize_andover:panel' pan.id %}">{{pan.FQN}} ({{pan.Name}})</option>
+{% endfor %}
+</select>
+</p>
+</form>
+{% else %}
+<p>Subpanel: No Subpanel data </p>
+{% endif %}
+
+{% if not Rooms.count == 0 %}
+<form>
+<p>Rooms:
+<select onchange="location = this.value">
+    <option>Old Name / New Name</option>
+{% for room in Rooms %}
+    <option value="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</option>
+{% endfor %}
+</select>
+</p>
+</form>
 {% else %}
 <p>Room: No Room data </p>
 {% endif %}
@@ -57,4 +92,7 @@
     <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.Name}}</option></p>
 {% endfor %}-->
 
+{% load static %}
+
+<img src="{% static picture %}" alt="My image"/>
 {% endblock %}

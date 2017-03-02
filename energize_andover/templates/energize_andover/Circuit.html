@@ -1,24 +1,28 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1>{{ Circuits }}</h1>
-<a href= "localhost/energize_andover/School" + school.pk >School</a>
+<h1> Circuit: {{circuit.Name}} </h1>
+<p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 
-<li>{{circuit.Name}}</li>
-<li>{{"Panel" + circuit.Panel}}</li>
-<li>{{"Number" + circuit.Number}}</li>
+<li>Name: {{circuit.Name}}</li>
+<li>Number: {{circuit.Number}}</li>
+<li>FQN: {{circuit.FQN}}</li>
+<li>Panel: <a href= "{% url 'energize_andover:panel' circuit.Panel.id %}" >{{circuit.FQN}} ({{circuit.Panel}})</a></li>
+<li>Function: {{circuit.Function}}</li>
 
-
+{% if not Rooms.count == 0 %}
 <form>
 <p>Rooms:
 <select onchange="location = this.value">
-    <option></option>
+    <option>Old Name / New Name</option>
 {% for room in Rooms %}
-    <option value="{% url 'energize_andover:room' room.id %}">{{room.Name}}</option></p>
+    <option value="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</option>
 {% endfor %}
 </select>
-    <input type = "submit" class "btn btn-default" onclick="location = this.value" />
 </p>
 <p></p>
 </form>
+{% else %}
+<p>Room: No Room data </p>
+{% endif %}
 {% endblock %}
