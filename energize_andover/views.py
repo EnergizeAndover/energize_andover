@@ -90,7 +90,7 @@ def school(request, school_id):
     Closets = school_obj.closets()
     Panels = school_obj.panels()
     Rooms = school_obj.rooms()
-
+    form = SearchForm()
     devices = Circuit.objects.all()
     for i in range (0, len(Panels)):
         if Panels[i] in devices:
@@ -102,7 +102,8 @@ def school(request, school_id):
             fdevices.append(devices[i])
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
-                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': fdevices})
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': fdevices,
+                   'form': form})
 
 
 def panel(request, panel_id):
@@ -275,3 +276,36 @@ def populate(request):
         form = PopulationForm()
     return render(request, 'energize_andover/Population.html',
                   {'form':form})
+
+def search(request):
+    if request.method == 'GET':
+        form = SearchForm(request.GET, request.FILES)
+        if form.is_valid():
+
+            title = request.GET.get('entry')
+            panels = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
+            circuits = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
+            rooms = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
+            closets = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
+            if request.GET.get('panels') == 'on':
+
+                panels = Panel.objects.filter(Name = title)
+            if request.GET.get('circuits') == 'on':
+                if request.GET.get('function') == None:
+                    circuits = Circuit.objects.filter(Name = title)
+                if request.GET.get('function') == 'on':
+                    circuits = Circuit.objects.filter(Function = title)
+            if request.GET.get('rooms') == 'on':
+                if request.GET.get('oldnames') == None:
+                    rooms = Room.objects.filter(Name = title)
+                elif request.GET.get('oldnames') == 'on':
+                    rooms = Room.objects.filter(OldName = title)
+
+            if request.GET.get('closets') == 'on':
+                if request.GET.get('oldnames') == None:
+                    closets = Closet.objects.filter(Name = title)
+                if request.GET.get('oldnames') == 'on':
+                    closets = Closet.objects.filter(OldName = title)
+
+            return render(request, 'energize_andover/Search.html', {'form': form, 'title': title,
+                            'panels': panels, 'circuits': circuits, 'rooms': rooms, 'closets': closets})

@@ -216,6 +216,34 @@ class PopulationForm(forms.Form):
         label='Select a file to Map from'
     )
 
-
+class SearchForm(forms.Form):
+    entry = forms.CharField(
+        label = 'Search:',
+        required = True
+    )
+    rooms = forms.BooleanField(
+        label = 'Rooms',
+        required = False
+    )
+    panels = forms.BooleanField(
+        label = 'Panels',
+        required = False
+    )
+    circuits = forms.BooleanField(
+        label = 'Circuits',
+        required = False
+    )
+    closets = forms.BooleanField(
+        label = 'Closets',
+        required = False
+    )
+    function = forms.BooleanField(
+        label = 'Function',
+        required = False
+    )
+    oldnames = forms.BooleanField(
+        label = 'Old Names',
+        required = False
+    )
 
 

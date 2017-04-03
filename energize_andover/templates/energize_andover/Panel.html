@@ -20,12 +20,12 @@
 {% if not Circuits.count == 0 %}
 <form>
 <p>Circuits:
-<select onchange="location = this.value">
-    <option>FQN (Name)</option>
+    <ul>
+    <li> # | FQN | Name | Function</li>
 {% for circ in Circuits %}
-    <option value="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}} ({{circ.Name}})</option>
+    <li>{{circ.Number}}) <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}}</a> | <a  href="{% url 'energize_andover:circuit' circ.id %}"> {{circ.Name}}</a> | <a  href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Function}}</a></li>
 {% endfor %}
-</select>
+</ul>
 </p>
 </form>
 {% else %}
@@ -95,4 +95,5 @@
 {% load static %}
 
 <img src="{% static picture %}" alt="My image"/>
+
 {% endblock %}

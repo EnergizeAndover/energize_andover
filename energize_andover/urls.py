@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^Closet(?P<closet_id>[0-9]+)', views.closet, name='closet'),
     url(r'^MapAdder', views.adder, name='adder'),
     url(r'^Populate', views.populate, name='populator'),
-
+    url(r'^Search', views.search, name='search')
 ]

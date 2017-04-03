@@ -1,0 +1,48 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1> Search for {{title}}: </h1>
+
+{% if not panels.count == 0 %}
+<p>Panels:</p>
+{% for panel in panels %}
+    <li> <a href="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</a></li>
+{% endfor %}
+{% endif %}
+
+{% if not rooms.count == 0 %}
+<p>Rooms:</p>
+{% for room in rooms %}
+    <li> <a href="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</a></li>
+{% endfor %}
+{% endif %}
+
+{% if not circuits.count == 0 %}
+<p>Circuits:
+{% for circ in circuits %}
+    <li> <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}}</a> | <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Name}}</a> | <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Function}}</a></li>
+{% endfor %}
+</p>
+{% endif %}
+
+{% if not closets.count == 0 %}
+<p>Closets:</p>
+{% for closet in closets %}
+    <li> <a href="{% url 'energize_andover:closet' closet.id %}">{{closet.Old_Name}} / {{closet.Name}}</a></li>
+{% endfor %}
+{% endif %}
+
+
+<form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
+  {% csrf_token %}
+  <p>{{ form.entry.label }} {{ form.entry }}</p>
+  <p>   Modifiers: {{ form.function.label }}: {{ form.function }}  {{ form.oldnames.label }}: {{ form.oldnames }}</p>
+  <p>{{ form.panels.label }}: {{ form.panels }}</p>
+  <p>{{ form.rooms.label }}: {{ form.rooms }}</p>
+  <p>{{ form.circuits.label }}: {{ form.circuits }}</p>
+  <p>{{ form.closets.label }}: {{ form.closets }}</p>
+  <p><input type="submit" class="btn btn-default" value="Search"/></p>
+</form>
+
+<l1><a href="{% url 'energize_andover:electric' %}">Return to School Select</a></l1>
+{% endblock %}

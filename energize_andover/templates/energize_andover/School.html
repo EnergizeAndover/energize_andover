@@ -62,4 +62,17 @@
 {% else %}
 <p> Devices: No Device Data </p>
 {% endif %}
+
+
+<form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
+  {% csrf_token %}
+  <p>{{ form.entry.label }} {{ form.entry }}</p>
+  <p>   Modifiers: {{ form.function.label }}: {{ form.function }}  {{ form.oldnames.label }}: {{ form.oldnames }}</p>
+  <p>{{ form.panels.label }}: {{ form.panels }}</p>
+  <p>{{ form.rooms.label }}: {{ form.rooms }}</p>
+  <p>{{ form.circuits.label }}: {{ form.circuits }}</p>
+  <p>{{ form.closets.label }}: {{ form.closets }}</p>
+  <p><input type="submit" class="btn btn-default" value="Search"/></p>
+</form>
+
 {% endblock %}
