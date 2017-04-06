@@ -1,6 +1,5 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, get_object_or_404
-
 from .models import *
 import pandas as pd
 import requests

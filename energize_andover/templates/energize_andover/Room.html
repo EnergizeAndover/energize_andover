@@ -26,16 +26,16 @@
 
 {% if not Circuits.count == 0 %}
 <form>
-<p>Circuits:
+<p>Devices:
 <select onchange="location = this.value">
     <option></option>
 {% for circuit in Circuits %}
-    <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.FQN}} ({{circuit.Name}})</option>
+    <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.FQN}}  | {{circuit.Name}} | {{circuit.Function}}</option>
 {% endfor %}
 </select>
 </p>
 </form>
 {% else %}
-<p>Circuit: No Circuit data </p>
+<p>Devices: No Device data </p>
 {% endif %}
 {% endblock %}

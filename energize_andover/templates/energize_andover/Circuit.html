@@ -1,7 +1,7 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1> Circuit: {{circuit.Name}} </h1>
+<h1> Device: {{circuit.Name}} | {{circuit.Function}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 
 <li>Name: {{circuit.Name}}</li>
