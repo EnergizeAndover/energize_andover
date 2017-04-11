@@ -219,7 +219,7 @@ class PopulationForm(forms.Form):
 class SearchForm(forms.Form):
     entry = forms.CharField(
         label = 'Search:',
-        required = True
+        required = False
     )
     rooms = forms.BooleanField(
         label = 'Rooms',
@@ -235,14 +235,6 @@ class SearchForm(forms.Form):
     )
     closets = forms.BooleanField(
         label = 'Closets',
-        required = False
-    )
-    function = forms.BooleanField(
-        label = 'Function',
-        required = False
-    )
-    oldnames = forms.BooleanField(
-        label = 'Old Names',
         required = False
     )
 

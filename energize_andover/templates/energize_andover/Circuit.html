@@ -8,7 +8,7 @@
 <li>Number: {{circuit.Number}}</li>
 <li>FQN: {{circuit.FQN}}</li>
 <li>Panel: <a href= "{% url 'energize_andover:panel' circuit.Panel.id %}" >{{circuit.FQN}} ({{circuit.Panel}})</a></li>
-<li>Function: {{circuit.Function}}</li>
+<li>Function: <a href = "{% url 'energize_andover:dictionary' %}">{{circuit.Function}}</a></li>
 
 {% if not Rooms.count == 0 %}
 <form>

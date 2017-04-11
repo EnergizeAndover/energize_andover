@@ -1,5 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, get_object_or_404
+
 from .models import *
 import pandas as pd
 import requests
@@ -281,31 +282,77 @@ def search(request):
     if request.method == 'GET':
         form = SearchForm(request.GET, request.FILES)
         if form.is_valid():
-
+            title = ""
             title = request.GET.get('entry')
-            panels = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
-            circuits = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
-            rooms = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
-            closets = Panel.objects.filter(Name = 'fjdkslaldfkdkslaldkfjalfjgkdlskajflakjfljfkdkslajfkdjflakdjflajfkjlajk')
+
+            panels = []
+            circuits = []
+            rooms = []
+            closets = []
+
             if request.GET.get('panels') == 'on':
-
-                panels = Panel.objects.filter(Name = title)
+                #panels = Panel.objects.filter(Name = title)
+                all_panels = Panel.objects.all()
+                for i in range (0, len(all_panels)):
+                    try:
+                        if title.lower() == all_panels[i].Name[0:len(title)].lower():
+                            #print(all_panels[i])
+                            panels.append(all_panels[i])
+                    except:
+                        None
             if request.GET.get('circuits') == 'on':
-                if request.GET.get('function') == None:
-                    circuits = Circuit.objects.filter(Name = title)
-                if request.GET.get('function') == 'on':
-                    circuits = Circuit.objects.filter(Function = title)
+                all_circuits = Circuit.objects.all()
+                for i in range(0, len(all_circuits)):
+                    try:
+                        if title.lower() == all_circuits[i].Name[0:len(title)].lower():
+                            # print(all_panels[i])
+                            circuits.append(all_circuits[i])
+                    except:
+                        None
+                    try:
+                        if title.lower() in all_circuits[i].Function[0:len(title)].lower():
+                            circuits.append(all_circuits[i])
+                    except:
+                        None
             if request.GET.get('rooms') == 'on':
-                if request.GET.get('oldnames') == None:
-                    rooms = Room.objects.filter(Name = title)
-                elif request.GET.get('oldnames') == 'on':
-                    rooms = Room.objects.filter(OldName = title)
-
+                all_rooms = Room.objects.all()
+                for i in range(0, len(all_rooms)):
+                    try:
+                        if title.lower() == all_rooms[i].Name.lower():
+                            # print(all_panels[i])
+                            rooms.append(all_rooms[i])
+                    except:
+                        None
+                    try:
+                        if title.lower() == all_rooms[i].OldName.lower():
+                            rooms.append(all_rooms[i])
+                    except:
+                        None
+                    try:
+                        if title.lower() in all_rooms[i].Type.lower():
+                            rooms.append(all_rooms[i])
+                    except:
+                        None
             if request.GET.get('closets') == 'on':
-                if request.GET.get('oldnames') == None:
-                    closets = Closet.objects.filter(Name = title)
-                if request.GET.get('oldnames') == 'on':
-                    closets = Closet.objects.filter(OldName = title)
-
+                all_closets = Closet.objects.all()
+                for i in range(0, len(all_closets)):
+                    try:
+                        if title.lower() == all_closets[i].Name.lower():
+                            # print(all_panels[i])
+                            closets.append(all_closets[i])
+                    except:
+                        None
+                    try:
+                        if title.lower() == all_closets[i].Old_Name.lower():
+                            closets.append(all_closets[i])
+                    except:
+                        None
             return render(request, 'energize_andover/Search.html', {'form': form, 'title': title,
                             'panels': panels, 'circuits': circuits, 'rooms': rooms, 'closets': closets})
+        return render(request, 'energize_andover/Search.html', {'form': form, 'title': ""})
+    else:
+        form = SearchForm()
+    return HttpResponse(render(request, 'energize_andover/Search.html', context = {'form': form, 'title': ""}))
+
+def dictionary (request):
+    return render(request, 'energize_andover/Dictionary.html')

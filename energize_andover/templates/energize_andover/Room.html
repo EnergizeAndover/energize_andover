@@ -6,7 +6,7 @@
 
 <li>Name: {{room.Name}}</li>
 <li>Old Name: {{room.OldName}}</li>
-<li>Type: {{room.Type}}</li>
+<li>Type:<a href = "{% url 'energize_andover:dictionary' %}"> {{room.Type}}</a></li>
 
 
 {% if not Panels.count == 0 %}
