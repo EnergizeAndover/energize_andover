@@ -63,7 +63,7 @@ class Panel(models.Model):
     def rooms(self):
         return Room.objects.filter(Panels__pk=self.pk)
     def circuits(self):
-        return Circuit.objects.filter(Panel__pk=self.pk)
+        return Circuit.objects.filter(Panel=self.pk)
     def panels(self):
         return Panel.objects.filter(Panels__pk=self.pk)
     def fqn(self):
@@ -110,11 +110,58 @@ class Circuit(models.Model):
 
     def rooms(self):
         return self.Rooms.all()
+    def devices(self):
+        return Device.objects.filter(Circuit__pk=self.pk)
     def __str__(self):
-
         out = str(self.Panel) + ', circuit ' + str(self.Number) + ': '
         #rooms = self.Rooms.all()
         #for room in rooms:
         #    out += room.__str__()
         return out
+    def to_string(self):
+        to_str = self.FQN + " | " + self.Name
+        if (not len(self.devices()) == 0):
+            dev = " | 1) "  + self.devices()[0].to_string()
+            rm = self.devices()[0].Room
+            for i in range (1, len(self.devices())):
+                dev += ("; " + str(i+1) + ") " + self.devices()[i].to_string())
+            to_str += (dev)
+        return to_str
+class Device(models.Model):
+    Name = models.CharField(max_length=50)
+    Circuit = models.ManyToManyField(
+        Circuit,
+        blank = True,
+    )
+    Associated_Device = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    Power = models.CharField(max_length=10)
+    Location = models.CharField(max_length=30)
+    Room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    Number = models.IntegerField(default = 0)
+    def circuits(self):
+        return self.Circuit.all()
+    def rooms(self):
+        return self.Room
+    def __str__(self):
+        str = self.Name
+        if (self.Room is not None):
+            str+=(", Rm:" + self.Room.Name)
+        return str
+    def to_string(self):
+        to_str = self.Name
+        if (self.Room is not None):
+            to_str += (", Rm: " + self.Room.Name)
+        return to_str
 
+class Transformer(models.Model):
+    Name = models.CharField(max_length=50)

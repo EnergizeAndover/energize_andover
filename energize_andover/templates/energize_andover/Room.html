@@ -11,14 +11,12 @@
 
 {% if not Panels.count == 0 %}
 <form>
-<p>Panels:
-<select onchange="location = this.value">
-    <option></option>
+<p>Panels:</p>
+    <ul>
 {% for panel in Panels %}
-    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</option>
+    <li><a href="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</a></li>
 {% endfor %}
-</select>
-</p>
+</ul>
 </form>
 {% else %}
 <p>Panel: No Panel data </p>
@@ -26,14 +24,12 @@
 
 {% if not Circuits.count == 0 %}
 <form>
-<p>Devices:
-<select onchange="location = this.value">
-    <option></option>
+<p>Devices:</p>
+<ul>
 {% for circuit in Circuits %}
-    <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.FQN}}  | {{circuit.Name}} | {{circuit.Function}}</option>
+    <li><a href="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.FQN}}  | {{circuit.Name}} | {{circuit.Function}}</a></li>
 {% endfor %}
-</select>
-</p>
+</ul>
 </form>
 {% else %}
 <p>Devices: No Device data </p>

@@ -9,6 +9,8 @@ def parse(a):
     file = '/var/www/gismap/room_mapping.csv'
     df = pd.read_csv(file)
     df = df.fillna("")
+    school = School(Name = "Andover High School")
+    school.save()
     school= School.objects.get(Name = "Andover High School")
 
     rooms = []

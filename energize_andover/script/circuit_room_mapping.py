@@ -38,12 +38,16 @@ def parse(a):
                             in_array = True
                     if (not in_array):
                         transformer.append(path[s1: len (path)])
+                        trans = Transformer(Name = path[s1: len (path)])
+                        trans.save()
             if (type == "circuit"):
                 print ("circuit")
-                number = path.count(".")
-                if number == 1:
+                num = path.count(".")
+                if num == 1:
                     name = path
                     panel = path[0:path.index('.')]
+                    number = path[path.index('.') + 1: len(path)]
+                    s2 = path.index ('.')
                 else:
                     count = 0
                     s1 = 0
@@ -51,19 +55,18 @@ def parse(a):
                     for j in range (0, len (path) - 1):
                         if path[j] is '.':
                             count += 1
-                            if count == number - 1:
+                            if count == num - 1:
                                 s1 = j
-                            elif count == number:
+                            elif count == num:
                                 s2 = j
                     panel = path[s1 + 1: s2]
                     name = path[s1 + 1:]
-                    circuit = path[s1 + 1: len(path)]
                     number = path[s2 + 1: len(path)]
-                rooms = re.findall(r"\D(\d{4})\D", description)
                 #print ("Circuit: Name: %s, Number: %s, Panel: %s, Rooms: %s," % (circuit, number, panel, rooms))
 
                 try:
-                    panels_obj = Panel.objects.filter(Name=panel)
+                    print (path[0:s2])
+                    panels_obj = Panel.objects.filter(FQN=path[0:s2])
                 except:
                     panels_obj = None
                 for i in range (0, len(panels_obj)):
@@ -72,18 +75,26 @@ def parse(a):
                 circuit.save()
 
             if (type == 'panel'):
-                #print ("panel")
+                print ("panel")
                 number = path.count('.')
                 if number == 0:
                     name = path
+                    if str(Closet.objects.filter(Old_Name = room)) == '<QuerySet []>':
+                        try:
+                            closet = Closet (Name = Room.objects.get(OldName = room).Name, Old_Name = room, School = school)
+                        except:
+                            closet = Closet(Name = "NL", Old_Name=room, School=school)
+                        closet.save()
+                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=Closet.objects.filter(Old_Name = room)[0], School = school, FQN = path)
                 else:
                     count = 0
                     s1 = -1
                     s2 = 0
                     s3 = 0
+                    summary_path = path
                     for j in range (0, len(transformer)):
-                        if transformer[k] in path:
-                            path = path.replace (transformer[k], "")
+                        if transformer[k] in summary_path:
+                            summary_path = summary_path.replace (transformer[k], "")
                             number-=1
                     for j in range(0, len(path) - 1):
                         if path[j] is '.':
@@ -94,31 +105,25 @@ def parse(a):
                                 s2 = j
                             elif count == number:
                                 s3 = j
-                    name = path[s3 + 1: len(path)]
-                    panel = path [s1 + 1: s2]
+                    name = summary_path[s3 + 1: len(path)]
+                    panel = summary_path [s1 + 1: s2]
 
                 #print ("Panel: Name: " + name + ", Voltage: " + voltage + "V, Location: None, School: AHS, Closet: " + room)
-                print (str(Closet.objects.filter(Old_Name = room)))
-                if str(Closet.objects.filter(Old_Name = room)) == '<QuerySet []>':
+                    print (str(Closet.objects.filter(Old_Name = room)))
+                    if str(Closet.objects.filter(Old_Name = room)) == '<QuerySet []>':
+                        try:
+                            closet = Closet (Name = Room.objects.get(OldName = room).Name, Old_Name = room, School = school)
+                        except:
+                            closet = Closet(Name = "NL", Old_Name=room, School=school)
+                        closet.save()
                     try:
-                        closet = Closet (Name = Room.objects.get(OldName = room).Name, Old_Name = room, School = school)
+                        panel_objs = Panel.objects.filter(FQN = path[0:path.index(panel)] + panel)
+                        panel_obj = panel_objs[0]
+
                     except:
-                        closet = Closet(Name = "NL", Old_Name=room, School=school)
-                    closet.save()
-                try:
-                    panel_objs = Panel.objects.filter(Name = panel)
-                    panel_obj = panel_objs[0]
-                except:
-                    panel_obj = None
-                new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=Closet.objects.filter(Old_Name = room)[0], FQN = path)
-                add = True
-                """
-                for i in range (0, len(Panel.objects.all())):
-                    #print(Panel.objects.all()[i].Name)
-                    if Panel.objects.all()[i].Name == name:
-                        add = False
-                        break
-                if (add):"""
+                        panel_obj = None
+                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=Closet.objects.filter(Old_Name = room)[0], FQN = path)
+
                 new_panel.save()
 
 

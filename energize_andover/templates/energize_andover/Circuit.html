@@ -1,26 +1,28 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-<h1> Device: {{circuit.Name}} | {{circuit.Function}} </h1>
+<h1> Circuit: {{circuit.Name}} | {{circuit.Function}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 
-<li>Name: {{circuit.Name}}</li>
-<li>Number: {{circuit.Number}}</li>
-<li>FQN: {{circuit.FQN}}</li>
-<li>Panel: <a href= "{% url 'energize_andover:panel' circuit.Panel.id %}" >{{circuit.FQN}} ({{circuit.Panel}})</a></li>
-<li>Function: <a href = "{% url 'energize_andover:dictionary' %}">{{circuit.Function}}</a></li>
-
+<p>Name: {{circuit.Name}}</p>
+<p>Number: {{circuit.Number}}</p>
+<p>FQN: {{circuit.FQN}}</p>
+<p>Panel: <a href= "{% url 'energize_andover:panel' circuit.Panel.id %}" >{{circuit.FQN}} ({{circuit.Panel}})</a></p>
+{% if not devices.count == 0 %}
+<p>Device:</p>
+{% for device in devices %}
+    <li><a href = "{% url 'energize_andover:device' device.id %}">{{device.Name}}</a></li>
+{% endfor %}
+{% else %}
+    <p>Device: Spare</p>
+{% endif %}
 {% if not Rooms.count == 0 %}
 <form>
-<p>Rooms:
-<select onchange="location = this.value">
-    <option>Old Name / New Name</option>
+<p>Rooms:</p>
 {% for room in Rooms %}
-    <option value="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</option>
+    <li><a href="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</a></li>
 {% endfor %}
-</select>
-</p>
-<p></p>
+
 </form>
 {% else %}
 <p>Room: No Room data </p>

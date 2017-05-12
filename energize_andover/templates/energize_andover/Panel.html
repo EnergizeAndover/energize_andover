@@ -17,16 +17,15 @@
 <p>Closet: No Closet data </p>
 {% endif %}
 
-{% if not Circuits.count == 0 %}
+{% if not Circuits|length == 0 %}
 <form>
-<p>Devices:
+<p>Devices:</p>
     <ul>
-    <li> # | FQN | Name | Function</li>
+    <li> #) FQN | Name | Device(s)</li>
 {% for circ in Circuits %}
-    <li>{{circ.Number}}) <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}}</a> | <a  href="{% url 'energize_andover:circuit' circ.id %}"> {{circ.Name}}</a> | <a  href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Function}}</a></li>
+    <li>{{circ.Number}}) <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.to_string}}</a></li>
 {% endfor %}
 </ul>
-</p>
 </form>
 {% else %}
 <p>Devices: No Device data </p>
@@ -34,14 +33,12 @@
 
 {% if not panel.panels.count == 0 %}
 <form>
-<p>Subpanels:
-<select onchange="location = this.value">
-    <option>FQN (Name)</option>
+<p>Subpanels:</p>
+    <ul>
 {% for pan in panel.panels %}
-    <option value="{% url 'energize_andover:panel' pan.id %}">{{pan.FQN}} ({{pan.Name}})</option>
+    <li><a href="{% url 'energize_andover:panel' pan.id %}">{{pan.FQN}} ({{pan.Name}})</a></li>
 {% endfor %}
-</select>
-</p>
+</ul>
 </form>
 {% else %}
 <p>Subpanel: No Subpanel data </p>
@@ -49,14 +46,12 @@
 
 {% if not Rooms.count == 0 %}
 <form>
-<p>Rooms:
-<select onchange="location = this.value">
-    <option>Old Name / New Name</option>
+<p>Rooms:</p>
+    <ul>
 {% for room in Rooms %}
-    <option value="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</option>
+    <li><a href="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</a></li>
 {% endfor %}
-</select>
-</p>
+</ul>
 </form>
 {% else %}
 <p>Room: No Room data </p>

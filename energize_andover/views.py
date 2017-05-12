@@ -91,20 +91,25 @@ def school(request, school_id):
     Panels = school_obj.panels()
     Rooms = school_obj.rooms()
     form = SearchForm()
-    devices = Circuit.objects.all()
-    for i in range (0, len(Panels)):
-        if Panels[i] in devices:
-            devices.remove(Panels[i])
+    devices = Device.objects.all()
 
-    fdevices = []
-    for i in range(0, len(devices)):
-        if devices[i].Function != "NA":
-            fdevices.append(devices[i])
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
-                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': fdevices,
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices,
                    'form': form})
 
+def device(request, device_id):
+    device = get_object_or_404(Device, pk=device_id)
+    rooms = device.rooms()
+    circuit = device.circuits()
+    circ = circuit.first()
+    print (circ)
+    panel = circ.Panel
+    school = panel.School
+    assoc_dev = device.Associated_Device
+    #print(assoc_dev.to_string)
+    return render(request, 'energize_andover/Device.html',
+                  {'device': device, "room": rooms, 'school': school, 'circuit': circuit, 'assoc_device': assoc_dev})
 
 def panel(request, panel_id):
     panel_obj = get_object_or_404(Panel, pk=panel_id)
@@ -115,25 +120,49 @@ def panel(request, panel_id):
     if panel_obj.panels() is not None:
         Panels = panel_obj.panels()
     parray = []
+    #devices = Device.objects.all()
+
+
     for i in range(0, len(Circuits)):
+        #print (len(Circuits[i].devices()))
+        #if not len(Circuits[i].devices()) == 0:
         parray.append(Circuits[i])
-    #print (parray[len(parray) - 1])
+
+
     print (parray)
     name = ""
     rarray = []
+    transformers = Transformer.objects.all()
+
     for i in range(0, len(Panels)):
+        a_break = False
         panel = Panels[i]
-        name = panel.FQN[0: panel.FQN.index(panel.Name) - 1]
+        path = panel.FQN
+        #print (path)
+        for count in reversed(range(6)):
+            for j in range(0, len(transformers)):
+                if len(transformers[j].Name) == count:
+                    print (count)
+                    if transformers[j].Name in path:
+                        print (transformers[j].Name)
+                        print(path)
+                        path = path.replace(transformers[j].Name, "")
+
+        print (path)
+        name = path[0: path.index(panel.Name) - 1]
+        print(name)
         for j in range (0, len(parray)):
-            print (parray[j])
+            print (parray[j].FQN)
             if parray[j].FQN == name and parray[j] not in rarray:
                 rarray.append(parray[j])
     for i in range(0, len(rarray)):
         print (rarray[i])
         parray.remove(rarray[i])
-    #print (parray)
+
+    print (parray)
     if panel_obj.School is not None:
         school = panel_obj.School
+
     Main = Panel.objects.filter(Name='MSWB')
     if Main.count()>0:
         Main = Main[0]
@@ -162,14 +191,16 @@ def circuit(request, circuit_id):
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     Rooms = circuit_obj.rooms()
     school = circuit_obj.Panel.School
+    devices = circuit_obj.devices()
     return render(request, 'energize_andover/Circuit.html',
-                  {'circuit': circuit_obj, 'Rooms': Rooms, 'school' : school})
+                  {'circuit': circuit_obj, 'Rooms': Rooms, 'school' : school, 'devices': devices})
 
 def closet(request, closet_id):
     closet_obj = get_object_or_404(Closet, pk=closet_id)
     panels = Panel.objects.filter(Closet__pk=closet_id)
+    school = closet_obj.School
     return render(request, 'energize_andover/Closet.html',
-                  {'closet': closet_obj, 'panels': panels})
+                  {'closet': closet_obj, 'panels': panels, 'school':school})
 
 def adder(request):
     if request.method == 'POST':
@@ -300,19 +331,30 @@ def search(request):
                     except:
                         None
             if request.GET.get('circuits') == 'on':
+                all_devices = Device.objects.all()
+                for i in range(0, len(all_devices)):
+                    try:
+                        if title.lower() in all_devices[i].Name.lower():
+                            circuits.append(all_devices[i])
+                    except:
+                        None
                 all_circuits = Circuit.objects.all()
-                for i in range(0, len(all_circuits)):
+                devs = []
+                for i in range (0, len(all_circuits)):
                     try:
-                        if title.lower() == all_circuits[i].Name[0:len(title)].lower():
-                            # print(all_panels[i])
-                            circuits.append(all_circuits[i])
-                    except:
-                        None
-                    try:
-                        if title.lower() in all_circuits[i].Function[0:len(title)].lower():
-                            circuits.append(all_circuits[i])
-                    except:
-                        None
+                        if title.lower() in all_circuits[i].Name.lower():
+                            #print (title)
+                           # print ("a")
+                            #print (all_circuits[i])
+                            circ_devices = all_circuits[i].devices()
+                            #print (circ_devices)
+                            for j in range(0, len(circ_devices)):
+                                if not circ_devices[j] in circuits:
+                                    circuits.append(circ_devices[j])
+                    except Exception as e:
+                        print (e)
+                #for i in range(0, len(circuits)):
+                #print (circuits[0])
             if request.GET.get('rooms') == 'on':
                 all_rooms = Room.objects.all()
                 for i in range(0, len(all_rooms)):

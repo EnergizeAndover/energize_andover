@@ -13,14 +13,14 @@
 {% if not rooms|length == 0 %}
 <p>Rooms:</p>
 {% for room in rooms %}
-    <li> <a href="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}}</a></li>
+    <li> <a href="{% url 'energize_andover:room' room.id %}">{{room.OldName}} / {{room.Name}} / {{room.Type}}</a></li>
 {% endfor %}
 {% endif %}
 
 {% if not circuits|length == 0 %}
 <p>Circuits: </p>
 {% for circ in circuits %}
-    <li> <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.FQN}}</a> | <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Name}}</a> | <a href="{% url 'energize_andover:circuit' circ.id %}">{{circ.Function}}</a></li>
+    <li><a href="{% url 'energize_andover:device' circ.id %}">{{circ.to_string}}</a></li>
 {% endfor %}
 {% endif %}
 
@@ -35,10 +35,10 @@
 <form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
   {% csrf_token %}
   <p>{{ form.entry.label }} {{ form.entry }}</p>
-  <p>{{ form.panels.label }}: {{ form.panels }}</p>
-  <p>{{ form.rooms.label }}: {{ form.rooms }}</p>
-  <p>{{ form.circuits.label }}: {{ form.circuits }}</p>
-  <p>{{ form.closets.label }}: {{ form.closets }}</p>
+  <p>{{ form.panels.label }}: {{ form.panels }} (Acceptable Fields are: Name)</p>
+  <p>{{ form.rooms.label }}: {{ form.rooms }} (Acceptable Fields are: Name, Old Name, Type)</p>
+  <p>{{ form.circuits.label }}: {{ form.circuits }} (Acceptable Fields are: Circuit Name, Device Name)</p>
+  <p>{{ form.closets.label }}: {{ form.closets }} (Acceptable Fields are: Name, Old Name)</p>
   <p><input type="submit" class="btn btn-default" value="Search"/></p>
 </form>
 
