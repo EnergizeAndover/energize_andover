@@ -15,5 +15,9 @@ urlpatterns = [
     url(r'^Populate', views.populate, name='populator'),
     url(r'^Search', views.search, name='search'),
     url(r'^Dictionary', views.dictionary, name = 'dictionary'),
-    url(r'^Device(?P<device_id>[0-9]+)', views.device, name = "device")
+    url(r'^Device(?P<device_id>[0-9]+)', views.device, name = "device"),
+    url(r'^Login', views.login, name = "login"),
+    url(r'^UserCreation', views.user_creation, name = "usercreation"),
+    url(r'^Management', views.user_management, name = "user_management"),
+    url(r'^Editing', views.user_editing, name = "user_editing")
 ]

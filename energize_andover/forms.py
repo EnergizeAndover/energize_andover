@@ -164,9 +164,18 @@ class NewSchoolForm(forms.Form):
 
 
 class SchoolForm(forms.ModelForm):
+    users = []
+    usrs = User.objects.all()
+    for i in usrs:
+        users.append((i.username, i.username))
+    all_users = forms.MultipleChoiceField(choices=users,
+                                          widget=forms.CheckboxSelectMultiple(),
+                                          label="Which Users Can Access: ")
     class Meta:
         model = School
         fields = ['Name']
+
+
 
 
 class ClosetForm(forms.ModelForm):
@@ -221,6 +230,9 @@ class SearchForm(forms.Form):
         label = 'Search:',
         required = False
     )
+    school = forms.CharField(
+        required = False
+    )
     rooms = forms.BooleanField(
         label = 'Rooms',
         required = False
@@ -230,7 +242,7 @@ class SearchForm(forms.Form):
         required = False
     )
     circuits = forms.BooleanField(
-        label = 'Circuits',
+        label = 'Devices',
         required = False
     )
     closets = forms.BooleanField(
@@ -238,4 +250,44 @@ class SearchForm(forms.Form):
         required = False
     )
 
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label = 'Username: ',
+        required = True
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label = "Password: ",
+        required=True
+    )
 
+class NewUserForm(forms.Form):
+    username = forms.CharField(
+        label='Username: ',
+        required=True
+    )
+    email = forms.EmailField(
+        label="Email: ",
+        required=True
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Password: ",
+        required=True
+    )
+    schools = []
+    query= School.objects.all()
+    for i in query:
+        schools.append((i.Name, i.Name))
+    approved_schools = forms.MultipleChoiceField(choices=schools,
+                                                 widget=forms.CheckboxSelectMultiple(),
+                                                 label = "Approved Schools")
+    master_username = forms.CharField(
+        label = "Administrator Username: ",
+        required = True
+    )
+    master_password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Administrator Password: ",
+        required=True
+    )

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class School(models.Model):
@@ -12,6 +13,16 @@ class School(models.Model):
 
     def closets(self):
         return Closet.objects.filter(School__pk=self.pk)
+
+    def devices(self):
+        panels = self.panels()
+        devs = []
+        for i in panels:
+            for j in i.circuits():
+                for k in j.devices():
+                    if k not in devs:
+                        devs.append(k)
+        return devs
 
     def __str__(self):
         return self.Name
@@ -32,6 +43,8 @@ class Closet(models.Model):
     def __str__(self):
         return self.Old_Name
 
+    def to_string(self):
+        return self.Old_Name + " / " + self.Name
 
 
 class Panel(models.Model):
@@ -70,6 +83,8 @@ class Panel(models.Model):
         return self.FQN
     def __str__(self):
         return self.Name
+    def to_string (self):
+        return self.FQN + " (" + self.Name + "), Rm. " + self.Closet.Name
 
 class Room(models.Model):
     Name = models.CharField(max_length=30)
@@ -92,6 +107,8 @@ class Room(models.Model):
         return Circuit.objects.filter(Rooms__pk=self.pk)
     def __str__(self):
         return self.OldName
+    def to_string(self):
+        return self.Name + " / " + self.OldName + " / " + self.Type
 
 
 class Circuit(models.Model):
@@ -112,6 +129,8 @@ class Circuit(models.Model):
         return self.Rooms.all()
     def devices(self):
         return Device.objects.filter(Circuit__pk=self.pk)
+    def school (self):
+        return self.Panel.School
     def __str__(self):
         out = str(self.Panel) + ', circuit ' + str(self.Number) + ': '
         #rooms = self.Rooms.all()
@@ -152,6 +171,7 @@ class Device(models.Model):
         return self.Circuit.all()
     def rooms(self):
         return self.Room
+
     def __str__(self):
         str = self.Name
         if (self.Room is not None):
@@ -165,3 +185,7 @@ class Device(models.Model):
 
 class Transformer(models.Model):
     Name = models.CharField(max_length=50)
+
+class SpecialUser(models.Model):
+    User = models.OneToOneField(User, on_delete=models.CASCADE)
+    Authorized_Schools = models.ManyToManyField(School, blank = True)

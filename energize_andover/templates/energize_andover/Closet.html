@@ -12,7 +12,7 @@
 <p>Panels:
 <ul>
 {% for panel in panels %}
-    <li><a value="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</a></li>
+    <li><a href="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</a></li>
 {% endfor %}
 </ul>
 </form>

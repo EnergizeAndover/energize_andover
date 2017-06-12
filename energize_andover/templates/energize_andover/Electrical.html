@@ -10,16 +10,15 @@
     {% if error %}
         <p>{{error}}</p>
     {% endif %}
-    <p>Enter NewSchools Name: {{form.Name}}</p>
+    <p>Enter New Schools Name: {{form.Name}}</p>
+    <p>{{form.all_users.label}}{{form.all_users}}</p>
     <p><input type="submit" class="btn btn-default" value="Add" name="MakeSchool" /></p>
 </form>
-
+<li><a href = "{% url 'energize_andover:electric' %}">Cancel and Return to School Select</a></li>
 
 {% else %}
 {% for schoo in schools %}
-    <a href="{% url 'energize_andover:school' schoo.id %}">
-        {{schoo.Name}}
-    </a>
+    <li><a href="{% url 'energize_andover:school' schoo.id %}">{{schoo.Name}}</a></li>
 {% endfor %}
 
 <form action=""  method="POST" enctype="multipart/form-data" name="Start">
@@ -28,5 +27,8 @@
 </form>
 
 {% endif %}
+<form action="#" method="get">
+ <input type="submit" class="btn" value="Log Out" name="mybtn">
+</form>
 
 {% endblock %}

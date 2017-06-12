@@ -4,6 +4,11 @@
 <h1> Panel: {{panel.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 <p>Name: {{panel.Name }}</p>
+{% if not panel.Closet == None %}
+<p>Closet: <a href= "{% url 'energize_andover:closet' panel.Closet.id %}" >{{panel.Closet.Old_Name}} / {{panel.Closet.Name}}</a></p>
+{% else %}
+<p>Closet: No Closet data </p>
+{% endif %}
 <p>FQN: {{panel.FQN }}</p>
 <p>Voltage: {{panel.Voltage}}</p>
 {% if not panel.Panels == None %}
@@ -11,11 +16,7 @@
 {% else %}
 <p>Parent: No Parent data </p>
 {% endif %}
-{% if not panel.Closet == None %}
-<p>Closet: <a href= "{% url 'energize_andover:closet' panel.Closet.id %}" >{{panel.Closet.Old_Name}} / {{panel.Closet.Name}}</a></p>
-{% else %}
-<p>Closet: No Closet data </p>
-{% endif %}
+
 
 {% if not Circuits|length == 0 %}
 <form>
