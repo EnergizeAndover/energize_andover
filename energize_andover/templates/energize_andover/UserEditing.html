@@ -1,0 +1,21 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1>User: {{user.username}}</h1>
+<p>Schools:</p>
+<form action="" method="GET" enctype="multipart/form-data">
+    {% for school in schools %}
+    <input type="radio" name="{{school.Name}}" value="{{school.Name}}"  /> {{school.Name}}
+    <input type = "hidden" name = "user" value="{{user.username}}">
+    <script>
+        function check():
+        if (school in su.Authorized_Schools.all()){
+            return "checked"
+            }
+    </script>
+    {% endfor %}
+<p>Permissions</p>
+    <input type="radio" name="is_admin" value="Is Admin" /> Admin
+</form>
+<input type="submit" class="btn" value="Save" name="save">
+{% endblock %}
