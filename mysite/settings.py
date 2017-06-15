@@ -241,6 +241,10 @@ INSTALLED_APPS = (
     # "mezzanine.accounts",
     # "mezzanine.mobile",
     "energize_andover",
+    "ea_parser",
+    "grapher",
+    "school_adder",
+    "login"
 )
 
 # List of middleware classes to use. Order is important; in the request phase,

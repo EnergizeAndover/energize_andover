@@ -43,7 +43,7 @@ urlpatterns += [
     # energize_andover url
     #url(r'^energize_andover/', include('energize_andover.energize_andover.urls')),
     #url(r'^', include('energize_andover.energize_andover.urls')),
-    url(r'^energize_andover/', include('energize_andover.urls')),
+    url(r'^energize_andover/', include('energize_andover.urls', namespace="energize_andover")),
     url(r'^', include('energize_andover.urls')),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE

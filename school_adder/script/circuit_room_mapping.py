@@ -6,11 +6,9 @@ import os
 from mysite.settings import BASE_DIR
 from energize_andover.models import *
 
-def parse(a):
-    file = '/var/www/gismap/circuit_mapping_updated.csv'
+def parse(file, school):
     df = pd.read_csv(file)
     df = df.fillna("skip")
-    school = (School.objects.get(Name="Andover High School"))
     transformer = []
     for i in range(1, len(df['path']) + 1):
         path = str(df._slice(slice(i - 1, i))['path'])
@@ -66,26 +64,29 @@ def parse(a):
 
                 try:
                     print (path[0:s2])
-                    panels_obj = Panel.objects.filter(FQN=path[0:s2])
+                    panels_obj = Panel.objects.filter(FQN=path[0:s2]).filter(School = school)
                 except:
                     panels_obj = None
                 for i in range (0, len(panels_obj)):
                     print(panels_obj[i])
-                circuit = Circuit(Name=name, Number=number, Panel=panels_obj[0], FQN = path)
+                circuit = Circuit(Name=name, Number=number, Panel=panels_obj.first(), FQN = path, School = school)
                 circuit.save()
 
             if (type == 'panel'):
                 print ("panel")
+                if str(Closet.objects.filter(Old_Name=room).filter(School=school)) == '<QuerySet []>':
+                    print(True)
+                    try:
+                        closet_name = Room.objects.filter(School=school).get(OldName=room).Name
+                        closet = Closet(Name=closet_name, Old_Name=room, School=school)
+                    except:
+                        closet = Closet(Name="NL", Old_Name=room, School=school)
+                    closet.save()
                 number = path.count('.')
                 if number == 0:
                     name = path
-                    if str(Closet.objects.filter(Old_Name = room)) == '<QuerySet []>':
-                        try:
-                            closet = Closet (Name = Room.objects.get(OldName = room).Name, Old_Name = room, School = school)
-                        except:
-                            closet = Closet(Name = "NL", Old_Name=room, School=school)
-                        closet.save()
-                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=Closet.objects.filter(Old_Name = room)[0], School = school, FQN = path)
+                    closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
+                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=closet, School = school, FQN = path)
                 else:
                     count = 0
                     s1 = -1
@@ -109,20 +110,17 @@ def parse(a):
                     panel = summary_path [s1 + 1: s2]
 
                 #print ("Panel: Name: " + name + ", Voltage: " + voltage + "V, Location: None, School: AHS, Closet: " + room)
-                    print (str(Closet.objects.filter(Old_Name = room)))
-                    if str(Closet.objects.filter(Old_Name = room)) == '<QuerySet []>':
-                        try:
-                            closet = Closet (Name = Room.objects.get(OldName = room).Name, Old_Name = room, School = school)
-                        except:
-                            closet = Closet(Name = "NL", Old_Name=room, School=school)
-                        closet.save()
+
+                    print(str(Closet.objects.filter(Old_Name = room).filter(School = school)))
+
                     try:
-                        panel_objs = Panel.objects.filter(FQN = path[0:path.index(panel)] + panel)
+                        panel_objs = Panel.objects.filter(FQN = path[0:path.index(panel)] + panel).filter(School = school)
                         panel_obj = panel_objs[0]
 
                     except:
                         panel_obj = None
-                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=Closet.objects.filter(Old_Name = room)[0], FQN = path)
+                    closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
+                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path)
 
                 new_panel.save()
 

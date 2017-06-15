@@ -122,6 +122,12 @@ class Circuit(models.Model):
         blank=True,
         null=True,
     )
+    School = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
     Rooms = models.ManyToManyField(Room,
                         blank=True)
 
@@ -151,6 +157,12 @@ class Device(models.Model):
     Circuit = models.ManyToManyField(
         Circuit,
         blank = True,
+    )
+    School = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
     )
     Associated_Device = models.ForeignKey(
         'self',

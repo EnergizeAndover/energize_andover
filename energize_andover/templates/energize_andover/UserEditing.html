@@ -5,17 +5,19 @@
 <p>Schools:</p>
 <form action="" method="GET" enctype="multipart/form-data">
     {% for school in schools %}
-    <input type="radio" name="{{school.Name}}" value="{{school.Name}}"  /> {{school.Name}}
-    <input type = "hidden" name = "user" value="{{user.username}}">
-    <script>
-        function check():
-        if (school in su.Authorized_Schools.all()){
-            return "checked"
-            }
-    </script>
+        {% if school in authorized_schools %}
+            <p><input type="checkbox" name="{{school.Name}}" value="{{school.Name}}"  checked="checked"/> {{school.Name}}</p>
+        {% else %}
+            <p><input type="checkbox" name="{{school.Name}}" value="{{school.Name}}"/> {{school.Name}}</p>
+        {% endif %}
     {% endfor %}
 <p>Permissions</p>
-    <input type="radio" name="is_admin" value="Is Admin" /> Admin
+    {% if admin_permission in user_permission_list %}
+        <p><input type="checkbox" name="is_admin" value="Is Admin" checked="checked"/> Admin</p>
+    {% else %}
+        <p><input type="checkbox" name="is_admin" value="Is Admin" /> Admin</p>
+    {% endif %}
+<p><input type="submit" class="btn" value="Save" name="save"></p>
 </form>
-<input type="submit" class="btn" value="Save" name="save">
+
 {% endblock %}

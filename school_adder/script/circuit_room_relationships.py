@@ -6,8 +6,8 @@ import os
 from mysite.settings import BASE_DIR
 from energize_andover.models import *
 
-def parse(a):
-    file = '/var/www/gismap/devices.csv'
+def parse(file, school):
+
     df = pd.read_csv(file)
     #df = df.fillna("skip")
 
@@ -26,9 +26,8 @@ def parse(a):
             tf = True
         print (fqn)
         #print (location)
-        circ = Circuit.objects.filter(FQN = fqn)
-        #print (circ)
-        circuit = circ.first()
+        circs = Circuit.objects.filter(FQN = fqn).filter(School=school)
+        circuit = circs.first()
 
         #print (circuit)
         try:
@@ -36,22 +35,21 @@ def parse(a):
                 if (location != "skip"):
                     try:
                         if len(location) < 4:
-                            rooms = Room.objects.filter(Name=location)
+                            rooms = Room.objects.filter(Name=location).filter(School = school)
                         else:
-                            rooms = Room.objects.filter(OldName = location)
+                            rooms = Room.objects.filter(OldName = location).filter(School = school)
                         room = rooms.first()
                         room.Panels.add(circuit.Panel)
                         room.save()
                         print("A")
                         circuit.Rooms.add(room)
-                        dev = Device.objects.filter(Name=obj)
+                        devices = Device.objects.filter(Name=obj).filter(School = school)
                         print ("B")
-                        if (not tf or str(dev) == "<QuerySet []>"):
-                            device = Device(Name=obj, Power="NA", Location="None", Room=room, Number=i)
+                        if (not tf or str(devices) == "<QuerySet []>"):
+                            device = Device(Name=obj, Power="NA", Location="None", Room=room, Number=i, School = school)
                             device.save()
-                            dev = Device.objects.filter(Number=i)
-                        device = dev.first()
-                        #print (device.Name)
+                            devices = Device.objects.filter(Number=i).filter(School = school)
+                        device = devices.first()
                         device.Circuit.add(circuit)
 
                         device.save()
@@ -59,11 +57,11 @@ def parse(a):
 
                     except Exception as e:
                         print(e)
-                        dev = Device.objects.filter(Name=obj)
+                        dev = Device.objects.filter(Name=obj).filter(School=school)
                         if (not tf or str(dev) == "<QuerySet []>"):
-                            device = Device(Name=obj, Power="NA", Location="None", Number=i)
+                            device = Device(Name=obj, Power="NA", Location="None", Number=i, School = school)
                             device.save()
-                            dev = Device.objects.filter(Number=i)
+                            dev = Device.objects.filter(Number=i).filter(School= school)
                         device = dev.first()
                         print ("a")
                         device.Circuit.add(circuit)
