@@ -244,7 +244,8 @@ INSTALLED_APPS = (
     "ea_parser",
     "grapher",
     "school_adder",
-    "login"
+    "login",
+    "user_management"
 )
 
 # List of middleware classes to use. Order is important; in the request phase,

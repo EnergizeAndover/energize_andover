@@ -4,6 +4,7 @@ from grapher import views as GraphViews
 from ea_parser import views as ParseViews
 from school_adder import views as AdderViews
 from login import views as LoginViews
+from user_management import views as UMViews
 
 app_name = 'gismap'
 urlpatterns = [
@@ -21,7 +22,7 @@ urlpatterns = [
     url(r'^Dictionary', views.dictionary, name = 'dictionary'),
     url(r'^Device(?P<device_id>[0-9]+)', views.device, name = "device"),
     url(r'^Login', LoginViews.login, name = "login"),
-    url(r'^UserCreation', LoginViews.user_creation, name = "usercreation"),
-    url(r'^Management', LoginViews.user_management, name = "user_management"),
-    url(r'^Editing(?P<user_id>[0-9]+)', LoginViews.user_editing, name = "user_editing")
+    url(r'^UserCreation', UMViews.user_creation, name = "usercreation"),
+    url(r'^Management', UMViews.user_management, name = "user_management"),
+    url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing")
 ]

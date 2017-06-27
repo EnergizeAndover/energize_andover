@@ -118,11 +118,11 @@ def populate(request):
                 user = User.objects.filter(username = usr)
                 su = SpecialUser.objects.filter(User=user).first()
                 su.Authorized_Schools.add(school)
+                su.save()
             RoomParse(form.cleaned_data['Room_File'], school)
             PanelParse(form.cleaned_data['Panel_File'], school)
             DeviceParse(form.cleaned_data['Device_File'], school)
-
-            return render(request, 'energize_andover/Population.html',)
+            return render(request, 'energize_andover/Population.html', context={'school': school})
     else:
         form = PopulationForm()
     return render(request, 'energize_andover/Population.html',
