@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from school_adder.script.room_mapping import parse as RoomParse
 from school_adder.script.circuit_room_mapping import parse as PanelParse
 from school_adder.script.circuit_room_relationships import parse as DeviceParse
-from login.views import check_status
+from login.views import check_status, check_admin
 
 def adder(request):
     if request.method == 'POST':
@@ -108,6 +108,8 @@ def adder(request):
 def populate(request):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
+    if check_admin(request) is False:
+        return HttpResponseRedirect("electric")
     if request.method == 'POST':
         form = PopulationForm(request.POST, request.FILES)
         if form.is_valid():

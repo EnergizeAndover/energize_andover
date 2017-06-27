@@ -9,7 +9,6 @@ from energize_andover.forms import *
 def electrical_mapping(request):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
-    print (request)
     for a_school in School.objects.all():
         if request.POST.get(a_school.Name):
             a_school.delete()
@@ -57,7 +56,6 @@ def device(request, device_id):
     rooms = device_.rooms()
     circuits = device_.circuits()
     circ = circuits.first()
-    print (circ)
     panel_ = circ.Panel
     school_ = circ.School
     if user is not None:
@@ -65,7 +63,6 @@ def device(request, device_id):
         if school_ not in su.Authorized_Schools.all():
             return HttpResponseRedirect("electric")
     assoc_dev = device_.Associated_Device
-    #print(assoc_dev.to_string)
     return render(request, 'energize_andover/Device.html',
                   {'device': device_, "room": rooms, 'school': school_, 'circuit': circuits, 'assoc_device': assoc_dev})
 
@@ -94,28 +91,17 @@ def panel(request, panel_id):
         a_break = False
         panel = Panels[i]
         path = panel.FQN
-        #print (path)
         for count in reversed(range(6)):
             for j in range(0, len(transformers)):
                 if len(transformers[j].Name) == count:
-                    print (count)
                     if transformers[j].Name in path:
-                        print (transformers[j].Name)
-                        print(path)
                         path = path.replace(transformers[j].Name, "")
-
-        print (path)
         name = path[0: path.index(panel.Name) - 1]
-        print(name)
         for j in range (0, len(parray)):
-            print (parray[j].FQN)
             if parray[j].FQN == name and parray[j] not in rarray:
                 rarray.append(parray[j])
     for i in range(0, len(rarray)):
-        print (rarray[i])
         parray.remove(rarray[i])
-
-    print (parray)
     if panel_obj.School is not None:
         school = panel_obj.School
 
@@ -124,7 +110,6 @@ def panel(request, panel_id):
         Main = Main[0]
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
-    print (picture)
     return render(request, 'energize_andover/Panel.html',
                   {'panel' : panel_obj,
                    'Rooms': Rooms, 'Circuits': parray,
@@ -193,8 +178,6 @@ def search(request):
                 return HttpResponseRedirect("electric")
         form = SearchForm(request.GET, request.FILES)
         if form.is_valid():
-
-            print(current_school)
             title = ""
             title = request.GET.get('entry')
 
@@ -209,7 +192,6 @@ def search(request):
                 for i in range (0, len(all_panels)):
                     try:
                         if title.lower() == all_panels[i].Name[0:len(title)].lower() and all_panels[i].School.Name.lower() == current_school.lower():
-                            #print(all_panels[i])
                             panels.append(all_panels[i])
                     except:
                         None
@@ -219,8 +201,6 @@ def search(request):
                 all_devs = school.devices()
                 for i in range(0, len(all_devices)):
                     try:
-
-                        #print (school.Name)
                         if title.lower() in all_devices[i].Name.lower() and all_devices[i] in all_devs:
                             circuits.append(all_devices[i])
                     except Exception as e:
@@ -280,5 +260,4 @@ def search(request):
 
 def dictionary (request):
     return render(request, 'energize_andover/Dictionary.html')
-
 

@@ -58,38 +58,11 @@
 <p>Room: No Room data </p>
 {% endif %}
 
-
-<!--<form>
-<p>Rooms:
-<select onchange="location = this.value">
-    <option></option>
-{% for room in Rooms %}
-    <option value="{% url 'energize_andover:room' room.id %}">{{room.Name}}</option></p>
-{% endfor %}
-</select>
-</p>
-
-</form>
-<p>Subpanels:
-<select onchange="location = this.value">
-    <option></option>
-{% for panel in Subpanels %}
-    <option value="{% url 'energize_andover:panel' panel.id %}">{{panel.Name}}</option></p>
-{% endfor %}
-</select>
-</p>
-</form>
-
-<form>
-<p>Circuits:
-<select onchange="location = this.value">
-    <option></option>
-{% for circuit in Circuits %}
-    <option value="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.Name}}</option></p>
-{% endfor %}-->
-
 {% load static %}
 
 <img src="{% static picture %}" alt="My image"/>
-
+<form action=""  method="POST" enctype="multipart/form-data" name="Manage">
+    {% csrf_token %}
+    <p><input type="submit" class="btn-xs" value="Manage Users" name="Manage" /></p>
+</form>
 {% endblock %}

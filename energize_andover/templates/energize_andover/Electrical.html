@@ -14,11 +14,11 @@
 
     <form action=""  method="POST" enctype="multipart/form-data" name="Start">
         {% csrf_token %}
-        <p><input type="submit" class="btn" value="Add New School" name="Start" /></p>
+        <p><input type="submit" class="btn-xs" value="Add New School" name="Start" /></p>
     </form>
     <form action=""  method="POST" enctype="multipart/form-data" name="Manage">
         {% csrf_token %}
-        <p><input type="submit" class="btn" value="Manage Users" name="Manage" /></p>
+        <p><input type="submit" class="btn-xs" value="Manage Users" name="Manage" /></p>
     </form>
 {% else %}
     {% for schoo in schools %}
@@ -27,7 +27,7 @@
 {% endif %}
 
 <form action="" method="get">
-    <input type="submit" class="btn" value="Log Out" name="mybtn">
+    <input type="submit" class="btn-xs" value="Log Out" name="mybtn">
 </form>
 
 {% endblock %}

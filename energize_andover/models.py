@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class School(models.Model):
     Name = models.CharField(max_length=30)
+    #Notes = models.CharField(max_length=1000, default='')
 
     def panels(self):
         return Panel.objects.filter(School__pk=self.pk)
@@ -38,7 +39,7 @@ class Closet(models.Model):
         blank=True,
         null=True,
     )
-
+    Notes = models.CharField(max_length=1000, default = '')
 
     def __str__(self):
         return self.Old_Name
@@ -70,7 +71,7 @@ class Panel(models.Model):
         blank=True,
         null=True,
     )
-
+    Notes = models.CharField(max_length=1000, default = '')
 
 
     def rooms(self):
@@ -98,6 +99,7 @@ class Room(models.Model):
     )
     Panels = models.ManyToManyField(Panel,
                                     blank=True,)
+    Notes = models.CharField(max_length=1000, default = '')
 
     def panels(self):
         return self.Panels.all()
@@ -130,6 +132,7 @@ class Circuit(models.Model):
     )
     Rooms = models.ManyToManyField(Room,
                         blank=True)
+    Notes = models.CharField(max_length=1000, default = '')
 
     def rooms(self):
         return self.Rooms.all()
@@ -179,6 +182,8 @@ class Device(models.Model):
         null=True
     )
     Number = models.IntegerField(default = 0)
+    Notes = models.CharField(max_length=1000, default = '')
+
     def circuits(self):
         return self.Circuit.all()
     def rooms(self):
@@ -197,7 +202,9 @@ class Device(models.Model):
 
 class Transformer(models.Model):
     Name = models.CharField(max_length=50)
+    Notes = models.CharField(max_length=1000, default = '')
 
 class SpecialUser(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
     Authorized_Schools = models.ManyToManyField(School, blank = True)
+    Notes = models.CharField(max_length=1000, default = '')

@@ -32,7 +32,7 @@ def user_creation(request):
 
 def user_management(request):
     if check_status(request) is False:
-        return HttpResponseRedirect("electric")
+        return HttpResponseRedirect("Login")
     if check_admin(request) is False:
         return HttpResponseRedirect("electric")
     user_list = User.objects.all()
