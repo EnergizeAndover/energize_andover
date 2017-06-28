@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from login.views import check_status, check_admin
 from energize_andover.forms import *
+from school_editing.forms import *
 
 
 def electrical_mapping(request):
@@ -69,6 +70,7 @@ def device(request, device_id):
 def panel(request, panel_id):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
+
     panel_obj = get_object_or_404(Panel, pk=panel_id)
     user = authenticate(username=request.session['username'], password=request.session['password'])
     if user is not None:
@@ -110,6 +112,10 @@ def panel(request, panel_id):
         Main = Main[0]
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
+    if request.POST.get("Edit"):
+        print(request)
+        form = PanelEditForm(request.POST)
+        return HttpResponse(request, "energize_andover/Panel.html", {'form':form})
     return render(request, 'energize_andover/Panel.html',
                   {'panel' : panel_obj,
                    'Rooms': Rooms, 'Circuits': parray,

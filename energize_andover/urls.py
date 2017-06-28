@@ -5,6 +5,7 @@ from ea_parser import views as ParseViews
 from school_adder import views as AdderViews
 from login import views as LoginViews
 from user_management import views as UMViews
+from school_editing import views as SEViews
 
 app_name = 'gismap'
 urlpatterns = [
@@ -15,6 +16,7 @@ urlpatterns = [
     url(r'^Room(?P<room_id>[0-9]+)', views.room, name='room'),
     url(r'^Circuit(?P<circuit_id>[0-9]+)', views.circuit, name='circuit'),
     url(r'^Panel(?P<panel_id>[0-9]+)', views.panel, name='panel'),
+    url(r'^Edit/Panel(?P<panel_id>[0-9]+)', SEViews.panel_editing, name='panel_editing'),
     url(r'^Closet(?P<closet_id>[0-9]+)', views.closet, name='closet'),
     url(r'^MapAdder', AdderViews.adder, name='adder'),
     url(r'^Populate', AdderViews.populate, name='populator'),

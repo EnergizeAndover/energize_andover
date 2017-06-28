@@ -1,6 +1,20 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
+{% if form %}
+<h1>Editing: {{panel.Name}} </h1>
+<form action=""  method="POST" enctype="multipart/form-data" name="Save">
+    {% csrf_token %}
+    <p>{{ form.Name.label }}{{ form.Name }}</p>
+    <p>{{ form.Voltage.label }}{{ form.Voltage }}</p>
+    <p>{{ form.Notes.label }}{{ form.Notes }}</p>
+    <p>{{ form.Closet.label }}{{ form.Closet }}</p>
+    <p>{{ form.Rooms.label }}{{ form.Rooms }}</p>
+    <p>{{ form.Parent.label }}{{ form.Parent }}</p>
+
+    <p><input type="submit" class="btn-xs" value="Save" name="Save" /></p>
+</form>
+{% else %}
 <h1> Panel: {{panel.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 <p>Name: {{panel.Name }}</p>
@@ -61,8 +75,10 @@
 {% load static %}
 
 <img src="{% static picture %}" alt="My image"/>
-<form action=""  method="POST" enctype="multipart/form-data" name="Manage">
+
+<form action="{% url 'energize_andover:panel_editing' panel.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
     {% csrf_token %}
-    <p><input type="submit" class="btn-xs" value="Manage Users" name="Manage" /></p>
+    <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
 </form>
+{% endif %}
 {% endblock %}

@@ -18,7 +18,7 @@
 {% compress css %}
 <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
-
+<!--
 {% if LANGUAGE_BIDI %}
 <link rel="stylesheet" href="{% static 'css/bootstrap-rtl.css' %}">
 {% endif %}
@@ -30,14 +30,16 @@
 {% endif %}
 
 {% endifinstalled %}
+-->
 {% block extra_css %}{% endblock %}
 
 {% endcompress %}
 
 {% compress js %}
-<script src="{% static 'mezzanine/js/'|add:settings.JQUERY_FILENAME %}"></script>
-<script src="{% static 'js/bootstrap.js' %}"></script>
-<script src="{% static 'js/bootstrap-extras.js' %}"></script>
+<script type="text/javascript" src="{% static 'jquery/jquery-3.2.1.js' %}"></script>
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-extras.js' %}"></script>
 {% block extra_js %}{% endblock %}
 {% endcompress %}
 
@@ -54,7 +56,7 @@
     <!--<div class="navbar navbar-fixed-top">-->
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{% url 'energize_andover:index' %}">Metasys Parsing</a></li>
             <li><a href="{% url 'energize_andover:graph' %}">Graphing</a></li>
