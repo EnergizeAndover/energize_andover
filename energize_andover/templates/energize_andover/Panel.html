@@ -3,6 +3,57 @@
 {% block main %}
 {% if form %}
 <h1>Editing: {{panel.Name}} </h1>
+<form action=""  method="POST" enctype="multipart/form-data" name="Name">
+    {% csrf_token %}
+    <p>Name:</p>
+    <p><input type="text" value = "{{panel.Name}}" name = "Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Voltage">
+    {% csrf_token %}
+    <p>Voltage:</p>
+    <p><input type="text" value = "{{panel.Voltage}}" name = "Voltage"></p>
+    <p><input type="submit" class="btn-xs" value="Save Voltage" name="Save Voltage" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{panel.Notes}}" name = "Notes" size = 100></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Parent">
+    {% csrf_token %}
+    <p>Parent Panel:</p>
+    <select id="id_Panels" name = "Panels">
+        {% if panel.Panels == None %}
+        <option>--------------</option>
+        {% endif %}
+        {% for pnl in Panels %}
+            {% if pnl == panel.Panels %}
+                <option value = "{{pnl.id}}" selected = 'selected'>{{pnl.Name}}</option>
+            {% else %}
+                <option value = "{{pnl.id}}">{{pnl.Name}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Save Parent" name="Save Parent" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Parent">
+    {% csrf_token %}
+    <p>Closet:</p>
+    <select id="id_Closet" name = "Closet">
+        {% for clst in Closets %}
+            {% if clst == panel.Closet %}
+                <option value = "{{clst.id}}" selected = 'selected'>{{clst.Name}}</option>
+            {% else %}
+                <option value = "{{clst.id}}">{{clst.Name}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Save Closet" name="Save Closet" /></p>
+</form>
+<p><a href="{% url 'energize_andover:panel' panel.id %}">Return To Panel</a></p>
+<!--
 <form action=""  method="POST" enctype="multipart/form-data" name="Save">
     {% csrf_token %}
     <p>{{ form.Name.label }}{{ form.Name }}</p>
@@ -13,7 +64,7 @@
     <p>{{ form.Parent.label }}{{ form.Parent }}</p>
 
     <p><input type="submit" class="btn-xs" value="Save" name="Save" /></p>
-</form>
+</form>-->
 {% else %}
 <h1> Panel: {{panel.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
@@ -22,6 +73,11 @@
 <p>Closet: <a href= "{% url 'energize_andover:closet' panel.Closet.id %}" >{{panel.Closet.Old_Name}} / {{panel.Closet.Name}}</a></p>
 {% else %}
 <p>Closet: No Closet data </p>
+{% endif %}
+{% if not panel.Notes == None %}
+<p>Notes: {{panel.Notes}}</p>
+{% else %}
+<p>Notes: No Notes </p>
 {% endif %}
 <p>FQN: {{panel.FQN }}</p>
 <p>Voltage: {{panel.Voltage}}</p>

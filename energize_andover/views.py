@@ -113,7 +113,7 @@ def panel(request, panel_id):
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
     if request.POST.get("Edit"):
-        print(request)
+        #print(request)
         form = PanelEditForm(request.POST)
         return HttpResponse(request, "energize_andover/Panel.html", {'form':form})
     return render(request, 'energize_andover/Panel.html',
@@ -134,7 +134,12 @@ def room(request, room_id):
             return HttpResponseRedirect("electric")
     Panels = room_obj.panels()
     Circuits = room_obj.circuits()
+
     #Circuits = Circuit.objects.filter(Rooms = room_obj)
+    if request.POST.get("Edit"):
+        #print(request)
+        form = PanelEditForm(request.POST)
+        return HttpResponse(request, "energize_andover/Room.html", {'form':form})
     return render (request, 'energize_andover/Room.html',
                    {'room' : room_obj,
                     "school": School,

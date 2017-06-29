@@ -39,7 +39,7 @@ class Closet(models.Model):
         blank=True,
         null=True,
     )
-    Notes = models.CharField(max_length=1000, default = '')
+    #Notes = models.CharField(max_length=1000, default = '', required = False)
 
     def __str__(self):
         return self.Old_Name
