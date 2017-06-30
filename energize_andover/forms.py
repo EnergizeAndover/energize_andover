@@ -1,7 +1,7 @@
 from django import forms
 from .models import *
 import pandas as pd
-from energize_andover.script.file_transfer import _temporary_output_file_path
+from grapher.script.file_transfer import _temporary_output_file_path
 
 
 
