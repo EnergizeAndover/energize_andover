@@ -1,5 +1,8 @@
 {% extends "pages/richtextpage.html" %}
 {% block main %}
+{% if form %}
+<h1>Editing: {{device}}</h1>
+{% else %}
 <h1>Device: {{device.Name}}</h1>
 <p>School:<a href= "{% url 'energize_andover:school' school.id %}">{{school.Name}}</a></p>
 <p>Circuit:</p>
@@ -18,5 +21,10 @@
 {% if not assoc_device == None %}
 <p>Associated Device:</p>
 <li><a href = "{% url 'energize_andover:device' assoc_device.id %}">{{assoc_device.to_string}}</a></li>
+{% endif %}
+<form action="{% url 'energize_andover:device_editing' device.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
+    {% csrf_token %}
+    <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
+</form>
 {% endif %}
 {% endblock %}

@@ -64,6 +64,10 @@ def device(request, device_id):
         if school_ not in su.Authorized_Schools.all():
             return HttpResponseRedirect("electric")
     assoc_dev = device_.Associated_Device
+    if request.POST.get("Edit"):
+        # print(request)
+        form = PanelEditForm(request.POST)
+        return HttpResponse(request, "energize_andover/Device.html", {'form': form})
     return render(request, 'energize_andover/Device.html',
                   {'device': device_, "room": rooms, 'school': school_, 'circuit': circuits, 'assoc_device': assoc_dev})
 
