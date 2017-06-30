@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from ea_parser.forms import *
-from energize_andover.script.file_transfer import get_transformed_file, graph_transformed_file
+from grapher.script.file_transfer import get_transformed_file, graph_transformed_file
 from django.http import HttpResponse
 def index(request):
     # Handle file upload
