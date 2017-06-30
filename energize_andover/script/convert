@@ -1,0 +1,252 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+## Use the CSV Module.  It makes the parsing of the CSV file really easy
+## In other words, one does not have to write all the code themselves to do
+## this.
+use Text::CSV;
+
+
+## my $infile = 'Newas_test2.csv';
+
+## my $infile = 'Newas_10192015.csv';
+## my $outfile = 'Newas_10192015_out.csv';
+
+
+## This is the name of the of the CSV file to be parsed.
+## my $energy_filename = 'Newas_10222015_2303';
+my $energy_filename = 'Newas_11232015_1310';
+
+## Setup names for the Input CSV file and the Output CSV file. Using variables
+## makes it easier to change the names in one place, rather than everywhere.
+my $infile = "${energy_filename}.csv";
+my $outfile = "${energy_filename}_out.csv";
+
+print "\n";
+print "INFILE..: $infile\n";
+print "OUTFILE.: $outfile\n";
+print "\n";
+
+## Instantiate an instance of the CSV Module.
+my $csv = Text::CSV->new();
+
+## Declare Arrays to hold various items.
+my @AoA;
+my @name_row;
+
+## Unix requires one to open the file before one can Read/Write to it. This
+## Command opens the input file and assigns it to the CSV handle. One can
+## think of the handle as another variable.
+open (CSV, "<", $infile) or die $!;
+
+## Declare another hard-coded array that will contain the names of the columns
+## in the order that one wishes to be seen in the output file.  This is 
+## predeclared for reasons that will be clear later.  Also, this method allows
+## one to easily tweak and change the order of the columns at a later date. 
+my @NameA = (
+  "Energy.Main-kWh-Energy (Trend1)",
+  "KVARh.Main-kVARh (Trend1)",
+  "KVAh.Main-kVAh (Trend1)",
+  "KW_Total.Main-kW (Trend1)",
+  "KVAR_Total.Main-kVAR (Trend1)",
+  "KVA_Total.Main-kVA (Trend1)",
+  "KW_A.Trend - Present Value (Trend1)",
+  "KW_B.Trend - Present Value (Trend1)",
+  "KW_C.Trend - Present Value (Trend1)",
+  "Energy.DL-Energy-kWh (Trend1)",
+  "KVARh.DL-kVARh (Trend1)",
+  "KVAh.DL-kVAh (Trend1)",
+  "KW_Total.DL-kW (Trend1)",
+  "KVAR_Total.DL-kVAR (Trend1)",
+  "KVA_Total.DL-kVA (Trend1)",
+  "Energy.DE-ATS-Energy-kWh (Trend1)",
+  "KVARh.DE-ATS-kVARh (Trend1)",
+  "KVAh.DE-ATS-kVAh (Trend1)",
+  "KW_Total.DE-ATS-kW (Trend1)",
+  "KVAR_Total.DE-ATS-kVAR (Trend1)",
+  "KVA_Total.DE-ATS-kVA (Trend1)",
+  "Energy.DG-kWh-Energy (Trend1)",
+  "KVARh.DG-kVARh (Trend1)",
+  "KVAh.DG-kVAh (Trend1)",
+  "KW_Total.DG-kW (Trend1)",
+  "KVAR_Total.DG-kVAR (Trend1)",
+  "KVA_Total.DG-kVA (Trend1)",
+  "Energy.DHB - kWh Total (Trend1)",
+  "KVAh.DHB-kVAh (Trend1)",
+  "KW_Total.DHB - kW - Present Value (Trend1)",
+  "KVAR_Total.DHB-KVAR (Trend1)",
+  "KVA_Total.DHB-KVA (Trend1)",
+  "Energy.M1-kWh-Energy (Trend1)",
+  "KVARh.M1-kVARh (Trend1)",
+  "KVAh.M1-kVAh (Trend1)",
+  "KW_Total.M1-kW-Total (Trend1)",
+  "KVAR_Total.M1-kVAR-Total (Trend1)",
+  "KVA_Total.M1-kVA-Total (Trend1) ",
+  "Energy.CollinCtr-Energy-kWh (Trend1)",
+  "KVARh.CollinCtr-kVARh (Trend1)",
+  "KVAh.CollinCtr-kVAh (Trend1)",
+  "KW_Total.CollinCtr-kW (Trend1)",
+  "KVAR_Total.CollinCtr-kVAR (Trend1)",
+  "KVA_Total.CollinCtr-kVA (Trend1)",
+  "KW_Present_Demand.Main-kW_Present_Demand (Trend1)",
+  "KVAR_Present_Demand.Main-kVAR_Present_Demand (Trend1)",
+  "KVA_Present_Demand.Main-kVA_Present_Demand (Trend1)",
+  "KW_Max_Demand.Trend - Present Value (Trend1)",
+  "KVAR_Max_Demand.Trend - Present Value (Trend1)",
+  "KVA_Max_Demand.Trend - Present Value (Trend1)",
+  "Max_Power.Main-Max_Power (Trend1)",
+  "Gas Meter.Cubic Feet of Gas (Trend1)");
+
+## This is a predeclared function for the sorting routine. It tells the inbuilt 
+## 'sort' command, how to conduct the sorting.
+sub by_number {
+  # a sort subroutine, expect $a and $b
+  if ($a < $b) { -1 } elsif ($a > $b) { 1 } else { 0 }
+}
+
+## Declare a Hash.  A has is a very useful data-structure that allows very easy
+## manipulation of data.
+my %HoH = ();
+
+## More variables.
+my $current_time = "";
+my $current_time1 = "";
+my $count4 = 0;
+
+## Start reading the Input CSV file.
+print "Reading CSV $infile. Begin...\n";
+while (<CSV>) {
+  ## Note that "$." actually denotes the line #, so we are actually skipping the first line
+  ## when reading in the csv file. This is a demonstration of a quick way to skip.
+  ## next if ($. == 1);
+  ## print " #### Dollar dot is $.\n";
+
+  ## Note that "$_" represents the whole line that was read in.
+  if ($csv->parse($_)) {
+    if ($. == 1) {
+      ## The following, stores the 1st line in the CSV file, which mostly consists of column
+      ## column names etc.  This was kept here for debug purposes. It is not actually used.
+      @name_row = $csv->fields();
+      ## print "  name_row[0]: $name_row[0]\n";
+      ## print "\tname_row[1]: $name_row[1]\n";
+      ## print "\tname_row[2]: $name_row[2]\n";
+      ## print "\tname_row[3]: $name_row[3]\n";
+      ## unshift @name_row, $count)
+    } else {
+      my @row = $csv->fields();
+      ## The following creates an automatic reference to an array and copies each element of
+      ## @row into it. That reference is then pushed into @AoA.
+      ## One will need to read the perl manuals to understand the references. A reference is
+      ## simply a pointer, pointing to some data-structure, that is stored elsewhere.
+      push @AoA, [ @row ];
+      ## print "  row[0]: $row[0]\n";
+      ## print "\trow[1]: $row[1]\n";
+      ## print "\trow[2]: $row[2]\n";
+      ## print "\trow[3]: $row[3]\n";
+
+      ## If one looks at the input CSV file, a group of trend data points for various trends
+      ## are collected at the same physical time instance.  They need to be grouped as one
+      ## line item for the output CSV file. So one needs to keep track of this time step.
+      ## It will be used in the hash data structure, later. 
+      my $time3 = $row[0];
+      $current_time1 = $count4 . " " . $time3;
+      if ($current_time ne $time3) {
+        $current_time = $time3;
+        ## It turns out that the number of time steps is also the total number of lines in
+        ## The output CSV file.
+        $count4 = $count4 +1;
+      }
+
+      ## Check for the existence of items in the current time step.  If there are no items
+      ## then start populating. If there is already some items for this time step then use
+      ## the existing hash item to populate the various trend items(row[2] and their values
+      ## (row[3]). Save the timestamp too. It will be needed later when creating the output
+      ## CSV file.
+      ## It is important to note here that $count4 is the key for the $trendvalH hash item.
+      ## The trendValH hash item stores all the trendname-tredvalue pairs for a given time.
+      ## $count4 will be used later to recover the trendValH hash items in chronological
+      ## order.
+      if (exists $HoH{$count4}) {
+        my $trendval_href = $HoH{$count4};
+        $trendval_href->{$row[2]} = $row[3];
+      } else {
+        my %trendvalH = ();
+        $trendvalH{$row[2]} = $row[3];
+        $trendvalH{"time"} = $current_time;
+        $HoH{$count4} = \%trendvalH;
+      }
+    }
+  } else {
+    my $err = $csv->error_input;
+    print "Failed to parse line: $err";
+  }
+}
+
+## Parsing of the input CSV file is done. It is a good habit to close the file to prevent
+## corruption.
+close CSV;
+print "Reading CSV $infile. Done...\n";
+
+## At this point, one is ready to create the output CSV file. So it is opened and assigned
+## a handle as done above for the input file. Only this time the data is dumped in '>',
+## rather than read out '<'.
+print "Creating Output CSV $outfile. Begin...\n";
+open (OUTFILE, ">", $outfile) or die $!;
+
+## Print out the Header i.e. the first line. This is where the NameA array comes in handy.
+print OUTFILE "\"Time\",";
+for my $ii ( 0 .. $#NameA ) {
+  my $trend1 = $NameA[$ii];
+  print OUTFILE "\"$trend1\",";
+}
+print OUTFILE "\n";
+
+## This loop goes thru the hash that was created earlier, to collect and collate the items
+## that will be printed out to the output CSV file. Note that the trendvalue hash items 
+## had been stored earlier with chronological time stamps(i.e. $count4, above). That order
+## will be used now to print out the data.  This makes the output appear in chronological
+## order as expected. Also note the use of the 'by_number' sorting routine.  
+my $count3 = 0;
+for my $num2 (sort by_number keys %HoH) {
+  my $trendval_href = $HoH{$num2};
+  ## $trend can be obtained from the $NameH hash, above. Then one iterates over
+  ## each value in $NameH.
+  ## print "Count: $num2\n";
+
+  ## The first Column is always the Time.
+  my $somekey2 = "time";
+  my $time1 = $trendval_href->{$somekey2};
+  ## print "Time: $time1\n";
+  print OUTFILE "\"$time1\",";
+
+  ## This is where the Name array, that was created above, becomes useful. Note how the
+  ## Order of the columns in the output CSV file is now governed by the trend names in
+  ## the $NameA array.
+  for my $jj ( 0 .. $#NameA ) {
+  my $trend  = $NameA[$jj];
+    ## Iterate over the sorted Trend names.  These are the other columns.
+    ## my $value1 = $trendval_href->{$trend};
+    ## print "Trend: $trend, Value: $value1\n";
+    if (my $value = $trendval_href->{$trend}) {
+      print OUTFILE "\"${value}\",";
+    } else {
+      print OUTFILE ",";
+    }
+    ## if ($trendval_href->{$trend}) {
+    ##   print "#### $trendval_href->{$somekey2}: $trend: $trendval_href->{$trend}\n";
+    ##   $count3 = $count3 + 1;
+    ## }
+  }
+  print OUTFILE "\n";
+  $count3 = $count3 + 1;
+}
+print "Creating Output CSV $outfile. Done...\n";
+
+## Dumping of the output CSV file is done. It is a good habit, as mentioned above, to
+## close the file to prevent corruption.
+print "There were $count3 entries.\n";
+close OUTFILE;
+
+## Done.....
+exit;
