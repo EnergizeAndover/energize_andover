@@ -11,10 +11,37 @@
 </form>
 <form action=""  method="POST" enctype="multipart/form-data" name="Old Name">
     {% csrf_token %}
-    <p>Voltage:</p>
+    <p>Old Name:</p>
     <p><input type="text" value = "{{room.OldName}}" name = "Old Name"></p>
     <p><input type="submit" class="btn-xs" value="Save Old Name" name="Save Old Name" /></p>
 </form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Type">
+    {% csrf_token %}
+    <p>Type:</p>
+    <p><input type="text" value = "{{room.Type}}" name = "Type"></p>
+    <p><input type="submit" class="btn-xs" value="Save Type" name="Save Type" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{room.Notes}}" name = "Notes" size = 100></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Panels">
+    {% csrf_token %}
+    <p>Panels: </p>
+    {% for panel in room_panels %}
+    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.Name}}"></p>
+    {% endfor %}
+    <select id="id_Panels" name = "Panels">
+        <option>--------------</option>
+        {% for pnl in Panels %}
+        <option value = "{{pnl.id}}">{{pnl.Name}}</option>
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Add Panel" name="Add Panel" /></p>
+</form>
+<p><a href="{% url 'energize_andover:room' room.id %}">Return To Room</a></p>
 {% else %}
 <h1> Room: {{room.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>

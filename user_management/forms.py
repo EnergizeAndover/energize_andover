@@ -1,6 +1,13 @@
 from django import forms
 from energize_andover.models import *
 
+def get_all_schools():
+    schools = []
+    query = School.objects.all()
+    for i in query:
+        schools.append((i.Name, i.Name))
+    return schools
+
 class NewUserForm(forms.Form):
     username = forms.CharField(
         label='Username: ',
@@ -15,11 +22,8 @@ class NewUserForm(forms.Form):
         label="Password: ",
         required=True
     )
-    schools = []
-    query= School.objects.all()
-    for i in query:
-        schools.append((i.Name, i.Name))
-    approved_schools = forms.MultipleChoiceField(choices=schools,
+
+    approved_schools = forms.MultipleChoiceField(choices=get_all_schools(),
                                                  widget=forms.CheckboxSelectMultiple(),
                                                  label = "Approved Schools")
     master_username = forms.CharField(

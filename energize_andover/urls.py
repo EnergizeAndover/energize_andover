@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^Populate', AdderViews.populate, name='populator'),
     url(r'^Search', views.search, name='search'),
     url(r'^Dictionary', views.dictionary, name = 'dictionary'),
+    url(r'^ChangeLog', views.changelog, name = 'changelog'),
     url(r'^Device(?P<device_id>[0-9]+)', views.device, name = "device"),
     url(r'^Login', LoginViews.login, name = "login"),
     url(r'^UserCreation', UMViews.user_creation, name = "usercreation"),

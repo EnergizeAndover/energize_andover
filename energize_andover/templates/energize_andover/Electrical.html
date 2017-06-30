@@ -20,6 +20,7 @@
         {% csrf_token %}
         <p><input type="submit" class="btn-xs" value="Manage Users" name="Manage" /></p>
     </form>
+    <p><a href="{% url 'energize_andover:changelog'%}">Inspect Log of Edits</a></p>
 {% else %}
     {% for schoo in schools %}
         <li><a href="{% url 'energize_andover:school' schoo.id %}">{{schoo.Name}}</a></li>

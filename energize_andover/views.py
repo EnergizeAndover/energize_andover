@@ -272,3 +272,10 @@ def search(request):
 def dictionary (request):
     return render(request, 'energize_andover/Dictionary.html')
 
+def changelog (request):
+    if check_status(request) is False:
+        return HttpResponseRedirect("Login")
+    if check_admin(request) is False:
+        return HttpResponseRedirect("electric")
+    return render(request, 'energize_andover/ChangeLog.html')
+

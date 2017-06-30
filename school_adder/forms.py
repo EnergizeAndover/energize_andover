@@ -44,6 +44,13 @@ class AdderTypeForm(forms.Form):
         required=True
     )
 
+def get_all_users():
+    users = []
+    usrs = User.objects.all()
+    for i in usrs:
+        users.append((i.username, i.username))
+    return users
+
 class PopulationForm(forms.Form):
     """
     School = forms.ModelChoiceField(
@@ -68,10 +75,8 @@ class PopulationForm(forms.Form):
     Device_File = forms.FileField(
         label='Select a file for Device Mapping'
     )
-    users = []
-    usrs = User.objects.all()
-    for i in usrs:
-        users.append((i.username, i.username))
-    all_users = forms.MultipleChoiceField(choices=users,
+
+    all_users = forms.MultipleChoiceField(choices=get_all_users(),
                                           widget=forms.CheckboxSelectMultiple(),
                                           label="Which Users Can Access: ")
+
