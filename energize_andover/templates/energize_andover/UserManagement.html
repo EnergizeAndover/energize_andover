@@ -1,0 +1,15 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1>User Management</h1>
+<p>List of Users</p>
+
+<form action="" method="GET" enctype="multipart/form-data" name = '{{user.username}}'>
+    {% for user in users %}
+    <li>{{user.username}}</li>
+    <input type="submit" class="btn" value="Edit" name="{{user.username}}">
+    <input type="submit" class="btn" value="Delete" name="{{user.username}}">
+    {% endfor %}
+</form>
+<p><a href="{% url 'energize_andover:electric' %}">Return to School Select</a></p>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+{% if form %}
+<h1>Editing: {{room.Name}} </h1>
+<form action=""  method="POST" enctype="multipart/form-data" name="Name">
+    {% csrf_token %}
+    <p>Name:</p>
+    <p><input type="text" value = "{{room.Name}}" name = "Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Old Name">
+    {% csrf_token %}
+    <p>Old Name:</p>
+    <p><input type="text" value = "{{room.OldName}}" name = "Old Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Old Name" name="Save Old Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Type">
+    {% csrf_token %}
+    <p>Type:</p>
+    <p><input type="text" value = "{{room.Type}}" name = "Type"></p>
+    <p><input type="submit" class="btn-xs" value="Save Type" name="Save Type" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{room.Notes}}" name = "Notes" size = 100></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Panels">
+    {% csrf_token %}
+    <p>Panels: </p>
+    {% for panel in room_panels %}
+    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.Name}}"></p>
+    {% endfor %}
+    <select id="id_Panels" name = "Panels">
+        <option>--------------</option>
+        {% for pnl in Panels %}
+        <option value = "{{pnl.id}}">{{pnl.Name}}</option>
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Add Panel" name="Add Panel" /></p>
+</form>
+<p><a href="{% url 'energize_andover:room' room.id %}">Return To Room</a></p>
+{% else %}
+<h1> Room: {{room.Name}} </h1>
+<p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
+
+<li>Name: {{room.Name}}</li>
+<li>Old Name: {{room.OldName}}</li>
+<li>Type:<a href = "{% url 'energize_andover:dictionary' %}"> {{room.Type}}</a></li>
+
+
+{% if not Panels.count == 0 %}
+<form>
+<p>Panels:</p>
+    <ul>
+{% for panel in Panels %}
+    <li><a href="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</a></li>
+{% endfor %}
+</ul>
+</form>
+{% else %}
+<p>Panel: No Panel data </p>
+{% endif %}
+
+{% if not Circuits.count == 0 %}
+<form>
+<p>Devices:</p>
+<ul>
+{% for circuit in Circuits %}
+    <li><a href="{% url 'energize_andover:circuit' circuit.id %}">{{circuit.FQN}}  | {{circuit.Name}} | {{circuit.Function}}</a></li>
+{% endfor %}
+</ul>
+</form>
+{% else %}
+<p>Devices: No Device data </p>
+{% endif %}
+<form action="{% url 'energize_andover:room_editing' room.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
+    {% csrf_token %}
+    <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
+</form>
+{% endif %}
+{% endblock %}
