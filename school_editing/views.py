@@ -5,10 +5,15 @@ from energize_andover.models import *
 from .forms import *
 import codecs
 from datetime import datetime
+from login.views import check_status, check_school_privilege
 
 
 def panel_editing(request, panel_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("/energize_andover/Login")
     panel_obj = get_object_or_404(Panel, pk=panel_id)
+    if check_school_privilege(panel_obj.School, request) == False:
+        return HttpResponseRedirect("/energize_andover/electric")
     form = PanelEditForm(initial={'Name': panel_obj.Name})
     if request.POST.get("Save Name"):
         message = "Panel Name Change: " + panel_obj.Name + " -->" + request.POST.get(
@@ -70,7 +75,11 @@ def panel_editing(request, panel_id):
                    'Closets': Closet.objects.all()}))
 
 def room_editing (request, room_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("/energize_andover/Login")
     room_obj = get_object_or_404(Room, pk=room_id)
+    if check_school_privilege(room_obj.School, request) == False:
+        return HttpResponseRedirect("/energize_andover/electric")
     if request.POST.get("Save Name"):
         message = "Room Number Change: " + room_obj.Name + " -->" + request.POST.get("Name")
         update_log(message, room_obj.School, request)
@@ -91,6 +100,7 @@ def room_editing (request, room_id):
         update_log(message, room_obj.School, request)
         room_obj.Notes = request.POST.get("Notes")
         room_obj.save()
+    """
     if request.POST.get("Add Panel"):
 
         pan = Panel.objects.get(pk=request.POST.get("Panels"))
@@ -103,17 +113,17 @@ def room_editing (request, room_id):
             room_obj.Panels.remove(panel)
             room_obj.save()
             for circuit in Circuit.objects.filter(Panel=panel):
-                if room_obj in circuit.Rooms:
+                if room_obj in circuit.Rooms.all():
                     circuit.Rooms.remove(room_obj)
                     circuit.save()
                 for device in Device.objects.filter(Circuit = circuit):
                     if room_obj in device.Room:
                         device.Room.remove(room_obj)
                         device.save()
-            message = "Panel " + panel + " added to Room " + room_obj.Name + \
+            message = "Panel " + panel + " removed from Room " + room_obj.Name + \
                 ". All Circuits and Devices on this panel that are related to this room are no longer related."
             update_log(message, room_obj.School, request)
-
+    """
     form = PanelEditForm(initial={'Name': room_obj.Name})
     return HttpResponse(render(request, "energize_andover/Room.html", {'room': room_obj,
                                                                        'form': form,
@@ -121,7 +131,11 @@ def room_editing (request, room_id):
                                                                        'room_panels': room_obj.Panels.all()}))
 
 def device_editing(request, device_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("/energize_andover/Login")
     device_obj = get_object_or_404(Device, pk = device_id)
+    if check_school_privilege(device_obj.School, request) == False:
+        return HttpResponseRedirect("/energize_andover/electric")
     form = PanelEditForm(initial={'Name': device_obj.Name})
     if request.POST.get("Save Name"):
         message = "Device Name Change: " + device_obj.Name + " -->" + request.POST.get("Name")
@@ -169,7 +183,11 @@ def device_editing(request, device_id):
                                                                          'form': form}))
 
 def circuit_editing (request, circuit_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("/energize_andover/Login")
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
+    if check_school_privilege(circuit_obj.School, request) == False:
+        return HttpResponseRedirect("/energize_andover/electric")
     if request.POST.get("Save Name"):
         message = "Circuit Name Change: " + circuit_obj.Name + " -->" + request.POST.get("Name")
         update_log(message, circuit_obj.School, request)
@@ -185,17 +203,80 @@ def circuit_editing (request, circuit_id):
         update_log(message, circuit_obj.School, request)
         circuit_obj.Notes = request.POST.get("Notes")
         circuit_obj.save()
+    query = "Enter Query (Name of Device)     |"
+    devices = []
     for dev in circuit_obj.devices():
         if request.POST.get(dev.Name):
             message = "Circuit-Device Change: Device " + dev.Name + " removed from Circuit " + circuit_obj.Name
             update_log(message, circuit_obj.School, request)
             dev.Circuit.remove(circuit_obj)
+            try:
+                remove = True
+                for device in circuit_obj.devices():
+                    if dev.Room == device.Room:
+                        remove = False
+                if remove:
+                    circuit_obj.Rooms.remove(dev.Room)
+                    circuit_obj.save()
+                panel = circuit_obj.Panel
+                remove = True
+                room = dev.Room
+                for circuit in panel.circuits():
+                    if not circuit == circuit_obj:
+                        for device in circuit.devices():
+                            try:
+                                if device.Room == room:
+                                    print (circuit)
+                                    remove = False
+                            except:
+                                None
+                if remove:
+                    room.Panels.remove(panel)
+                    room.save()
+            except:
+                None
             #dev.save()
+    if request.POST.get("Search"):
+        query = request.POST.get("Device_Query")
+        devs = Device.objects.all()
+        for dev in devs:
+            if query == dev.to_string():
+                devices.insert(0, dev)
+            elif query in dev.to_string():
+                devices.append(dev)
+    if request.POST.get("Add Device"):
+        dev_id = request.POST.get("Device")
+        added_dev = Device.objects.get(id= dev_id)
+        message = "Device " + added_dev.to_string() + " added to Circuit " + circuit_obj.Name +"."
+        update_log(message, circuit_obj.School, request)
+        added_dev.Circuit.add(circuit_obj)
+        added_dev.save()
+        try:
+            circuit_obj.Rooms.add(added_dev.Room)
+            circuit_obj.save()
+            panel = circuit_obj.Panel
+            room = added_dev.Room
+            room.Panels.add(panel)
+            room.save()
+        except:
+            None
+
     form = PanelEditForm(initial={'Name': circuit_obj.Name})
     return HttpResponse(render(request, "energize_andover/Circuit.html", {'circuit': circuit_obj,
                                                                           'devices': circuit_obj.devices(),
+                                                                          'search_devices': devices,
+                                                                          'query':query,
                                                                          'form': form}))
 
+def closet_editing(request, closet_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("/energize_andover/Login")
+    closet_obj = get_object_or_404(Circuit, pk=closet_id)
+    if check_school_privilege(closet_obj.School, request) == False:
+        return HttpResponseRedirect("/energize_andover/electric")
+    form = PanelEditForm(initial={'Name': closet_obj.Name})
+    return HttpResponse(render(request, "energize_andover/Closet.html", {'closet': closet_obj,
+                                                                          'form': form}))
 def update_log (message, school, request):
     f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")
     file = str(f.read())

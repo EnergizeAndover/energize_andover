@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from login.views import check_status, check_admin
+from login.views import check_status, check_admin, check_school_privilege
 from energize_andover.forms import *
 from school_editing.forms import *
 
@@ -31,11 +31,8 @@ def school(request, school_id):
         return HttpResponseRedirect("Login")
     school_obj = get_object_or_404(School,
                                    pk=school_id)
-    user = authenticate(username=request.session['username'], password=request.session['password'])
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if school_obj not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(school_obj, request) == False:
+        return HttpResponseRedirect("electric")
     Closets = school_obj.closets()
     Panels = school_obj.panels()
     Rooms = school_obj.rooms()
@@ -52,17 +49,14 @@ def school(request, school_id):
 def device(request, device_id):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
-    user = authenticate(username=request.session['username'], password=request.session['password'])
     device_ = get_object_or_404(Device, pk=device_id)
     rooms = device_.rooms()
     circuits = device_.circuits()
     circ = circuits.first()
     panel_ = circ.Panel
     school_ = circ.School
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if school_ not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(school_, request) == False:
+        return HttpResponseRedirect("electric")
     assoc_dev = device_.Associated_Device
     if request.POST.get("Edit"):
         # print(request)
@@ -76,11 +70,8 @@ def panel(request, panel_id):
         return HttpResponseRedirect("Login")
 
     panel_obj = get_object_or_404(Panel, pk=panel_id)
-    user = authenticate(username=request.session['username'], password=request.session['password'])
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if panel_obj.School not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(panel_obj.School, request) == False:
+        return HttpResponseRedirect("electric")
     if panel_obj.rooms() is not None:
         Rooms = panel_obj.rooms()
     if panel_obj.circuits() is not None:
@@ -131,11 +122,8 @@ def room(request, room_id):
         return HttpResponseRedirect("Login")
     room_obj = get_object_or_404(Room, pk=room_id)
     School = room_obj.school()
-    user = authenticate(username=request.session['username'], password=request.session['password'])
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if School not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(School, request) == False:
+        return HttpResponseRedirect("electric")
     Panels = room_obj.panels()
     Circuits = room_obj.circuits()
 
@@ -156,11 +144,8 @@ def circuit(request, circuit_id):
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     Rooms = circuit_obj.rooms()
     school = circuit_obj.School
-    user = authenticate(username=request.session['username'], password=request.session['password'])
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if school not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(school, request) == False:
+        return HttpResponseRedirect("electric")
     if request.POST.get("Edit"):
         #print(request)
         form = PanelEditForm(request.POST)
@@ -175,11 +160,12 @@ def closet(request, closet_id):
     closet_obj = get_object_or_404(Closet, pk=closet_id)
     panels = Panel.objects.filter(Closet__pk=closet_id)
     school = closet_obj.School
-    user = authenticate(username=request.session['username'], password=request.session['password'])
-    if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
-        if school not in su.Authorized_Schools.all():
-            return HttpResponseRedirect("electric")
+    if check_school_privilege(school, request) == False:
+        return HttpResponseRedirect("electric")
+    if request.POST.get("Edit"):
+        # print(request)
+        form = PanelEditForm(request.POST)
+        return HttpResponse(request, "energize_andover/Closet.html", {'closet': closet_obj, 'form': form})
     return render(request, 'energize_andover/Closet.html',
                   {'closet': closet_obj, 'panels': panels, 'school':school})
 
@@ -190,11 +176,8 @@ def search(request):
     if request.method == 'GET':
         current_school = request.GET.get('school')
         school_obj = School.objects.filter(Name=current_school).first()
-        user = authenticate(username=request.session['username'], password=request.session['password'])
-        if user is not None:
-            su = SpecialUser.objects.filter(User=user).first()
-            if School.objects.filter(Name= current_school).first() not in su.Authorized_Schools.all():
-                return HttpResponseRedirect("electric")
+        if check_school_privilege(school_obj, request) == False:
+            return HttpResponseRedirect("electric")
         form = SearchForm(request.GET, request.FILES)
         if form.is_valid():
             title = ""

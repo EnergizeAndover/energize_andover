@@ -52,6 +52,13 @@ def check_admin(request):
         return True
     return False
 
+def check_school_privilege(school, request):
+    user = authenticate(username=request.session['username'], password=request.session['password'])
+    if user is not None:
+        su = SpecialUser.objects.filter(User=user).first()
+        if school not in su.Authorized_Schools.all():
+            return False
+    return True
 
 """
 ct = ContentType.objects.get_for_model(User)

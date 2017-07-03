@@ -27,6 +27,7 @@
     <p><input type="text" value = "{{room.Notes}}" name = "Notes" size = 100></p>
     <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
 </form>
+<!--
 <form action=""  method="POST" enctype="multipart/form-data" name="Panels">
     {% csrf_token %}
     <p>Panels: </p>
@@ -41,6 +42,7 @@
     </select>
     <p><input type="submit" class="btn-xs" value="Add Panel" name="Add Panel" /></p>
 </form>
+-->
 <p><a href="{% url 'energize_andover:room' room.id %}">Return To Room</a></p>
 {% else %}
 <h1> Room: {{room.Name}} </h1>
