@@ -2,9 +2,48 @@
 {% block main %}
 {% if form %}
 <h1>Editing: {{device}}</h1>
+<form action=""  method="POST" enctype="multipart/form-data" name="Name">
+    {% csrf_token %}
+    <p>Name:</p>
+    <p><input type="text" value = "{{device.Name}}" name = "Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Power">
+    {% csrf_token %}
+    <p>Power:</p>
+    <p><input type="text" value = "{{device.Power}}" name = "Power"></p>
+    <p><input type="submit" class="btn-xs" value="Save Power" name="Save Power" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Zone">
+    {% csrf_token %}
+    <p>Zone:</p>
+    <p><input type="text" value = "{{device.Location}}" name = "Zone"></p>
+    <p><input type="submit" class="btn-xs" value="Save Zone" name="Save Zone" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{device.Notes}}" name = "Notes"></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Associated Device">
+    {% csrf_token %}
+    <p>Associated Device:</p>
+    <p><input type="text" value = "{{query}}" name = "Associated_Device_Query" size = "24">    {{device.Associated_Device}}</p>
+    <p><input type="submit" class="btn-xs" value="Search" name="Search" /></p>
+    <select id="id_Device" name = "Associated_Dev">
+    {% for dev in devices %}
+        <option value="{{dev.id}}">{{dev.to_string}}</option>
+    {% endfor %}
+    </select>
+    {% if not devices|length == 0 %}
+        <p><input type="submit" class="btn-xs" value="Save Associated Device" name="Save Associated Device" /></p>
+    {% endif %}
+</form>
+<p><a href="{% url 'energize_andover:device' device.id %}">Return To Device</a></p>
 {% else %}
 <h1>Device: {{device.Name}}</h1>
-<p>School:<a href= "{% url 'energize_andover:school' school.id %}">{{school.Name}}</a></p>
+<p>School: <a href= "{% url 'energize_andover:school' school.id %}">{{school.Name}}</a></p>
 <p>Circuit:</p>
 {% if not circuit.count == 0 %}
 {% for circ in circuit %}
@@ -16,6 +55,11 @@
 <p>Power: {{device.Power}}</p>
 {% if not room == None %}
 <p>Room: <a href = "{% url 'energize_andover:room' room.id %}">{{room.to_string}}</a></p>
+{% endif %}
+{% if not device.Notes == None %}
+<p>Notes: {{device.Notes}}</p>
+{% else %}
+<p>Notes: No Notes </p>
 {% endif %}
 <li>Zone: {{device.Location}}</li>
 {% if not assoc_device == None %}

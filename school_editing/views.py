@@ -123,11 +123,78 @@ def room_editing (request, room_id):
 def device_editing(request, device_id):
     device_obj = get_object_or_404(Device, pk = device_id)
     form = PanelEditForm(initial={'Name': device_obj.Name})
-    return HttpResponse(render(request, "energize_andover/Room.html", {'device': device_obj,
-                                                                       'form': form}))
+    if request.POST.get("Save Name"):
+        message = "Device Name Change: " + device_obj.Name + " -->" + request.POST.get("Name")
+        update_log(message, device_obj.School, request)
+        device_obj.Name = request.POST.get("Name")
+        device_obj.save()
+    if request.POST.get("Save Power"):
+        message = "Device Power Change: " + device_obj.Power + " -->" + request.POST.get("Power")
+        update_log(message, device_obj.School, request)
+        device_obj.Power = request.POST.get("Power")
+        device_obj.save()
+    if request.POST.get("Save Zone"):
+        message = "Device Zone Change: " + device_obj.Location + " -->" + request.POST.get("Zone")
+        update_log(message, device_obj.School, request)
+        device_obj.Location = request.POST.get("Zone")
+        device_obj.save()
+    if request.POST.get("Save Notes"):
+        message = "Device Notes Change: " + device_obj.Notes + " -->" + request.POST.get("Notes")
+        update_log(message, device_obj.School, request)
+        device_obj.Notes = request.POST.get("Notes")
+        device_obj.save()
+    query = "Enter Query (Name of Device)     |"
+    devices = []
+    if request.POST.get("Search"):
+        query = request.POST.get("Associated_Device_Query")
+        devs = Device.objects.all()
+        for dev in devs:
+            if query == dev.Name:
+                devices.insert(0, dev)
+            elif query in dev.Name:
+                devices.append(dev)
+    if request.POST.get("Save Associated Device"):
+        dev_id = request.POST.get("Associated_Dev")
+        assoc_dev = Device.objects.get(id= dev_id)
+        message = device_obj.to_string() + " is now associated with " + assoc_dev.to_string() +"."
+        update_log(message, device_obj.School, request)
+        device_obj.Associated_Device = assoc_dev
+        device_obj.save()
+        assoc_dev.Associated_Device = device_obj
+        assoc_dev.save()
+
+    return HttpResponse(render(request, "energize_andover/Device.html", {'device': device_obj,
+                                                                        'devices': devices,
+                                                                         'query':query,
+                                                                         'form': form}))
 
 def circuit_editing (request, circuit_id):
-    None
+    circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
+    if request.POST.get("Save Name"):
+        message = "Circuit Name Change: " + circuit_obj.Name + " -->" + request.POST.get("Name")
+        update_log(message, circuit_obj.School, request)
+        circuit_obj.Name = request.POST.get("Name")
+        circuit_obj.save()
+    if request.POST.get("Save Number"):
+        message = "Circuit Number Change: " + circuit_obj.Number + " -->" + request.POST.get("Number")
+        update_log(message, circuit_obj.School, request)
+        circuit_obj.Number = request.POST.get("Number")
+        circuit_obj.save()
+    if request.POST.get("Save Notes"):
+        message = "Circuit Notes Change: " + circuit_obj.Notes + " -->" + request.POST.get("Notes")
+        update_log(message, circuit_obj.School, request)
+        circuit_obj.Notes = request.POST.get("Notes")
+        circuit_obj.save()
+    for dev in circuit_obj.devices():
+        if request.POST.get(dev.Name):
+            message = "Circuit-Device Change: Device " + dev.Name + " removed from Circuit " + circuit_obj.Name
+            update_log(message, circuit_obj.School, request)
+            dev.Circuit.remove(circuit_obj)
+            #dev.save()
+    form = PanelEditForm(initial={'Name': circuit_obj.Name})
+    return HttpResponse(render(request, "energize_andover/Circuit.html", {'circuit': circuit_obj,
+                                                                          'devices': circuit_obj.devices(),
+                                                                         'form': form}))
 
 def update_log (message, school, request):
     f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")

@@ -7,7 +7,6 @@ class SchoolForm(forms.ModelForm):
 
 
 
-
 class ClosetForm(forms.ModelForm):
     class Meta:
         model = Closet
@@ -52,13 +51,7 @@ def get_all_users():
     return users
 
 class PopulationForm(forms.Form):
-    """
-    School = forms.ModelChoiceField(
-        queryset=School.objects.all(),
-        label='Existing School: ',
-        required=True,
-    )
-    """
+
     New_School = forms.CharField(
         label='New School: ',
         required=True
@@ -79,4 +72,5 @@ class PopulationForm(forms.Form):
     all_users = forms.MultipleChoiceField(choices=get_all_users(),
                                           widget=forms.CheckboxSelectMultiple(),
                                           label="Which Users Can Access: ")
+
 

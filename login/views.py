@@ -51,6 +51,8 @@ def check_admin(request):
     if Permission.objects.filter(codename="can_create_user").first() in user.user_permissions.all():
         return True
     return False
+
+
 """
 ct = ContentType.objects.get_for_model(User)
 permission = Permission.objects.create(codename = "master",

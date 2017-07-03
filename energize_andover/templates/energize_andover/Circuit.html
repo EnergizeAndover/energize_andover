@@ -1,6 +1,35 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
+{% if form %}
+<h1>Editing: {{circuit.Name}}</h1>
+<form action=""  method="POST" enctype="multipart/form-data" name="Name">
+    {% csrf_token %}
+    <p>Name:</p>
+    <p><input type="text" value = "{{circuit.Name}}" name = "Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Number">
+    {% csrf_token %}
+    <p>Number:</p>
+    <p><input type="text" value = "{{circuit.Number}}" name = "Number"></p>
+    <p><input type="submit" class="btn-xs" value="Save Number" name="Save Number" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{circuit.Notes}}" name = "Notes"></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Devices">
+    {% csrf_token %}
+    <p>Devices:</p>
+    {% for dev in devices %}
+    <p>{{dev.Name}}<input type="submit" class="btn-xs" value="Delete" name="{{dev.Name}}" /></p>
+    {% endfor %}
+</form>
+<li><a href="{% url 'energize_andover:circuit' circuit.id %}">Return to Circuit</a></li>
+{% else %}
 <h1> Circuit: {{circuit.FQN}} ({{circuit.Name}})</h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 
@@ -26,5 +55,15 @@
 </form>
 {% else %}
 <p>Room: No Room data </p>
+{% endif %}
+{% if not circuit.Notes == None %}
+<p>Notes: {{circuit.Notes}}</p>
+{% else %}
+<p>Notes: No Notes </p>
+{% endif %}
+<form action="{% url 'energize_andover:circuit_editing' circuit.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
+    {% csrf_token %}
+    <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
+</form>
 {% endif %}
 {% endblock %}

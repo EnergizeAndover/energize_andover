@@ -35,3 +35,4 @@ class NewUserForm(forms.Form):
         label="Administrator Password: ",
         required=True
     )
+

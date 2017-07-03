@@ -246,7 +246,8 @@ INSTALLED_APPS = (
     "school_adder",
     "login",
     "user_management",
-    "school_editing"
+    "school_editing",
+    "setup"
 )
 
 # List of middleware classes to use. Order is important; in the request phase,

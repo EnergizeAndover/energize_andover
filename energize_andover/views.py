@@ -67,7 +67,7 @@ def device(request, device_id):
     if request.POST.get("Edit"):
         # print(request)
         form = PanelEditForm(request.POST)
-        return HttpResponse(request, "energize_andover/Device.html", {'form': form})
+        return HttpResponse(request, "energize_andover/Device.html", {'device': device_, 'form': form})
     return render(request, 'energize_andover/Device.html',
                   {'device': device_, "room": rooms, 'school': school_, 'circuit': circuits, 'assoc_device': assoc_dev})
 
@@ -161,6 +161,10 @@ def circuit(request, circuit_id):
         su = SpecialUser.objects.filter(User=user).first()
         if school not in su.Authorized_Schools.all():
             return HttpResponseRedirect("electric")
+    if request.POST.get("Edit"):
+        #print(request)
+        form = PanelEditForm(request.POST)
+        return HttpResponse(request, "energize_andover/Circuit.html", {'form':form})
     devices = circuit_obj.devices()
     return render(request, 'energize_andover/Circuit.html',
                   {'circuit': circuit_obj, 'Rooms': Rooms, 'school' : school, 'devices': devices})
@@ -275,6 +279,8 @@ def search(request):
 
 def dictionary (request):
     return render(request, 'energize_andover/Dictionary.html')
+
+
 
 def changelog (request):
     if check_status(request) is False:
