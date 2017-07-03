@@ -27,7 +27,18 @@
     {% for dev in devices %}
     <p>{{dev.Name}}<input type="submit" class="btn-xs" value="Delete" name="{{dev.Name}}" /></p>
     {% endfor %}
+    <p><input type="text" value = "{{query}}" name = "Device_Query" size = "24">    {{device.Associated_Device}}</p>
+    <p><input type="submit" class="btn-xs" value="Search" name="Search" /></p>
+    <select id="id_Device" name = "Device">
+    {% for dev in search_devices %}
+        <option value="{{dev.id}}">{{dev.to_string}}</option>
+    {% endfor %}
+    </select>
+    {% if not search_devices|length == 0 %}
+        <p><input type="submit" class="btn-xs" value="Add Device" name="Add Device" /></p>
+    {% endif %}
 </form>
+
 <li><a href="{% url 'energize_andover:circuit' circuit.id %}">Return to Circuit</a></li>
 {% else %}
 <h1> Circuit: {{circuit.FQN}} ({{circuit.Name}})</h1>

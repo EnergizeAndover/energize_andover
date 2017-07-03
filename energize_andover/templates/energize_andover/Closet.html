@@ -1,6 +1,11 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
+{% if form %}
+<h1> Editing: {{closet.Name}} </h1>
+<p><a href= "{% url 'energize_andover:closet' closet.id %}" >Return to Closet</a></p>
+
+{% else %}
 <h1> Closet: {{closet.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 <p>Name: {{closet.Name}}</p>
@@ -19,5 +24,9 @@
 {% else %}
 <p>Panels: No Panel data </p>
 {% endif %}
-
+<form action="{% url 'energize_andover:closet_editing' closet.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
+    {% csrf_token %}
+    <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
+</form>
+{% endif %}
 {% endblock %}

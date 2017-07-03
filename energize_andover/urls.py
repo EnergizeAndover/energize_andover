@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^Edit/Room(?P<room_id>[0-9]+)', SEViews.room_editing, name='room_editing'),
     url(r'^Edit/Device(?P<device_id>[0-9]+)', SEViews.device_editing, name='device_editing'),
     url(r'^Edit/Circuit(?P<circuit_id>[0-9]+)', SEViews.circuit_editing, name='circuit_editing'),
+    url(r'^Edit/Closet(?P<closet_id>[0-9]+)', SEViews.closet_editing, name='closet_editing'),
     url(r'^MapAdder', AdderViews.adder, name='adder'),
     url(r'^Populate', AdderViews.populate, name='populator'),
     url(r'^Search', views.search, name='search'),
