@@ -8,58 +8,41 @@ from login.views import check_status, check_admin
 
 def adder(request):
     if request.method == 'POST':
+        #print (request.POST.get("School"))
         if request.POST.get('start'):
             print(request.POST)
             form = AdderTypeForm(request.POST)
             if form.is_valid():
                 data = form.cleaned_data
-                if data['type'] == 'school':
+                if data['type'] == 'School':
                     form = SchoolForm()
                     return render(request, 'energize_andover/Adder.html',
                                   {'school': form, 'title': 'Electrical Mapping Creation'})
-                elif data['type'] == 'closet':
+                elif data['type'] == 'Closet':
                     form = ClosetForm()
+                    print("True")
                     return render(request, 'energize_andover/Adder.html',
                                   {'closet': form, 'title': 'Electrical Mapping Creation'})
-                elif data['type'] == 'panel':
+                elif data['type'] == 'Panel':
                     form = PanelForm()
                     return render(request, 'energize_andover/Adder.html',
                                   {'panel': form, 'title': 'Electrical Mapping Creation'})
-                elif data['type'] == 'room':
+                elif data['type'] == 'Room':
                     form = RoomForm()
                     return render(request, 'energize_andover/Adder.html',
                                   {'room': form, 'title': 'Electrical Mapping Creation'})
-                elif data['type'] == 'circuit':
+                elif data['type'] == 'Circuit':
                     form = CircuitForm()
                     return render(request, 'energize_andover/Adder.html',
                                   {'circuit': form, 'title': 'Electrical Mapping Creation'})
-        elif request.POST.get('school'):
-            form = SchoolForm(request.POST, request.FILES)
-            if form.is_valid():
-                new = form.save()
-                new.save()
-                form = AdderTypeForm()
-                users = form.cleaned_data['all_users']
-                for user in users:
-                    Usr = User.objects.filter(username = user).first()
-                    SU = SpecialUser.objects.filter(User = Usr).first()
-                    SU.Authorized_Schools.add(new)
-                    SU.save()
-                return render(request, 'energize_andover/Adder.html',
-                              {'type': form, 'title': 'Electrical Mapping Creation',
-                               'complete': 'school'})
-            else:
-                return render(request, 'energize_andover/Adder.html',
-                              {'school': form, 'title': 'Electrical Mapping Creation'})
+
         elif request.POST.get('closet'):
             form = ClosetForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
                 new.save()
                 form = AdderTypeForm()
-                return render(request, 'energize_andover/Adder.html',
-                              {'type': form, 'title': 'Electrical Mapping Creation',
-                               'complete': 'school'})
+                return HttpResponseRedirect("Closet" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
                               {'closet': form, 'title': 'Electrical Mapping Creation'})
@@ -67,11 +50,10 @@ def adder(request):
             form = PanelForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
+                new.School = new.Closet.School
                 new.save()
                 form = AdderTypeForm()
-                return render(request, 'energize_andover/Adder.html',
-                              {'type': form, 'title': 'Electrical Mapping Creation',
-                               'complete': 'school'})
+                return HttpResponseRedirect("Panel" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
                               {'panel': form, 'title': 'Electrical Mapping Creation'})
@@ -99,8 +81,7 @@ def adder(request):
             else:
                 return render(request, 'energize_andover/Adder.html',
                               {'circuit': form, 'title': 'Electrical Mapping Creation'})
-    else:
-        form = AdderTypeForm()
+    form = AdderTypeForm()
     return render(request, 'energize_andover/Adder.html',
                   {'type': form, 'title': 'Electrical Mapping Creation'})
 

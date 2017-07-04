@@ -53,8 +53,7 @@ def device(request, device_id):
     rooms = device_.rooms()
     circuits = device_.circuits()
     circ = circuits.first()
-    panel_ = circ.Panel
-    school_ = circ.School
+    school_=device_.School
     if check_school_privilege(school_, request) == False:
         return HttpResponseRedirect("electric")
     assoc_dev = device_.Associated_Device

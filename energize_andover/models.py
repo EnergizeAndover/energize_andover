@@ -39,7 +39,7 @@ class Closet(models.Model):
         blank=True,
         null=True,
     )
-    #Notes = models.CharField(max_length=1000, default = '', required = False)
+    Notes = models.CharField(max_length=1000, default = '')
 
     def __str__(self):
         return self.Old_Name
@@ -85,7 +85,10 @@ class Panel(models.Model):
     def __str__(self):
         return self.Name
     def to_string (self):
-        return self.FQN + " (" + self.Name + "), Rm. " + self.Closet.Name
+        try:
+            return self.FQN + " (" + self.Name + "), Rm. " + self.Closet.Name
+        except:
+            return self.FQN + " (" + self.Name + ")"
 
 class Room(models.Model):
     Name = models.CharField(max_length=30)

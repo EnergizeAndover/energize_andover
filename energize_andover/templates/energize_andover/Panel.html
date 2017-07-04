@@ -28,15 +28,25 @@
         {% if panel.Panels == None %}
         <option>--------------</option>
         {% endif %}
+        <p>{{selected.Name}}</p>
         {% for pnl in Panels %}
-            {% if pnl == panel.Panels %}
+            {% if pnl == selected %}
                 <option value = "{{pnl.id}}" selected = 'selected'>{{pnl.Name}}</option>
             {% else %}
                 <option value = "{{pnl.id}}">{{pnl.Name}}</option>
             {% endif %}
         {% endfor %}
     </select>
-    <p><input type="submit" class="btn-xs" value="Save Parent" name="Save Parent" /></p>
+    <p><input type="submit" class="btn-xs" value="Select Parent" name="Save Parent" /></p>
+    {% if not selected == None %}
+    <select id="id_Circuit" name = "Circuit">
+        {% for circ in par_circuits %}
+            <option value = "{{circ.id}}">{{circ.Number}}</option>
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Save Parent and Circuit" name="Save Circuit" /></p>
+    {% endif %}
+
 </form>
 <form action=""  method="POST" enctype="multipart/form-data" name="Closet">
     {% csrf_token %}
@@ -52,19 +62,40 @@
     </select>
     <p><input type="submit" class="btn-xs" value="Save Closet" name="Save Closet" /></p>
 </form>
-<p><a href="{% url 'energize_andover:panel' panel.id %}">Return To Panel</a></p>
-<!--
-<form action=""  method="POST" enctype="multipart/form-data" name="Save">
-    {% csrf_token %}
-    <p>{{ form.Name.label }}{{ form.Name }}</p>
-    <p>{{ form.Voltage.label }}{{ form.Voltage }}</p>
-    <p>{{ form.Notes.label }}{{ form.Notes }}</p>
-    <p>{{ form.Closet.label }}{{ form.Closet }}</p>
-    <p>{{ form.Rooms.label }}{{ form.Rooms }}</p>
-    <p>{{ form.Parent.label }}{{ form.Parent }}</p>
 
-    <p><input type="submit" class="btn-xs" value="Save" name="Save" /></p>
-</form>-->
+<button class="btn-xs" id="delete_object">Delete</button>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form action=""  method="POST" enctype="multipart/form-data" name="Confirm">
+    {% csrf_token %}
+    <p>Are you sure you want to delete?
+    <p>Enter Username and Password to confirm:</p>
+    <p>Username: <input type="text" value = "Username" name = "Username"></p>
+    <p>Password: <input type="password" value = "Password" name = "Password"></p>
+    <p><input type="submit" class="btn-xs" value="Confirm" name="Confirm" /></p>
+</form>
+  </div>
+</div>
+
+<script>
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("delete_object");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+<p><a href="{% url 'energize_andover:panel' panel.id %}">Return To Panel</a></p>
 {% else %}
 <h1> Panel: {{panel.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
@@ -136,5 +167,7 @@
     {% csrf_token %}
     <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>
 </form>
+
+
 {% endif %}
 {% endblock %}

@@ -3,15 +3,83 @@
 {% block main %}
 {% if form %}
 <h1> Editing: {{closet.Name}} </h1>
-<p><a href= "{% url 'energize_andover:closet' closet.id %}" >Return to Closet</a></p>
+<form action=""  method="POST" enctype="multipart/form-data" name="Name">
+    {% csrf_token %}
+    <p>Name:</p>
+    <p><input type="text" value = "{{closet.Name}}" name = "Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Old Name">
+    {% csrf_token %}
+    <p>Old Name:</p>
+    <p><input type="text" value = "{{closet.Old_Name}}" name = "Old Name"></p>
+    <p><input type="submit" class="btn-xs" value="Save Old Name" name="Save Old Name" /></p>
+</form>
+<form action=""  method="POST" enctype="multipart/form-data" name="Notes">
+    {% csrf_token %}
+    <p>Notes:</p>
+    <p><input type="text" value = "{{closet.Notes}}" name = "Notes" size = 100></p>
+    <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
+</form>
 
+<form action=""  method="POST" enctype="multipart/form-data" name="Panels">
+    {% csrf_token %}
+    <p>Panels: </p>
+    {% for panel in clos_panels %}
+    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.Name}}"></p>
+    {% endfor %}
+    <select id="id_Panels" name = "Panels">
+        <option>--------------</option>
+        {% for pnl in Panels %}
+        <option value = "{{pnl.id}}">{{pnl.Name}}</option>
+        {% endfor %}
+    </select>
+    <p><input type="submit" class="btn-xs" value="Add Panel" name="Add Panel" /></p>
+</form>
+<button class="btn-xs" id="delete_object">Delete</button>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form action=""  method="POST" enctype="multipart/form-data" name="Confirm">
+    {% csrf_token %}
+    <p>Are you sure you want to delete?
+    <p>Enter Username and Password to confirm:</p>
+    <p>Username: <input type="text" value = "Username" name = "Username"></p>
+    <p>Password: <input type="password" value = "Password" name = "Password"></p>
+    <p><input type="submit" class="btn-xs" value="Confirm" name="Confirm" /></p>
+</form>
+  </div>
+</div>
+
+<script>
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("delete_object");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+<p><a href= "{% url 'energize_andover:closet' closet.id %}" >Return to Closet</a></p>
 {% else %}
 <h1> Closet: {{closet.Name}} </h1>
 <p>School: <a href= "{% url 'energize_andover:school' school.id %}" >{{school.Name}}</a></p>
 <p>Name: {{closet.Name}}</p>
 <p>Old Name: {{closet.Old_Name}}</p>
 <p></p>
-
+{% if not closet.Notes == None %}
+<p>Notes: {{closet.Notes}}</p>
+{% else %}
+<p>Notes: No Notes</p>
+{% endif %}
 {% if not panels.count == 0 %}
 <form>
 <p>Panels:

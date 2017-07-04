@@ -27,22 +27,37 @@
     <p><input type="text" value = "{{room.Notes}}" name = "Notes" size = 100></p>
     <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
 </form>
-<!--
-<form action=""  method="POST" enctype="multipart/form-data" name="Panels">
+<button class="btn-xs" id="delete_object">Delete</button>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form action=""  method="POST" enctype="multipart/form-data" name="Confirm">
     {% csrf_token %}
-    <p>Panels: </p>
-    {% for panel in room_panels %}
-    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.Name}}"></p>
-    {% endfor %}
-    <select id="id_Panels" name = "Panels">
-        <option>--------------</option>
-        {% for pnl in Panels %}
-        <option value = "{{pnl.id}}">{{pnl.Name}}</option>
-        {% endfor %}
-    </select>
-    <p><input type="submit" class="btn-xs" value="Add Panel" name="Add Panel" /></p>
+    <p>Are you sure you want to delete?
+    <p>Enter Username and Password to confirm:</p>
+    <p>Username: <input type="text" value = "Username" name = "Username"></p>
+    <p>Password: <input type="password" value = "Password" name = "Password"></p>
+    <p><input type="submit" class="btn-xs" value="Confirm" name="Confirm" /></p>
 </form>
--->
+  </div>
+</div>
+
+<script>
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("delete_object");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
 <p><a href="{% url 'energize_andover:room' room.id %}">Return To Room</a></p>
 {% else %}
 <h1> Room: {{room.Name}} </h1>
