@@ -23,14 +23,15 @@
 </form>
 <form action=""  method="POST" enctype="multipart/form-data" name="Parent">
     {% csrf_token %}
+    {% if changed == False %}
     <p>Parent Panel:</p>
     <select id="id_Panels" name = "Panels">
         {% if panel.Panels == None %}
         <option>--------------</option>
         {% endif %}
-        <p>{{selected.Name}}</p>
         {% for pnl in Panels %}
-            {% if pnl == selected %}
+        <p></p>
+            {% if pnl == panel.Panels %}
                 <option value = "{{pnl.id}}" selected = 'selected'>{{pnl.Name}}</option>
             {% else %}
                 <option value = "{{pnl.id}}">{{pnl.Name}}</option>
@@ -38,21 +39,27 @@
         {% endfor %}
     </select>
     <p><input type="submit" class="btn-xs" value="Select Parent" name="Save Parent" /></p>
-    {% if not selected == None %}
-    <select id="id_Circuit" name = "Circuit">
+    {% else %}
+        <p>Panel: {{selected.Name}}</p>
+        <p>Circuit on Panel: {{selected.Name}}</p>
+        <select id="id_Circuit" name = "Circuit">
+
         {% for circ in par_circuits %}
             <option value = "{{circ.id}}">{{circ.Number}}</option>
         {% endfor %}
     </select>
+    <input type="hidden" value = {{selected.Name}} name = "Selected Panel">
     <p><input type="submit" class="btn-xs" value="Save Parent and Circuit" name="Save Circuit" /></p>
     {% endif %}
+
 
 </form>
 <form action=""  method="POST" enctype="multipart/form-data" name="Closet">
     {% csrf_token %}
     <p>Closet:</p>
     <select id="id_Closet" name = "Closet">
-        {% for clst in Closets %}
+        {% for clst in Closets %}apache
+        
             {% if clst == panel.Closet %}
                 <option value = "{{clst.id}}" selected = 'selected'>{{clst.Name}}</option>
             {% else %}
@@ -62,6 +69,14 @@
     </select>
     <p><input type="submit" class="btn-xs" value="Save Closet" name="Save Closet" /></p>
 </form>
+
+<form action=""  method="POST" enctype="multipart/form-data" name="Circuits">
+    {% csrf_token %}
+    <p>Add Circuits:</p>
+    <p><input type="number" step="1" value = "0" name = "Additional Circuits" size = 100></p>
+    <p><input type="submit" class="btn-xs" value="Add Circuits" name="Add Circuits" /></p>
+</form>
+
 
 <button class="btn-xs" id="delete_object">Delete</button>
 <div id="myModal" class="modal">

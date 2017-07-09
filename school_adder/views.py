@@ -14,76 +14,76 @@ def adder(request):
             form = AdderTypeForm(request.POST)
             if form.is_valid():
                 data = form.cleaned_data
-                if data['type'] == 'School':
-                    form = SchoolForm()
-                    return render(request, 'energize_andover/Adder.html',
-                                  {'school': form, 'title': 'Electrical Mapping Creation'})
-                elif data['type'] == 'Closet':
+                if data['type'] == 'Closet':
                     form = ClosetForm()
-                    print("True")
                     return render(request, 'energize_andover/Adder.html',
-                                  {'closet': form, 'title': 'Electrical Mapping Creation'})
+                                  {'closet': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
                 elif data['type'] == 'Panel':
                     form = PanelForm()
+                    #form.Closet.queryset = Closet.objects.filter(School=request.GET.get(""))
                     return render(request, 'energize_andover/Adder.html',
-                                  {'panel': form, 'title': 'Electrical Mapping Creation'})
+                                  {'panel': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
                 elif data['type'] == 'Room':
                     form = RoomForm()
                     return render(request, 'energize_andover/Adder.html',
-                                  {'room': form, 'title': 'Electrical Mapping Creation'})
+                                  {'room': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
                 elif data['type'] == 'Circuit':
                     form = CircuitForm()
                     return render(request, 'energize_andover/Adder.html',
-                                  {'circuit': form, 'title': 'Electrical Mapping Creation'})
+                                  {'circuit': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
+                elif data['type'] == 'Device':
+                    form = DeviceForm()
+                    return render(request, 'energize_andover/Adder.html',
+                                  {'device': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
 
         elif request.POST.get('closet'):
             form = ClosetForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
+                new.School = School.objects.get(Name=request.GET.get("school_choice"))
                 new.save()
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Closet" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
-                              {'closet': form, 'title': 'Electrical Mapping Creation'})
+                              {'closet': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
         elif request.POST.get('panel'):
             form = PanelForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
-                new.School = new.Closet.School
+                new.School = School.objects.get(Name = request.GET.get("school_choice"))
+                new.FQN = new.Name
                 new.save()
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Panel" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
-                              {'panel': form, 'title': 'Electrical Mapping Creation'})
+                              {'panel': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
         elif request.POST.get('room'):
             form = RoomForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
+                new.School = School.objects.get(Name = request.GET.get("school_choice"))
                 new.save()
                 form = AdderTypeForm()
-                return render(request, 'energize_andover/Adder.html',
-                              {'type': form, 'title': 'Electrical Mapping Creation',
-                               'complete': 'school'})
+                return HttpResponseRedirect("Room" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
-                              {'room': form, 'title': 'Electrical Mapping Creation'})
-        elif request.POST.get('circuit'):
-            form = CircuitForm(request.POST, request.FILES)
+                              {'room': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
+        elif request.POST.get('device'):
+            form = DeviceForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
+                new.School = School.objects.get(Name = request.GET.get("school_choice"))
                 new.save()
                 form = AdderTypeForm()
-                return render(request, 'energize_andover/Adder.html',
-                              {'type': form, 'title': 'Electrical Mapping Creation',
-                               'complete': 'school'})
+                return HttpResponseRedirect("Device" + str(new.pk))
             else:
                 return render(request, 'energize_andover/Adder.html',
-                              {'circuit': form, 'title': 'Electrical Mapping Creation'})
+                              {'device': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
     form = AdderTypeForm()
     return render(request, 'energize_andover/Adder.html',
-                  {'type': form, 'title': 'Electrical Mapping Creation'})
+                  {'type': form, 'title': 'Electrical Mapping Creation', 'school_choice': request.GET.get("school_choice")})
 
 
 def populate(request):

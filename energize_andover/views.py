@@ -33,6 +33,8 @@ def school(request, school_id):
                                    pk=school_id)
     if check_school_privilege(school_obj, request) == False:
         return HttpResponseRedirect("electric")
+    #if request.GET.get("Adder"):
+    #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
     Closets = school_obj.closets()
     Panels = school_obj.panels()
     Rooms = school_obj.rooms()
@@ -54,6 +56,8 @@ def device(request, device_id):
     circuits = device_.circuits()
     circ = circuits.first()
     school_=device_.School
+    #print(school_)
+    #print(SpecialUser.objects.get(User = User.objects.get(username= request.session['username'])).Authorized_Schools.all())
     if check_school_privilege(school_, request) == False:
         return HttpResponseRedirect("electric")
     assoc_dev = device_.Associated_Device
@@ -174,7 +178,7 @@ def search(request):
         return HttpResponseRedirect("Login")
     if request.method == 'GET':
         current_school = request.GET.get('school')
-        school_obj = School.objects.filter(Name=current_school).first()
+        school_obj = School.objects.get(Name=current_school)
         if check_school_privilege(school_obj, request) == False:
             return HttpResponseRedirect("electric")
         form = SearchForm(request.GET, request.FILES)

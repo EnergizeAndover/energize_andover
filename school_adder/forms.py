@@ -10,30 +10,29 @@ class SchoolForm(forms.ModelForm):
 class ClosetForm(forms.ModelForm):
     class Meta:
         model = Closet
-        fields = ['Name', 'School']
+        fields = ['Name', 'Old_Name']
 
 class PanelForm(forms.ModelForm):
     class Meta:
         model = Panel
-        fields = ['Name', 'Voltage', 'Closet']
+        fields = ['Name', 'Voltage']
 
 
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ['Name', 'OldName', 'Type', 'School']
+        fields = ['Name', 'OldName', 'Type']
 
 class CircuitForm(forms.ModelForm):
     class Meta:
         model = Circuit
-        fields = ['Name', 'Number', 'Panel', 'Rooms', 'School']
-        widgets = {'Rooms': forms.CheckboxSelectMultiple, 'Devices': forms.CheckboxSelectMultiple}
+        fields = ['Name', 'Number', 'Panel']
+        #widgets = {'Rooms': forms.CheckboxSelectMultiple, 'Devices': forms.CheckboxSelectMultiple}
 
 class DeviceForm(forms.ModelForm):
     class Meta:
         model = Device
-        fields = ['Name', 'Circuit', 'School', 'Power', 'Room', 'Location']
-        widgets = {'Circuit': forms.CheckboxSelectMultiple}
+        fields = ['Name']
 
 class AdderTypeForm(forms.Form):
     type = forms.ChoiceField(
@@ -43,7 +42,6 @@ class AdderTypeForm(forms.Form):
                  #('School', 'School'),
                  ('Panel', 'Panel'),
                  ('Room', 'Room'),
-                 ('Circuit', 'Circuit'),
                  ('Device', 'Device')
                  ],
         required=True

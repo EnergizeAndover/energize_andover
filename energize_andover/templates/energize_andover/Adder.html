@@ -17,7 +17,7 @@
     <form action="" method="POST" enctype="multipart/form-data" name="closet">
         {% csrf_token %}
         <p>Name: {{closet.Name}}</p>
-        <p>School: {{closet.School}}</p>
+        <p>Old Name: {{closet.Old_Name}}</p>
         <p><input type="submit" class="btn btn-default" value="Add" name="closet" /></p>
     </form>
 <!--
@@ -33,22 +33,17 @@
         {% csrf_token %}
         <p>Name: {{panel.Name}}</p>
         <p>Voltage: {{panel.Voltage}}</p>
-        <p>location: {{panel.Location}}</p>
-        <p>panels: {{panel.Panels}}</p>
-        <p>school: {{panel.School}}</p>
-        <p>closets: {{panel.Closet}}</p>
         <p><input type="submit" class="btn btn-default" value="Add" name="panel" /></p>
     </form>
 {% elif room %}
     <form action="" method="POST" enctype="multipart/form-data" name="room">
         {% csrf_token %}
         <p>Name: {{room.Name}}</p>
-        <p>OldName: {{room.OldName}}</p>
+        <p>Old Name: {{room.OldName}}</p>
         <p>Type: {{room.Type}}</p>
-        <p>School: {{room.School}}</p>
-        <p>Panels: {{room.Panels}}</p>
         <p><input type="submit" class="btn btn-default" value="Add" name="room" /></p>
     </form>
+<!--
 {% elif circuit %}
     <form action="" method="POST" enctype="multipart/form-data" name="circuit">
         {% csrf_token %}
@@ -59,16 +54,15 @@
         <p>School: {{circuit.School}}</p>
         <p><input type="submit" class="btn btn-default" value="Add" name="circuit" /></p>
     </form>
+-->
 {% elif device %}
-    <form action="" method="POST" enctype="multipart/form-data" name="circuit">
+    <form action="" method="POST" enctype="multipart/form-data" name="device">
         {% csrf_token %}
         <p>Name: {{device.Name}}</p>
-        <p>Circuit: {{device.Number}}</p>
-        <p>School: {{device.Panel}}</p>
-        <p>Power: {{device.Rooms}}</p>
-        <p>Location: {{device.Devices}}</p>
-        <p>Room: {{device.Room}}</p>
-        <p><input type="submit" class="btn btn-default" value="Add" name="circuit" /></p>
+        <p><input type="submit" class="btn btn-default" value="Add" name="device" /></p>
     </form>
 {% endif %}
+<form action="" method="GET" enctype="multipart/form-data">
+    <input type="hidden" name="school_choice" value = "{{school_choice}}">
+</form>
 {% endblock %}
