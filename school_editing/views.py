@@ -82,14 +82,14 @@ def panel_editing(request, panel_id):
         panel_obj.save()
         new_par_fqn = Panel.objects.filter(School=panel_obj.School).get(Name = new_par_pan).FQN
         for panel in Panel.objects.filter(School=panel_obj.School):
-            if ("." + panel_obj.Name + ".") in panel.FQN:
+            if ("." + panel_obj.Name + ".") in panel.FQN or panel.FQN.find(panel_obj.Name + ".")==0 or panel_obj == panel:
                 breakpt = panel.FQN.index(panel_obj.Name)
                 remainder = panel.FQN[breakpt:]
                 panel.FQN = new_par_fqn + "." + str(circ.Number) + "." + remainder
                 panel.save()
         #panel_obj = Panel.objects.get(Name = panel_obj.Name)
         for circuit in Circuit.objects.filter(School = panel_obj.School):
-            if ("." + panel_obj.Name + ".") in circuit.FQN:
+            if ("." + panel_obj.Name + ".") in circuit.FQN or circuit.FQN.find(panel_obj.Name + ".")==0 or circuit.Panel == panel_obj:
                 print (circuit.FQN)
                 circuit.FQN = circuit.Panel.FQN + "." + circuit.Number
                 circuit.save()
@@ -114,7 +114,7 @@ def panel_editing(request, panel_id):
                 #print (pan.Panels)
                 pan.save()
             for pan in Panel.objects.filter(School = panel_obj.School):
-                if ("." + panel_obj.Name + ".") in pan.FQN or (" " + panel_obj.Name + " ") in pan.FQN:# and not pan == panel_obj:
+                if ("." + panel_obj.Name + ".") in pan.FQN:# and not pan == panel_obj:
                     try:
                         print(pan.FQN)
                         index1 = pan.FQN.index(panel_obj.Name) + len(panel_obj.Name)+1
@@ -124,7 +124,7 @@ def panel_editing(request, panel_id):
                     except:
                         None
             for circuit in Circuit.objects.filter(School = panel_obj.School):
-                if ("." + panel_obj.Name + ".") in circuit.FQN or (" " + panel_obj.Name + " ") in circuit.FQN:
+                if ("." + panel_obj.Name + ".") in circuit.FQN:
                     try:
                         index1 = circuit.FQN.index(panel_obj.Name) + len(panel_obj.Name) + 1
                         new_index = circuit.FQN.index(".", index1)
