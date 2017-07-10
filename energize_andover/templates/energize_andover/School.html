@@ -63,7 +63,10 @@
 <p> Devices: No Device Data </p>
 {% endif %}
 
-
+{% load static %}
+{% if not picture == None %}
+<img src="{% static picture %}" style="width:700px;height:350px;" alt="My image"/>
+{% endif %}
 <form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
   {% csrf_token %}
   <p>{{ form.entry.label }} {{ form.entry }}</p>

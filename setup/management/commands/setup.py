@@ -33,5 +33,14 @@ class Command(BaseCommand):
             permission = Permission.objects.get(codename='can_create_user')
         user.user_permissions.add(permission)
         user.save()
+        try:
+            permission = Permission.objects.create(codename="can_edit_schools",
+                                                   name="Can Edit Schools",
+                                                   content_type=ct)
+            permission.save()
+        except:
+            permission = Permission.objects.get(codename='can_edit_schools')
+        user.user_permissions.add(permission)
+        user.save()
         su = SpecialUser(User = user)
         su.save()

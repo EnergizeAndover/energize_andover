@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from login.views import check_status, check_admin, check_school_privilege
+from login.views import check_status, check_admin, check_school_privilege, logout
 from energize_andover.forms import *
 from school_editing.forms import *
-
+import os.path
 
 def electrical_mapping(request):
     if check_status(request) is False:
@@ -19,7 +19,7 @@ def electrical_mapping(request):
         if request.POST.get('Manage'):
             return HttpResponseRedirect('Management')
     if (request.GET.get('mybtn')):
-        request.session['logged_in'] = None
+        logout(request)
         return HttpResponseRedirect("Login")
     schools = School.objects.filter()
     if_admin = check_admin(request)
@@ -42,10 +42,12 @@ def school(request, school_id):
     devices = school_obj.devices()
     if len(devices) == 0:
         devices = Device.objects.none()
-
+    picture = "energize_andover/" + school_obj.Name + ".jpg"
+    #if not os.path.isfile(picture):
+    #    picture = None
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
-                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices,
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture,
                    'form': form})
 
 def device(request, device_id):
@@ -110,6 +112,8 @@ def panel(request, panel_id):
         Main = Main[0]
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
+    #if not os.path.exists(picture):
+        #picture = None
     if request.POST.get("Edit"):
         #print(request)
         form = PanelEditForm(request.POST)

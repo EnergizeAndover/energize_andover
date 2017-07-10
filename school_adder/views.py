@@ -4,9 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from school_adder.script.room_mapping import parse as RoomParse
 from school_adder.script.circuit_room_mapping import parse as PanelParse
 from school_adder.script.circuit_room_relationships import parse as DeviceParse
-from login.views import check_status, check_admin
+from login.views import check_status, check_school_privilege, check_admin, check_school_edit_privilege, update_log
 
 def adder(request):
+    if check_status(request) is False:
+        return HttpResponseRedirect("Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("School" + str(School.objects.get(Name = request.GET.get("school_choice")).id))
+    if check_school_privilege(School.objects.get(Name = request.GET.get("school_choice")), request) == False:
+        return HttpResponseRedirect("electric")
     if request.method == 'POST':
         #print (request.POST.get("School"))
         if request.POST.get('start'):
@@ -42,6 +48,8 @@ def adder(request):
                 new = form.save()
                 new.School = School.objects.get(Name=request.GET.get("school_choice"))
                 new.save()
+                message = "Closet " + new.Name + " added."
+                update_log(message, new.School, request)
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Closet" + str(new.pk))
             else:
@@ -54,6 +62,8 @@ def adder(request):
                 new.School = School.objects.get(Name = request.GET.get("school_choice"))
                 new.FQN = new.Name
                 new.save()
+                message = "Panel " + new.Name + " added."
+                update_log(message, new.School, request)
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Panel" + str(new.pk))
             else:
@@ -65,6 +75,8 @@ def adder(request):
                 new = form.save()
                 new.School = School.objects.get(Name = request.GET.get("school_choice"))
                 new.save()
+                message = "Room " + new.Name + " added."
+                update_log(message, new.School, request)
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Room" + str(new.pk))
             else:
@@ -76,6 +88,8 @@ def adder(request):
                 new = form.save()
                 new.School = School.objects.get(Name = request.GET.get("school_choice"))
                 new.save()
+                message = "Device " + new.Name + " added."
+                update_log(message, new.School, request)
                 form = AdderTypeForm()
                 return HttpResponseRedirect("Device" + str(new.pk))
             else:

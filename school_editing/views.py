@@ -4,14 +4,14 @@ from django.shortcuts import render, get_object_or_404
 from energize_andover.models import *
 from .forms import *
 from energize_andover.forms import *
-import codecs
-from datetime import datetime
-from login.views import check_status, check_school_privilege
+from login.views import check_status, check_school_edit_privilege, check_school_privilege, update_log
 
 
 def panel_editing(request, panel_id):
     if check_status(request) is False:
         return HttpResponseRedirect("/energize_andover/Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("/energize_andover/Panel" + panel_id)
     panel_obj = get_object_or_404(Panel, pk=panel_id)
     if check_school_privilege(panel_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
@@ -151,6 +151,8 @@ def panel_editing(request, panel_id):
 def room_editing (request, room_id):
     if check_status(request) is False:
         return HttpResponseRedirect("/energize_andover/Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("/energize_andover/Room" + room_id)
     room_obj = get_object_or_404(Room, pk=room_id)
     if check_school_privilege(room_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
@@ -193,6 +195,8 @@ def room_editing (request, room_id):
 def device_editing(request, device_id):
     if check_status(request) is False:
         return HttpResponseRedirect("/energize_andover/Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("/energize_andover/Device" + device_id)
     device_obj = get_object_or_404(Device, pk = device_id)
     if check_school_privilege(device_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
@@ -251,6 +255,8 @@ def device_editing(request, device_id):
 def circuit_editing (request, circuit_id):
     if check_status(request) is False:
         return HttpResponseRedirect("/energize_andover/Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("/energize_andover/Circuit" + circuit_id)
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     if check_school_privilege(circuit_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
@@ -272,7 +278,7 @@ def circuit_editing (request, circuit_id):
     query = "Enter Query (Name of Device)     |"
     devices = []
     for dev in circuit_obj.devices():
-        if request.POST.get(dev.Name):
+        if request.POST.get(dev.id):
             message = "Circuit-Device Change: Device " + dev.Name + " removed from Circuit " + circuit_obj.Name
             update_log(message, circuit_obj.School, request)
             dev.Circuit.remove(circuit_obj)
@@ -350,6 +356,8 @@ def circuit_editing (request, circuit_id):
 def closet_editing(request, closet_id):
     if check_status(request) is False:
         return HttpResponseRedirect("/energize_andover/Login")
+    if check_school_edit_privilege(request) is False:
+        return HttpResponseRedirect("/energize_andover/Closet" + closet_id)
     closet_obj = get_object_or_404(Closet, pk=closet_id)
     if check_school_privilege(closet_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
@@ -400,10 +408,3 @@ def closet_editing(request, closet_id):
                                                                          'clos_panels': Panel.objects.filter(Closet = closet_obj).filter(School=closet_obj.School),
                                                                          'Panels': Panel.objects.filter(School = closet_obj.School),
                                                                           'form': form}))
-def update_log (message, school, request):
-    f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")
-    file = str(f.read())
-    w = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "w")
-    break_pt = file.index("</h1>") + 5
-    w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[
-        'username'] + ", Description: " + message + "</p>" + file[break_pt:])

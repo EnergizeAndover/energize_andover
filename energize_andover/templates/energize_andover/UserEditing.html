@@ -17,6 +17,11 @@
     {% else %}
         <p><input type="checkbox" name="is_admin" value="Is Admin" /> Admin</p>
     {% endif %}
+    {% if school_edit_permission in user_permission_list %}
+        <p><input type="checkbox" name="can_edit" value="Can Edit Schools" checked="checked"/> Can Edit Schools</p>
+    {% else %}
+        <p><input type="checkbox" name="can_edit" value="Can Edit Schools" /> Can Edit Schools</p>
+    {% endif %}
 <p><input type="submit" class="btn" value="Save" name="save"></p>
 </form>
 

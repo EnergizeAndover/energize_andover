@@ -25,7 +25,7 @@
     {% csrf_token %}
     <p>Devices:</p>
     {% for dev in devices %}
-    <p>{{dev.Name}}<input type="submit" class="btn-xs" value="Delete" name="{{dev.Name}}" /></p>
+    <p>{{dev.Name}}<input type="submit" class="btn-xs" value="Delete" name="{{dev.id}}" /></p>
     {% endfor %}
     <p><input type="text" value = "{{query}}" name = "Device_Query" size = "24">    {{device.Associated_Device}}</p>
     <p><input type="submit" class="btn-xs" value="Search" name="Search" /></p>

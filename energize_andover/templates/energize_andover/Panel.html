@@ -175,9 +175,9 @@ window.onclick = function(event) {
 {% endif %}
 
 {% load static %}
-
-<img src="{% static picture %}" alt="My image"/>
-
+{% if not picture == None %}
+<img src="{% static picture %}" style="width:500px;height:700px;" alt="My image"/>
+{% endif %}
 <form action="{% url 'energize_andover:panel_editing' panel.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
     {% csrf_token %}
     <p><input type="submit" class="btn-xs" value="Edit" name="Edit" /></p>

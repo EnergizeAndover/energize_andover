@@ -5,6 +5,8 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from energize_andover.models import *
 from login.forms import *
+import codecs
+from datetime import datetime
 
 def login (request):
     if check_status(request):
@@ -26,6 +28,8 @@ def login (request):
                     return HttpResponseRedirect('electric')
                 dest_string = request.session['destination']
                 request.session['destination'] = None
+                message = "User " + request.session['username'] + " logged in."
+                update_log(message, None, request)
                 return HttpResponseRedirect(dest_string)
             else:
                 return HttpResponse(render(request, 'energize_andover/Login.html', {'form': form, 'message': "Login Failed: Incorrect Username and/or Password"}))
@@ -34,6 +38,10 @@ def login (request):
 
 def logout (request):
     if (request.GET.get('mybtn')):
+        print ("true")
+        message = "User " + request.session['username'] + " logged out."
+        print (message)
+        update_log(message, None, request)
         request.session['logged_in'] = None
         request.session['username'] = None
         request.session['password'] = None
@@ -48,23 +56,41 @@ def check_status(request):
 
 def check_admin(request):
     user = authenticate(username = request.session['username'], password = request.session['password'])
-    if Permission.objects.filter(codename="can_create_user").first() in user.user_permissions.all():
+    if Permission.objects.get(codename="can_create_user") in user.user_permissions.all():
         return True
     return False
 
 def check_school_privilege(school, request):
     user = authenticate(username=request.session['username'], password=request.session['password'])
     if user is not None:
-        su = SpecialUser.objects.filter(User=user).first()
+        su = SpecialUser.objects.get(User=user)
         if school not in su.Authorized_Schools.all():
             return False
     return True
 
+def check_school_edit_privilege(request):
+    user = authenticate(username=request.session['username'], password=request.session['password'])
+    if Permission.objects.get(codename="can_edit_schools") in user.user_permissions.all():
+        return True
+    return False
+
+def update_log (message, school, request):
+    f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")
+    file = str(f.read())
+    w = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "w")
+    break_pt = file.index("</h1>") + 5
+    if not school == None:
+        w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[
+            'username'] + ", Description: " + message + "</p>" + file[break_pt:])
+    else:
+        try:
+            w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", User: " + request.session['username'] + ", Description: " + message + "</p>" + file[break_pt:])
+        except:
+            w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", Description: " + message + "</p>" + file[break_pt:])
 """
 ct = ContentType.objects.get_for_model(User)
-permission = Permission.objects.create(codename = "master",
-                                       name = "Master",
-                                       content_type = ct)
+permission = Permission.objects.create(codename="can_edit_schools",
+                                                   name="Can Edit Schools",
+                                                   content_type=ct)
 permission.save()
-User.objects.filter(username = "energizeandover").first().user_permissions.add(permission)
 """
