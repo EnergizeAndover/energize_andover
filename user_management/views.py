@@ -46,6 +46,8 @@ def user_management(request):
     if request.method == "GET":
         for usr in usrs:
             if (request.GET.get(usr.username)) == "Delete":
+                message = "User " + usr.username + " was deleted"
+                update_log(message, None, request)
                 usr.delete()
                 return HttpResponseRedirect('Management')
             elif (request.GET.get(usr.username)) == "Edit":
@@ -66,25 +68,40 @@ def user_editing(request, user_id):
     school_edit_permission = Permission.objects.get(codename='can_edit_schools')
     user_permission_list = user.user_permissions.all()
     if request.GET.get('save'):
+        message = ""
+        count = 1
         for school in schools:
             if request.GET.get(school.Name):
                 if school not in authorized_schools:
                     su.Authorized_Schools.add(school)
+                    message += str(count) + ") School " + school.Name + " added to User " + user.username + "\n"
+                    count += 1
             else:
                 if school in authorized_schools:
                     su.Authorized_Schools.remove(school)
+                    message += str(count) + ") School " + school.Name + " removed from User " + user.username + "\n"
+                    count += 1
         if request.GET.get('is_admin'):
             if admin_permission not in user_permission_list:
                 user.user_permissions.add(admin_permission)
+                message += str(count) + ") Admin Permissions granted to User " + user.username + "\n"
+                count += 1
         else:
             if admin_permission in user_permission_list:
                 user.user_permissions.remove(admin_permission)
+                message += str(count) + ") Admin Permissions revoked for User " + user.username + "\n"
+                count += 1
         if request.GET.get('can_edit'):
             if school_edit_permission not in user_permission_list:
                 user.user_permissions.add(school_edit_permission)
+                message += str(count) + ") School Editing Permissions granted to User " + user.username + "\n"
+                count += 1
         else:
             if school_edit_permission in user_permission_list:
                 user.user_permissions.remove(school_edit_permission)
+                message += str(count) + ") School Editing Permissions revoked for User " + user.username
+                count += 1
+        update_log(message, None, request)
         return HttpResponseRedirect("Management")
     return HttpResponse(render(request, 'energize_andover/UserEditing.html',
                                {"schools": schools, 'user':user,
