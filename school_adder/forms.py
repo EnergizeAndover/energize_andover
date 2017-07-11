@@ -73,6 +73,11 @@ class PopulationForm(forms.Form):
         label='Select a file for Device Mapping'
     )
 
+    Device_Association_File = forms.FileField(
+        label='Select a file for Additional Device Info',
+        required = False
+    )
+
     all_users = forms.MultipleChoiceField(choices=get_all_users(),
                                           widget=forms.CheckboxSelectMultiple(),
                                           label="Which Users Can Access: ")

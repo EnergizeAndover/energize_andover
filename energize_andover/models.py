@@ -16,6 +16,8 @@ class School(models.Model):
         return Closet.objects.filter(School__pk=self.pk)
 
     def devices(self):
+        return Device.objects.filter(School__pk=self.pk)
+        """
         panels = self.panels()
         devs = []
         for i in panels:
@@ -24,6 +26,7 @@ class School(models.Model):
                     if k not in devs:
                         devs.append(k)
         return devs
+        """
 
     def __str__(self):
         return self.Name

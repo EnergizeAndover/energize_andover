@@ -1,0 +1,10 @@
+Device,Associated Device,Power,Zone
+AHU-1,,16 HP,ZN-7
+AHU-4,F-2,10 HP,ZN-9
+F-1,AHU-3,3 HP,ZN-10
+AHU-6,F-4,10 HP,ZN-6
+AHU-3,F-1,5 HP,ZN-10
+F-2,AHU-4,10 HP,ZN-9
+F-5,AHU-7,1.5 HP,ZN-5
+F-4,AHU-6,5 HP,ZN-6
+AHU-7,F-5,3 HP,ZN-5

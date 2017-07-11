@@ -4,7 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from school_adder.script.room_mapping import parse as RoomParse
 from school_adder.script.circuit_room_mapping import parse as PanelParse
 from school_adder.script.circuit_room_relationships import parse as DeviceParse
+from school_adder.script.device_mapping import parse as DeviceMappingParse
 from login.views import check_status, check_school_privilege, check_admin, check_school_edit_privilege, update_log
+
 
 def adder(request):
     if check_status(request) is False:
@@ -119,9 +121,15 @@ def populate(request):
             RoomParse(form.cleaned_data['Room_File'], school)
             PanelParse(form.cleaned_data['Panel_File'], school)
             DeviceParse(form.cleaned_data['Device_File'], school)
+            if not form.cleaned_data['Device_Association_File'] == None:
+                DeviceMappingParse(form.cleaned_data['Device_Association_File'], school)
             return render(request, 'energize_andover/Population.html', context={'school': school})
     else:
         form = PopulationForm()
     return render(request, 'energize_andover/Population.html',
                   {'form':form})
-
+"""
+school = School.objects.get(Name = "Andover High School")
+new_file = open("/var/www/gismap/device_relations.csv",'r')
+DeviceMappingParse(new_file, school)
+"""

@@ -35,11 +35,11 @@ def school(request, school_id):
         return HttpResponseRedirect("electric")
     #if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
-    Closets = school_obj.closets()
-    Panels = school_obj.panels()
-    Rooms = school_obj.rooms()
+    Closets = school_obj.closets().order_by('id')
+    Panels = school_obj.panels().order_by('id')
+    Rooms = school_obj.rooms().order_by('id')
     form = SearchForm()
-    devices = school_obj.devices()
+    devices = school_obj.devices().order_by('id')
     if len(devices) == 0:
         devices = Device.objects.none()
     picture = "energize_andover/" + school_obj.Name + ".jpg"
@@ -80,7 +80,7 @@ def panel(request, panel_id):
     if panel_obj.rooms() is not None:
         Rooms = panel_obj.rooms()
     if panel_obj.circuits() is not None:
-        Circuits = panel_obj.circuits()
+        Circuits = panel_obj.circuits().order_by('id')
     if panel_obj.panels() is not None:
         Panels = panel_obj.panels()
     parray = []
@@ -131,7 +131,7 @@ def room(request, room_id):
     School = room_obj.school()
     if check_school_privilege(School, request) == False:
         return HttpResponseRedirect("electric")
-    Panels = room_obj.panels()
+    Panels = room_obj.panels().order_by('id')
     Circuits = room_obj.circuits()
 
     #Circuits = Circuit.objects.filter(Rooms = room_obj)
@@ -157,7 +157,7 @@ def circuit(request, circuit_id):
         #print(request)
         form = PanelEditForm(request.POST)
         return HttpResponse(request, "energize_andover/Circuit.html", {'form':form})
-    devices = circuit_obj.devices()
+    devices = circuit_obj.devices().order_by('id')
     return render(request, 'energize_andover/Circuit.html',
                   {'circuit': circuit_obj, 'Rooms': Rooms, 'school' : school, 'devices': devices})
 
@@ -165,7 +165,7 @@ def closet(request, closet_id):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     closet_obj = get_object_or_404(Closet, pk=closet_id)
-    panels = Panel.objects.filter(Closet__pk=closet_id)
+    panels = Panel.objects.filter(Closet__pk=closet_id).order_by('id')
     school = closet_obj.School
     if check_school_privilege(school, request) == False:
         return HttpResponseRedirect("electric")
@@ -196,29 +196,27 @@ def search(request):
             closets = []
 
             if request.GET.get('panels') == 'on':
-                #panels = Panel.objects.filter(Name = title)
-                all_panels = Panel.objects.all()
+                all_panels = Panel.objects.filter(School=school_obj).order_by('id')
                 for i in range (0, len(all_panels)):
                     try:
-                        if title.lower() == all_panels[i].Name[0:len(title)].lower() and all_panels[i].School.Name.lower() == current_school.lower():
+                        if title.lower() == all_panels[i].Name[0:len(title)].lower():
                             panels.append(all_panels[i])
                     except:
                         None
             if request.GET.get('circuits') == 'on':
-                all_devices = Device.objects.all()
-                school = School.objects.filter(Name=current_school).first()
-                all_devs = school.devices()
+                all_devices = Device.objects.filter(School = school_obj).order_by('id')
+
                 for i in range(0, len(all_devices)):
                     try:
-                        if title.lower() in all_devices[i].Name.lower() and all_devices[i] in all_devs:
+                        if title.lower() in all_devices[i].Name.lower():
                             circuits.append(all_devices[i])
                     except Exception as e:
                         print (e)
-                all_circuits = Circuit.objects.all()
+                all_circuits = Circuit.objects.filter(School = school_obj).order_by('id')
                 devs = []
                 for i in range (0, len(all_circuits)):
                     try:
-                        if title.lower() in all_circuits[i].Name.lower() and all_circuits[i].School.Name.lower() == current_school.lower():
+                        if title.lower() in all_circuits[i].Name.lower():
                             circ_devices = all_circuits[i].devices()
 
                             for j in range(0, len(circ_devices)):
@@ -228,33 +226,33 @@ def search(request):
                         print (e)
 
             if request.GET.get('rooms') == 'on':
-                all_rooms = Room.objects.all()
+                all_rooms = Room.objects.filter(School=school_obj).order_by('id')
                 for i in range(0, len(all_rooms)):
                     try:
-                        if title.lower() == all_rooms[i].Name.lower() and all_rooms[i].School.Name.lower() == current_school.lower():
+                        if title.lower() == all_rooms[i].Name.lower():
                             rooms.append(all_rooms[i])
                     except:
                         None
                     try:
-                        if title.lower() == all_rooms[i].OldName.lower() and all_rooms[i].School.Name.lower() == current_school.lower():
+                        if title.lower() == all_rooms[i].OldName.lower():
                             rooms.append(all_rooms[i])
                     except:
                         None
                     try:
-                        if title.lower() in all_rooms[i].Type.lower() and all_rooms[i].School.Name.lower() == current_school.lower():
+                        if title.lower() in all_rooms[i].Type.lower():
                             rooms.append(all_rooms[i])
                     except:
                         None
             if request.GET.get('closets') == 'on':
-                all_closets = Closet.objects.all()
+                all_closets = Closet.objects.filter(School=school_obj).order_by('id')
                 for i in range(0, len(all_closets)):
                     try:
-                        if title.lower() == all_closets[i].Name.lower() and all_closets[i].School.Name.lower() == current_school.lower():
+                        if title.lower() == all_closets[i].Name.lower():
                             closets.append(all_closets[i])
                     except:
                         None
                     try:
-                        if title.lower() == all_closets[i].Old_Name.lower() and all_closets[i].School.Name.lower() == current_school.lower():
+                        if title.lower() == all_closets[i].Old_Name.lower():
                             closets.append(all_closets[i])
                     except:
                         None
