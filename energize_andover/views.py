@@ -149,7 +149,7 @@ def circuit(request, circuit_id):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
-    Rooms = circuit_obj.rooms()
+    Rooms = circuit_obj.rooms().order_by("id")
     school = circuit_obj.School
     if check_school_privilege(school, request) == False:
         return HttpResponseRedirect("electric")

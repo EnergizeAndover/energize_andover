@@ -14,6 +14,10 @@ def user_creation(request):
             if user is not None and Permission.objects.get(codename = "can_create_user") in user.user_permissions.all():
                 schools = form.cleaned_data['approved_schools']
                 if request.GET.get('username') is not None and request.GET.get('password') is not None and request.GET.get('email') is not None:
+                    for user in User.objects.all():
+                        if request.GET.get('username') == user.username:
+                            return render(request, 'energize_andover/UserCreation.html',
+                                          {'form': form, 'message': "That Username is Already Taken"})
                     new_user = User.objects.create_user(username=request.GET.get('username'),
                                      password=request.GET.get('password'), email=request.GET.get('email'))
                     new_user.save()

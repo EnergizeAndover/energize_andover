@@ -278,7 +278,7 @@ def circuit_editing (request, circuit_id):
     query = "Enter Query (Name of Device)     |"
     devices = []
     for dev in circuit_obj.devices():
-        if request.POST.get(dev.id):
+        if request.POST.get(str(dev.id)):
             message = "Circuit-Device Change: Device " + dev.Name + " removed from Circuit " + circuit_obj.Name
             update_log(message, circuit_obj.School, request)
             dev.Circuit.remove(circuit_obj)
