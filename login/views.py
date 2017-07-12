@@ -60,6 +60,7 @@ def check_admin(request):
         return True
     return False
 
+
 def check_school_privilege(school, request):
     user = authenticate(username=request.session['username'], password=request.session['password'])
     if user is not None:
@@ -68,16 +69,18 @@ def check_school_privilege(school, request):
             return False
     return True
 
+
 def check_school_edit_privilege(request):
     user = authenticate(username=request.session['username'], password=request.session['password'])
     if Permission.objects.get(codename="can_edit_schools") in user.user_permissions.all():
         return True
     return False
 
+
 def update_log (message, school, request):
-    f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")
+    f = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "r")
     file = str(f.read())
-    w = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "w")
+    w = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "w")
     break_pt = file.index("</h1>") + 5
     if not school == None:
         w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[

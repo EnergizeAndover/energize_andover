@@ -16,8 +16,8 @@ class Command(BaseCommand):
         user.save()
         ct = ContentType.objects.get_for_model(User)
         try:
-            permission = Permission.objects.create(codename = "master",
-                                                   name = "Master",
+            permission = Permission.objects.create(codename="master",
+                                                   name="Master",
                                                    content_type = ct)
             permission.save()
         except:
