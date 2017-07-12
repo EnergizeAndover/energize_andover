@@ -5,7 +5,11 @@ from wsgiref.util import FileWrapper
 
 from django.http import HttpResponse
 
+<<<<<<< HEAD
 from .grapher import file_grapher
+=======
+from grapher import file_grapher
+>>>>>>> fc9613b7805474ea02dfa5be0bfe54e985dcccf8
 from mysite.settings import BASE_DIR
 
 PARSE_CHAR = '/'
