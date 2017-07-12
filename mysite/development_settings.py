@@ -7,9 +7,9 @@ NEVERCACHE_KEY = "(!org&1*e%x!6y61ijp%@41(#_b6@$2db4*pw4x%))3hohmw*o"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mysite',
-        'USER': 'postgres',
-        'PASSWORD': 'ja01810',
+        'NAME': 'mydb',
+        'USER': 'myuser',
+        'PASSWORD': '01810EA',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }

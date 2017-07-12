@@ -26,12 +26,13 @@ def electrical_mapping(request):
     return render(request, 'energize_andover/Electrical.html',
                   {'title': 'School Select', 'schools': schools, 'if_admin': if_admin})
 
+
 def school(request, school_id):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     school_obj = get_object_or_404(School,
                                    pk=school_id)
-    if check_school_privilege(school_obj, request) == False:
+    if check_school_privilege(school_obj, request) is False:
         return HttpResponseRedirect("electric")
     #if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
