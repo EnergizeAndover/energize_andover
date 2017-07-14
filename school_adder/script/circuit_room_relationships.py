@@ -57,12 +57,12 @@ def parse(file, school):
 
                     except Exception as e:
                         print(e)
-                        dev = Device.objects.filter(Name=obj).filter(School=school)
-                        if (not tf or str(dev) == "<QuerySet []>"):
-                            device = Device(Name=obj, Power="NA", Location="None", Number=i, School = school)
-                            device.save()
-                            dev = Device.objects.filter(Number=i).filter(School= school)
-                        device = dev.first()
+                        try:
+                            device = Device.objects.filter(School=school).get(Name=obj)
+                        except:
+                            if tf:
+                                device = Device(Name=obj, Power="NA", Location="None", Number=i, School = school)
+                                device.save()
                         print ("a")
                         device.Circuit.add(circuit)
                         device.save()

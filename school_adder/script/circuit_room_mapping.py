@@ -40,7 +40,7 @@ def parse(file, school):
                         trans = Transformer(Name = path[s1: len (path)], FQN = path, Notes = description, School = school)
                         trans.save()
             if (type == "circuit"):
-                print ("circuit")
+                #print ("circuit")
                 num = path.count(".")
                 if num == 1:
                     name = path
@@ -64,23 +64,28 @@ def parse(file, school):
                 #print ("Circuit: Name: %s, Number: %s, Panel: %s, Rooms: %s," % (circuit, number, panel, rooms))
 
                 try:
-                    print (path[0:s2])
+                    #print (path[0:s2])
                     panels_obj = Panel.objects.filter(FQN=path[0:s2]).filter(School = school)
                 except:
                     panels_obj = None
-                for i in range (0, len(panels_obj)):
-                    print(panels_obj[i])
+                #for i in range (0, len(panels_obj)):
+                    #print(panels_obj[i])
                 circuit = Circuit(Name=name, Number=number, Panel=panels_obj.first(), FQN = path, School = school, Notes = description)
                 circuit.save()
 
             if (type == 'panel'):
-                print ("panel")
-                if str(Closet.objects.filter(Old_Name=room).filter(School=school)) == '<QuerySet []>':
-                    print(True)
+                #print ("panel")
+                #print ("1")
+                closet = None
+                try:
+                    Closet.objects.filter(School=school).get(Old_Name=room) == None
+                except:
                     try:
+                        #print ("3")
                         closet_name = Room.objects.filter(School=school).get(OldName=room).Name
                         closet = Closet(Name=closet_name, Old_Name=room, School=school)
                     except:
+                        #print ("4")
                         closet = Closet(Name="NL", Old_Name=room, School=school)
                     closet.save()
                 number = path.count('.')

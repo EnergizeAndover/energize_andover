@@ -17,6 +17,7 @@ def electrical_mapping(request):
             return render(request, 'energize_andover/Electrical.html',
                   {'title': a_school.Name, 'school': a_school.id, 'deleted': True})
     if request.POST.get("Confirm"):
+        #if request.POST.get("Username") == request.session['Username'] and request.POST.get("Password") == request.session['Password']:
         school = School.objects.get(id=request.POST.get('school'))
         school.delete()
     if request.method == 'POST':
