@@ -41,21 +41,9 @@
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap-extras.js' %}"></script>
 
-
-	<!-- Pick a theme, load the plugin & initialize plugin -->
-	<link href="{% static 'dist/css/theme.default.min.css' %}" rel="stylesheet">
-	<script src="{% static 'dist/js/jquery.tablesorter.min.js' %}"></script>
-	<script src="{% static 'dist/js/jquery.tablesorter.widgets.min.js' %}"></script>
-	<script>
-	$(function(){
-		$('table').tablesorter({
-			widgets        : ['zebra', 'columns'],
-			usNumberFormat : false,
-			sortReset      : true,
-			sortRestart    : true
-		});
-	});
-	</script>
+  <link href="{% static 'dist/css/theme.default.min.css' %}" rel="stylesheet">
+  <script src="{% static 'dist/js/jquery.tablesorter.min.js' %}"></script
+  <script src="{% static 'dist/js/jquery.tablesorter.widgets.min.js' %}"></script>
 
 
   {% block extra_js %}{% endblock %}
@@ -73,18 +61,21 @@
       </div>
       <!--<div class="navbar navbar-fixed-top">-->
         <ul class="nav navbar-nav">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="{% url 'energize_andover:index' %}">Metasys Parsing</a></li>
-              <li><a href="{% url 'energize_andover:graph' %}">Graphing</a></li>
-              <li><a href="{% url 'energize_andover:electric' %}">Electrical Mapping</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="http://www.energizeandover.com/">Energize Andover</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="http://projectgle.weebly.com/">Project GLE</a></li>
-            </ul>
-          </li>
+            <li>
+                <a href="{% url 'energize_andover:index' %}"><font size="1">Metasys Parsing</font></a>
+            </li>
+            <li>
+                <a href="{% url 'energize_andover:graph' %}"><font size="1">Graphing</font></a>
+            </li>
+            <li>
+                <a href="{% url 'energize_andover:electric' %}"><font size="1">Electrical Mapping</font></a>
+            </li>
+            <li>
+                <a href="http://www.energizeandover.com/"><font size="1">Energize Andover</font></a>
+            </li>
+            <li>
+                <a href="http://projectgle.weebly.com/"><font size="1">Project GLE</font></a>
+            </li>
         </ul>
       <!--</div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -95,7 +86,7 @@
   <div class="container">
     <div class="row">
 
-      <div class="col-md-7 middle">
+      <div class="col-md-10 middle">
         {% block main %}{% endblock %}
       </div>
 

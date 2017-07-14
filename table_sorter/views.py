@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from login.views import check_status, check_school_privilege
+from django.http import HttpResponse, HttpResponseRedirect
 from energize_andover.models import School
 from energize_andover.forms import *
 from school_editing.forms import *
 
 
-def list(request, school_id):
+def list(request, school_id, type):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     school_obj = get_object_or_404(School, pk=school_id)
@@ -24,7 +25,7 @@ def list(request, school_id):
     #if not os.path.isfile(picture):
     #    picture = None
     return render(request, 'energize_andover/Test.html',
-                  {'title': 'Table Sorting', 'school': school_obj,
+                  {'title': 'Table Sorting', 'type': type, 'school': school_obj,
                    'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture,
                    'form': form})
 

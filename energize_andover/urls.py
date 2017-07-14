@@ -33,5 +33,5 @@ urlpatterns = [
     url(r'^UserCreation', UMViews.user_creation, name = "usercreation"),
     url(r'^Management', UMViews.user_management, name = "user_management"),
     url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing"),
-    url(r'^TableSorting(?P<school_id>[0-9]+)', TableViews.list, name='table_sorting'),
+    url(r'^TableSorting(?P<school_id>[0-9]+)(?P<type>[-\w]+)', TableViews.list, name='table_sorting'),
 ]

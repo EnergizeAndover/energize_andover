@@ -1,6 +1,37 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
+
+<!-- bar with links to the different tables: -->
+
+
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <!--<div class="navbar navbar-fixed-top">-->
+        <ul class="nav navbar-nav">
+          <li>
+              <a href="{% url 'energize_andover:table_sorting' school.id 'devices' %}">Devices</a>
+          </li>
+          <li>
+              <a href="{% url 'energize_andover:table_sorting' school.id 'rooms' %}">Rooms</a>
+          </li>
+          <li>
+              <a href="{% url 'energize_andover:table_sorting' school.id 'closets' %}">Closets</a>
+          </li>
+          <li>
+              <a href="{% url 'energize_andover:table_sorting' school.id 'panels' %}">Panels</a>
+          </li>
+          <li>
+              <a href="{% url 'energize_andover:table_sorting' school.id 'locations' %}">Locations</a>
+          </li>
+        </ul>
+      <!--</div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+     <!--</div>-->
+  </nav>
+
 <h1> School: {{school.Name}} </h1>
 
 {% if not Closets.count == 0 %}
