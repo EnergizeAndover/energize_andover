@@ -5,7 +5,9 @@ from io import BytesIO
 from django.http import HttpResponse
 
 from ea_parser.script.parse import parse, summarize, save_df, header_parse
+
 from .file_transfer_grapher import  _transform_saved_input_graph, _temporary_output_graph_path, _graph_error_file_path
+
 from mysite.settings import BASE_DIR
 
 OUTPUT_FILE = 'graph'

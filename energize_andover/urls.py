@@ -6,6 +6,7 @@ from school_adder import views as AdderViews
 from login import views as LoginViews
 from user_management import views as UMViews
 from school_editing import views as SEViews
+from table_sorter import views as TableViews
 
 app_name = 'gismap'
 urlpatterns = [
@@ -31,5 +32,6 @@ urlpatterns = [
     url(r'^Login', LoginViews.login, name = "login"),
     url(r'^UserCreation', UMViews.user_creation, name = "usercreation"),
     url(r'^Management', UMViews.user_management, name = "user_management"),
-    url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing")
+    url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing"),
+    url(r'^TableSorting(?P<school_id>[0-9]+)', TableViews.list, name='table_sorting'),
 ]

@@ -1,12 +1,14 @@
 from django import forms
 from energize_andover.models import *
 
+
 def get_all_schools():
     schools = []
     query = School.objects.all()
     for i in query:
         schools.append((i.Name, i.id))
     return schools
+
 
 class NewUserForm(forms.Form):
     username = forms.CharField(
