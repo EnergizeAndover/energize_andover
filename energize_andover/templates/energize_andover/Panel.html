@@ -48,7 +48,7 @@
             <option value = "{{circ.id}}">{{circ.Number}}</option>
         {% endfor %}
     </select>
-    <input type="hidden" value = {{selected.Name}} name = "Selected Panel">
+    <input type="hidden" value = {{selected.id}} name = "Selected Panel">
     <p><input type="submit" class="btn-xs" value="Save Parent and Circuit" name="Save Circuit" /></p>
     {% endif %}
 

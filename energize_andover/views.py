@@ -5,14 +5,20 @@ from django.shortcuts import render, get_object_or_404
 from login.views import check_status, check_admin, check_school_privilege, logout
 from energize_andover.forms import *
 from school_editing.forms import *
+from school_saver.views import save_school
 import os.path
 
 def electrical_mapping(request):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     for a_school in School.objects.all():
-        if request.POST.get(a_school.Name):
-            a_school.delete()
+        if request.POST.get(str(a_school.id)):
+            print (a_school.id)
+            return render(request, 'energize_andover/Electrical.html',
+                  {'title': a_school.Name, 'school': a_school.id, 'deleted': True})
+    if request.POST.get("Confirm"):
+        school = School.objects.get(id=request.POST.get('school'))
+        school.delete()
     if request.method == 'POST':
         if request.POST.get('Start'):
             return HttpResponseRedirect('Populate')
@@ -33,6 +39,8 @@ def school(request, school_id):
                                    pk=school_id)
     if check_school_privilege(school_obj, request) == False:
         return HttpResponseRedirect("electric")
+    if request.POST.get("Saver"):
+        save_school(school_obj, request)
     #if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
     Closets = school_obj.closets().order_by('id')
@@ -43,8 +51,8 @@ def school(request, school_id):
     if len(devices) == 0:
         devices = Device.objects.none()
     picture = "energize_andover/" + school_obj.Name + ".jpg"
-    #if not os.path.isfile(picture):
-    #    picture = None
+    if not os.path.exists("/var/www/gismap/theme/static/" + picture):
+        picture = None
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
                    'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture,
@@ -112,8 +120,8 @@ def panel(request, panel_id):
         Main = Main[0]
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
-    #if not os.path.exists(picture):
-        #picture = None
+    if not os.path.exists("/var/www/gismap/theme/static/" + picture):
+        picture = None
     if request.POST.get("Edit"):
         #print(request)
         form = PanelEditForm(request.POST)

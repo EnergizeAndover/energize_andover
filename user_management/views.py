@@ -75,7 +75,7 @@ def user_editing(request, user_id):
         message = ""
         count = 1
         for school in schools:
-            if request.GET.get(school.Name):
+            if request.GET.get(str(school.id)):
                 if school not in authorized_schools:
                     su.Authorized_Schools.add(school)
                     message += str(count) + ") School " + school.Name + " added to User " + user.username + "\n"

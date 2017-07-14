@@ -207,9 +207,17 @@ class Device(models.Model):
         return to_str
 
 class Transformer(models.Model):
-    Name = models.CharField(max_length=50)
+    Name = models.CharField(max_length=50, default = '')
     Notes = models.CharField(max_length=1000, default = '')
-
+    FQN = models.CharField(max_length=50, default = '')
+    School = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    def __str__(self):
+        return self.Name
 class SpecialUser(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
     Authorized_Schools = models.ManyToManyField(School, blank = True)

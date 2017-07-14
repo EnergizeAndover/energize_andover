@@ -3,12 +3,14 @@
 {% block main %}
 {% if form %}
 <h1>Editing: {{circuit.Name}}</h1>
+<!--
 <form action=""  method="POST" enctype="multipart/form-data" name="Name">
     {% csrf_token %}
     <p>Name:</p>
     <p><input type="text" value = "{{circuit.Name}}" name = "Name"></p>
     <p><input type="submit" class="btn-xs" value="Save Name" name="Save Name" /></p>
 </form>
+-->
 <form action=""  method="POST" enctype="multipart/form-data" name="Number">
     {% csrf_token %}
     <p>Number:</p>

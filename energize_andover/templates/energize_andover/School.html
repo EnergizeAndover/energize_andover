@@ -79,8 +79,12 @@
   <input type="submit" class="btn btn-default" value="Search">
 </form>
 <form action="{% url 'energize_andover:adder' %}" method="GET" enctype="multipart/form-data">
-    <input type="hidden" name="school_choice" value="{{school.Name}}">
+    <input type="hidden" name="school_choice" value="{{school.id}}">
     <input type="submit" class="btn btn-default" value="Add New Object to School" name = "Adder">
+</form>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-default" value="Save School to Requisite CSV Files" name = "Saver">
 </form>
 <p><a href="{% url 'energize_andover:electric' %}">Return to School Select</a></p>
 

@@ -12,8 +12,9 @@ def adder(request):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     if check_school_edit_privilege(request) is False:
-        return HttpResponseRedirect("School" + str(School.objects.get(Name = request.GET.get("school_choice")).id))
-    if check_school_privilege(School.objects.get(Name = request.GET.get("school_choice")), request) == False:
+        return HttpResponseRedirect("School" + request.GET.get("school_choice"))
+    #print (request.GET.get("school_choice"))
+    if check_school_privilege(School.objects.get(id = request.GET.get("school_choice")), request) == False:
         return HttpResponseRedirect("electric")
     if request.method == 'POST':
         #print (request.POST.get("School"))
@@ -48,7 +49,7 @@ def adder(request):
             form = ClosetForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
-                new.School = School.objects.get(Name=request.GET.get("school_choice"))
+                new.School = School.objects.get(id=str(request.GET.get("school_choice")))
                 new.save()
                 message = "Closet " + new.Name + " added."
                 update_log(message, new.School, request)
@@ -61,7 +62,7 @@ def adder(request):
             form = PanelForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
-                new.School = School.objects.get(Name = request.GET.get("school_choice"))
+                new.School = School.objects.get(id = str(request.GET.get("school_choice")))
                 new.FQN = new.Name
                 new.save()
                 message = "Panel " + new.Name + " added."
@@ -75,7 +76,7 @@ def adder(request):
             form = RoomForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
-                new.School = School.objects.get(Name = request.GET.get("school_choice"))
+                new.School = School.objects.get(id = str(request.GET.get("school_choice")))
                 new.save()
                 message = "Room " + new.Name + " added."
                 update_log(message, new.School, request)
@@ -88,7 +89,7 @@ def adder(request):
             form = DeviceForm(request.POST, request.FILES)
             if form.is_valid():
                 new = form.save()
-                new.School = School.objects.get(Name = request.GET.get("school_choice"))
+                new.School = School.objects.get(id = str(request.GET.get("school_choice")))
                 new.save()
                 message = "Device " + new.Name + " added."
                 update_log(message, new.School, request)

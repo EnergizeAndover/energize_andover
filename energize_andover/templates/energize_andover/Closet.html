@@ -26,7 +26,7 @@
     {% csrf_token %}
     <p>Panels: </p>
     {% for panel in clos_panels %}
-    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.Name}}"></p>
+    <p>{{panel.Name}}<input type="submit" class="btn-xs" value="Delete Panel" name="{{panel.id}}"></p>
     {% endfor %}
     <select id="id_Panels" name = "Panels">
         <option>--------------</option>

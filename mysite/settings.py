@@ -247,6 +247,7 @@ INSTALLED_APPS = (
     "login",
     "user_management",
     "school_editing",
+    "school_saver",
     "setup"
 )
 

@@ -31,14 +31,14 @@ def panel_editing(request, panel_id):
         panel_obj.Name = new_name
         panel_obj.FQN = panel_obj.FQN.replace(name, new_name)
         panel_obj.save()
-        panels = Panel.objects.filter(School = panel_obj.School)
+        panels = Panel.objects.filter(School = panel_obj.School).exclude(id = panel_obj.id)
         for pan in panels:
-            if ("." + name + ".") in pan.FQN:
+            if ("." + name + ".") in pan.FQN or pan.FQN.find(name + ".") == 0:
                 pan.FQN = pan.FQN.replace(name, request.POST.get("Name"))
                 pan.save()
         circuits = Circuit.objects.filter(School = panel_obj.School)
         for circ in circuits:
-            if ("." + name + ".") in circ.FQN:
+            if ("." + name + ".") in circ.FQN or circ.FQN.find(name + ".") == 0:
                 circ.FQN = circ.FQN.replace(name, request.POST.get("Name"))
                 circ.save()
             if ("." + name + ".") in circ.Name:
@@ -66,21 +66,22 @@ def panel_editing(request, panel_id):
             new_circuit = Circuit(Name = panel_obj.Name + "." + str(new_number), Number = new_number, FQN = panel_obj.FQN + "." + str(new_number), Panel = panel_obj, School = panel_obj.School)
             new_circuit.save()
     if request.POST.get("Save Parent"):
-        selected_panel = Panel.objects.filter(School=panel_obj.School).get(id=request.POST.get("Panels"))
-        par_circuits = selected_panel.circuits()
+        selected_panel = Panel.objects.get(id=request.POST.get("Panels"))
+        par_circuits = selected_panel.circuits().order_by("id")
         changed = True
     if request.POST.get("Save Circuit"):
-        new_par_pan = request.POST.get("Selected Panel")
-        circ = Circuit.objects.filter(School=panel_obj.School).get(id=request.POST.get("Circuit"))
+        pan_id = request.POST.get("Selected Panel")
+        new_par_pan = Panel.objects.get(id = pan_id)
+        circ = Circuit.objects.get(id=request.POST.get("Circuit"))
         try:
             par_pan = panel_obj.Panels.Name
-            message = "Parent Panel Change on " + panel_obj.Name + ": " + par_pan  + " -->" + new_par_pan + ". All Affected Circuits and Panels renamed accordingly. "
+            message = "Parent Panel Change on " + panel_obj.Name + ": " + par_pan  + " -->" + new_par_pan.Name + ". All Affected Circuits and Panels renamed accordingly. "
         except:
-            message = "Parent Panel for " + panel_obj.Name + " set to " + new_par_pan
+            message = "Parent Panel for " + panel_obj.Name + " set to " + new_par_pan.Name
         update_log(message, panel_obj.School, request)
-        panel_obj.Panels = Panel.objects.filter(School=panel_obj.School).get(Name = new_par_pan)
+        panel_obj.Panels = new_par_pan
         panel_obj.save()
-        new_par_fqn = Panel.objects.filter(School=panel_obj.School).get(Name = new_par_pan).FQN
+        new_par_fqn = new_par_pan.FQN
         for panel in Panel.objects.filter(School=panel_obj.School):
             if ("." + panel_obj.Name + ".") in panel.FQN or panel.FQN.find(panel_obj.Name + ".")==0 or panel_obj == panel:
                 breakpt = panel.FQN.index(panel_obj.Name)
@@ -95,9 +96,9 @@ def panel_editing(request, panel_id):
                 circuit.save()
 
     if request.POST.get("Save Closet"):
-        message = "Panel Closet Change: " + panel_obj.Closet + " -->" + request.POST.get("Closet")
+        message = "Panel Closet Change: " + panel_obj.Closet.Name + " -->" + Closet.objects.get(id=request.POST.get("Closet")).Name
         update_log(message, panel_obj.School, request)
-        panel_obj.Closet = Closet.objects.filter(School=panel_obj.School).get(id=request.POST.get("Closet"))
+        panel_obj.Closet = Closet.objects.get(id=request.POST.get("Closet"))
         panel_obj.save()
     if request.POST.get("Confirm"):
         if request.POST.get("Username")==request.session['username'] and request.POST.get("Password")==request.session['password']:
@@ -138,15 +139,15 @@ def panel_editing(request, panel_id):
                 return HttpResponseRedirect("/energize_andover/Panel" + str(parent.pk))
             else:
                 return HttpResponseRedirect("/energize_andover/School" + str(school_obj.pk))
-
+    list_panels = Panel.objects.all().exclude(id=panel_obj.id).filter(School = panel_obj.School)
     return HttpResponse(render(request, 'energize_andover/Panel.html',
                   {'panel': panel_obj,
                    'form': form,
-                   'Panels': Panel.objects.filter(School = panel_obj.School),
+                   'Panels': list_panels.order_by("id"),
                    'selected': selected_panel,
                    'par_circuits': par_circuits,
                    'changed': changed,
-                   'Closets': Closet.objects.filter(School = panel_obj.School)}))
+                   'Closets': Closet.objects.filter(School = panel_obj.School).order_by("id")}))
 
 def room_editing (request, room_id):
     if check_status(request) is False:
@@ -225,7 +226,7 @@ def device_editing(request, device_id):
     devices = []
     if request.POST.get("Search"):
         query = request.POST.get("Associated_Device_Query")
-        devs = Device.objects.filter(School = device_obj.School)
+        devs = Device.objects.all().exclude(id=device_obj.id).filter(School = device_obj.School)
         for dev in devs:
             if query.lower() == dev.Name.lower():
                 devices.insert(0, dev)
@@ -233,7 +234,7 @@ def device_editing(request, device_id):
                 devices.append(dev)
     if request.POST.get("Save Associated Device"):
         dev_id = request.POST.get("Associated_Dev")
-        assoc_dev = Device.objects.filter(School=device_obj.School).get(id= dev_id)
+        assoc_dev = Device.objects.get(id= dev_id)
         message = device_obj.to_string() + " is now associated with " + assoc_dev.to_string() +"."
         update_log(message, device_obj.School, request)
         device_obj.Associated_Device = assoc_dev
@@ -260,16 +261,32 @@ def circuit_editing (request, circuit_id):
     circuit_obj = get_object_or_404(Circuit, pk=circuit_id)
     if check_school_privilege(circuit_obj.School, request) == False:
         return HttpResponseRedirect("/energize_andover/electric")
+    """
     if request.POST.get("Save Name"):
         message = "Circuit Name Change: " + circuit_obj.Name + " -->" + request.POST.get("Name")
         update_log(message, circuit_obj.School, request)
         circuit_obj.Name = request.POST.get("Name")
         circuit_obj.save()
+    """
     if request.POST.get("Save Number"):
         message = "Circuit Number Change: " + circuit_obj.Number + " -->" + request.POST.get("Number")
         update_log(message, circuit_obj.School, request)
-        circuit_obj.Number = request.POST.get("Number")
-        circuit_obj.save()
+        try:
+            other_circuit = Circuit.objects.filter(Panel=circuit_obj.Panel).get(Number=request.POST.get("Number"))
+            old_number = circuit_obj.Number
+            old_name = circuit_obj.Name
+            old_fqn = circuit_obj.FQN
+            circuit_obj.Number = other_circuit.Number
+            circuit_obj.Name = other_circuit.Name
+            circuit_obj.FQN = other_circuit.FQN
+            other_circuit.Name = old_name
+            other_circuit.Number = old_number
+            other_circuit.FQN = old_fqn
+            circuit_obj.save()
+            other_circuit.save()
+        except:
+            None
+
     if request.POST.get("Save Notes"):
         message = "Circuit Notes Change: " + circuit_obj.Notes + " -->" + request.POST.get("Notes")
         update_log(message, circuit_obj.School, request)
@@ -318,7 +335,7 @@ def circuit_editing (request, circuit_id):
                 devices.append(dev)
     if request.POST.get("Add Device"):
         dev_id = request.POST.get("Device")
-        added_dev = Device.objects.filter(School=circuit_obj.School).get(id= dev_id)
+        added_dev = Device.objects.get(id= dev_id)
         message = "Device " + added_dev.to_string() + " added to Circuit " + circuit_obj.Name +"."
         update_log(message, circuit_obj.School, request)
         added_dev.Circuit.add(circuit_obj)
@@ -348,7 +365,7 @@ def circuit_editing (request, circuit_id):
             return HttpResponseRedirect("/energize_andover/Panel" + str(panel.pk))
     form = PanelEditForm(initial={'Name': circuit_obj.Name})
     return HttpResponse(render(request, "energize_andover/Circuit.html", {'circuit': circuit_obj,
-                                                                          'devices': circuit_obj.devices(),
+                                                                          'devices': circuit_obj.devices().order_by("id"),
                                                                           'search_devices': devices,
                                                                           'query':query,
                                                                          'form': form}))
@@ -378,7 +395,7 @@ def closet_editing(request, closet_id):
         closet_obj.Notes = request.POST.get("Notes")
         closet_obj.save()
     if request.POST.get("Add Panel"):
-        pan = Panel.objects.filter(School=closet_obj.School).get(pk=request.POST.get("Panels"))
+        pan = Panel.objects.get(pk=request.POST.get("Panels"))
         try:
             message = "Panel " + pan.Name + " moved from Closet " + pan.Closet.Name + " to Closet " +  closet_obj.Name
         except:
@@ -387,7 +404,7 @@ def closet_editing(request, closet_id):
         pan.Closet = closet_obj
         pan.save()
     for panel in Panel.objects.filter(Closet = closet_obj):
-        if request.POST.get(panel.Name):
+        if request.POST.get(str(panel.id)):
             panel.Closet = None
             panel.save()
             message = "Panel " + panel.Name + " removed from Closet " + closet_obj.Name
@@ -405,6 +422,6 @@ def closet_editing(request, closet_id):
             return HttpResponseRedirect("/energize_andover/School"+str(school_obj.pk))
 
     return HttpResponse(render(request, "energize_andover/Closet.html", {'closet': closet_obj,
-                                                                         'clos_panels': Panel.objects.filter(Closet = closet_obj).filter(School=closet_obj.School),
-                                                                         'Panels': Panel.objects.filter(School = closet_obj.School),
+                                                                         'clos_panels': Panel.objects.filter(Closet = closet_obj).filter(School=closet_obj.School).order_by("id"),
+                                                                         'Panels': Panel.objects.filter(School = closet_obj.School).order_by("id"),
                                                                           'form': form}))

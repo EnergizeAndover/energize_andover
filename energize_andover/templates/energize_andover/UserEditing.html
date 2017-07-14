@@ -6,9 +6,9 @@
 <form action="" method="GET" enctype="multipart/form-data">
     {% for school in schools %}
         {% if school in authorized_schools %}
-            <p><input type="checkbox" name="{{school.Name}}" value="{{school.Name}}"  checked="checked"/> {{school.Name}}</p>
+            <p><input type="checkbox" name="{{school.id}}" value="{{school.Name}}"  checked="checked"/> {{school.Name}}</p>
         {% else %}
-            <p><input type="checkbox" name="{{school.Name}}" value="{{school.Name}}"/> {{school.Name}}</p>
+            <p><input type="checkbox" name="{{school.id}}" value="{{school.Name}}"/> {{school.Name}}</p>
         {% endif %}
     {% endfor %}
 <p>Permissions</p>

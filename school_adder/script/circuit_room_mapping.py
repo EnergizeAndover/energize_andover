@@ -21,6 +21,7 @@ def parse(file, school):
             path = path[path.index("   ") + 4: path.index('\n')]
             voltage = voltage[voltage.index("   ") + 4: voltage.index('\n')]
             room = room[room.index("   ") + 4: room.index('\n')]
+            description = description[description.index("   ") + 4: description.index('\n')]
             if ("transformer" in type):
                 number = path.count('.')
                 count = 0
@@ -36,7 +37,7 @@ def parse(file, school):
                             in_array = True
                     if (not in_array):
                         transformer.append(path[s1: len (path)])
-                        trans = Transformer(Name = path[s1: len (path)])
+                        trans = Transformer(Name = path[s1: len (path)], FQN = path, Notes = description, School = school)
                         trans.save()
             if (type == "circuit"):
                 print ("circuit")
@@ -69,7 +70,7 @@ def parse(file, school):
                     panels_obj = None
                 for i in range (0, len(panels_obj)):
                     print(panels_obj[i])
-                circuit = Circuit(Name=name, Number=number, Panel=panels_obj.first(), FQN = path, School = school)
+                circuit = Circuit(Name=name, Number=number, Panel=panels_obj.first(), FQN = path, School = school, Notes = description)
                 circuit.save()
 
             if (type == 'panel'):
@@ -86,7 +87,7 @@ def parse(file, school):
                 if number == 0:
                     name = path
                     closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
-                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=closet, School = school, FQN = path)
+                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=closet, School = school, FQN = path, Notes = description)
                 else:
                     count = 0
                     s1 = -1
@@ -120,7 +121,7 @@ def parse(file, school):
                     except:
                         panel_obj = None
                     closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
-                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path)
+                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path, Notes = description)
 
                 new_panel.save()
 

@@ -5,7 +5,7 @@ def get_all_schools():
     schools = []
     query = School.objects.all()
     for i in query:
-        schools.append((i.Name, i.Name))
+        schools.append((i.Name, i.id))
     return schools
 
 class NewUserForm(forms.Form):
@@ -23,7 +23,7 @@ class NewUserForm(forms.Form):
         required=True
     )
 
-    approved_schools = forms.MultipleChoiceField(choices=get_all_schools(),
+    approved_schools = forms.MultipleChoiceField(choices=get_all_schools,
                                                  widget=forms.CheckboxSelectMultiple(),
                                                  label = "Approved Schools")
     master_username = forms.CharField(

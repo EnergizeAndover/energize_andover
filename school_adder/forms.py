@@ -78,7 +78,7 @@ class PopulationForm(forms.Form):
         required = False
     )
 
-    all_users = forms.MultipleChoiceField(choices=get_all_users(),
+    all_users = forms.MultipleChoiceField(choices=get_all_users,
                                           widget=forms.CheckboxSelectMultiple(),
                                           label="Which Users Can Access: ")
 
