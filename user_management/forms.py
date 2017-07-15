@@ -6,7 +6,7 @@ def get_all_schools():
     schools = []
     query = School.objects.all()
     for i in query:
-        schools.append((i.Name, i.id))
+        schools.append((i.id, i.Name))
     return schools
 
 

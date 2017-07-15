@@ -24,7 +24,7 @@ def user_creation(request):
                     schools_user = SpecialUser(User = new_user)
                     schools_user.save()
                     for i in schools:
-                        schoo = School.objects.filter(Name = i).first()
+                        schoo = School.objects.get(id = i)
                         schools_user.Authorized_Schools.add(schoo)
                     schools_user.save()
                     message = str("User " + request.GET.get('username') + "created by User " + request.GET.get('master_username'))

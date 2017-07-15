@@ -237,10 +237,16 @@ def device_editing(request, device_id):
         assoc_dev = Device.objects.get(id= dev_id)
         message = device_obj.to_string() + " is now associated with " + assoc_dev.to_string() +"."
         update_log(message, device_obj.School, request)
-        device_obj.Associated_Device = assoc_dev
+        device_obj.Associated_Devices.add(assoc_dev)
         device_obj.save()
-        assoc_dev.Associated_Device = device_obj
+        assoc_dev.Associated_Devices.add(device_obj)
         assoc_dev.save()
+    for dev in device_obj.Associated_Devices.all():
+        if request.POST.get(str(dev.id)):
+            message = "Associated Device Change: Device " + dev.Name + " unassociated with Device " + device_obj.Name
+            update_log(message, device_obj.School, request)
+            dev.Associated_Devices.remove(device_obj)
+            dev.save()
     if request.POST.get("Confirm"):
         if request.POST.get("Username")==request.session['username'] and request.POST.get("Password")==request.session['password']:
             message = "Device " + device_obj.to_string() + " Deleted."
@@ -250,6 +256,7 @@ def device_editing(request, device_id):
             return HttpResponseRedirect("/energize_andover/School" + str(school_obj.pk))
     return HttpResponse(render(request, "energize_andover/Device.html", {'device': device_obj,
                                                                         'devices': devices,
+                                                                         'assoc_devices':device_obj.Associated_Devices.all(),
                                                                          'query':query,
                                                                          'form': form}))
 

@@ -26,7 +26,9 @@ def parse(file, school):
                 try:
                     assoc_dev = Device.objects.filter(School = school).get(Name = associated_device)
                     if not assoc_dev is None:
-                        dev.Associated_Device = assoc_dev
+                        dev.Associated_Devices.add(assoc_dev)
+                        assoc_dev.Associated_Devices.add(dev)
+                        assoc_dev.save()
                 except:
                     None
                 dev.Power = power

@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from login.views import check_status, check_admin, check_school_privilege, logout
+from login.views import check_status, check_admin, check_school_privilege, update_log, logout
 from energize_andover.forms import *
 from school_editing.forms import *
 from school_saver.views import save_school
@@ -13,13 +13,15 @@ def electrical_mapping(request):
         return HttpResponseRedirect("Login")
     for a_school in School.objects.all():
         if request.POST.get(str(a_school.id)):
-            print (a_school.id)
+            #print (a_school.id)
             return render(request, 'energize_andover/Electrical.html',
                   {'title': a_school.Name, 'school': a_school.id, 'deleted': True})
     if request.POST.get("Confirm"):
-        #if request.POST.get("Username") == request.session['Username'] and request.POST.get("Password") == request.session['Password']:
-        school = School.objects.get(id=request.POST.get('school'))
-        school.delete()
+        if request.POST.get("Username") == request.session['username'] and request.POST.get("Password") == request.session['password']:
+            school = School.objects.get(id=request.POST.get('school'))
+            message="School " + school.Name + " deleted"
+            update_log(message, school, request)
+            school.delete()
     if request.method == 'POST':
         if request.POST.get('Start'):
             return HttpResponseRedirect('Populate')
@@ -43,6 +45,8 @@ def school(request, school_id):
         return HttpResponseRedirect("electric")
     if request.POST.get("Saver"):
         save_school(school_obj, request)
+        message = "CSV files created for School " + school_obj.Name
+        update_log(message, school, request)
     #if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
     Closets = school_obj.closets().order_by('id')
@@ -72,7 +76,7 @@ def device(request, device_id):
     #print(SpecialUser.objects.get(User = User.objects.get(username= request.session['username'])).Authorized_Schools.all())
     if check_school_privilege(school_, request) == False:
         return HttpResponseRedirect("electric")
-    assoc_dev = device_.Associated_Device
+    assoc_dev = device_.Associated_Devices.all()
     if request.POST.get("Edit"):
         # print(request)
         form = PanelEditForm(request.POST)
@@ -192,7 +196,7 @@ def search(request):
         return HttpResponseRedirect("Login")
     if request.method == 'GET':
         current_school = request.GET.get('school')
-        school_obj = School.objects.get(Name=current_school)
+        school_obj = School.objects.get(id=current_school)
         if check_school_privilege(school_obj, request) == False:
             return HttpResponseRedirect("electric")
         form = SearchForm(request.GET, request.FILES)

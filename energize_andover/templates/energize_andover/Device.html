@@ -26,10 +26,13 @@
     <p><input type="text" value = "{{device.Notes}}" name = "Notes"></p>
     <p><input type="submit" class="btn-xs" value="Save Notes" name="Save Notes" /></p>
 </form>
-<form action=""  method="POST" enctype="multipart/form-data" name="Associated Device">
+<form action=""  method="POST" enctype="multipart/form-data" name="Devices">
     {% csrf_token %}
-    <p>Associated Device:</p>
-    <p><input type="text" value = "{{query}}" name = "Associated_Device_Query" size = "24">    {{device.Associated_Device}}</p>
+    <p>Associated Devices:</p>
+    {% for dev in assoc_devices %}
+    <p>{{dev.to_string}}<input type="submit" class="btn-xs" value="Delete" name={{dev.id}} /></p>
+    {% endfor %}
+    <p><input type="text" value = "{{query}}" name = "Associated_Device_Query" size = "24"></p>
     <p><input type="submit" class="btn-xs" value="Search" name="Search" /></p>
     <select id="id_Device" name = "Associated_Dev">
     {% for dev in devices %}
@@ -37,7 +40,7 @@
     {% endfor %}
     </select>
     {% if not devices|length == 0 %}
-        <p><input type="submit" class="btn-xs" value="Save Associated Device" name="Save Associated Device" /></p>
+        <p><input type="submit" class="btn-xs" value="Add Associated Device" name="Save Associated Device" /></p>
     {% endif %}
 </form>
 <button class="btn-xs" id="delete_object">Delete</button>
@@ -94,9 +97,11 @@ window.onclick = function(event) {
 <p>Notes: No Notes </p>
 {% endif %}
 <li>Zone: {{device.Location}}</li>
-{% if not assoc_device == None %}
+{% if not assoc_device.count == 0 %}
 <p>Associated Device:</p>
-<li><a href = "{% url 'energize_andover:device' assoc_device.id %}">{{assoc_device.to_string}}</a></li>
+{% for ad in assoc_device %}
+<li><a href = "{% url 'energize_andover:device' ad.id %}">{{ad.to_string}}</a></li>
+{% endfor %}
 {% endif %}
 <form action="{% url 'energize_andover:device_editing' device.id %}"  method="POST" enctype="multipart/form-data" name="Edit">
     {% csrf_token %}

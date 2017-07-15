@@ -41,32 +41,38 @@ def parse(file, school):
                         room = rooms.first()
                         room.Panels.add(circuit.Panel)
                         room.save()
-                        print("A")
+                        #print("A")
                         circuit.Rooms.add(room)
-                        devices = Device.objects.filter(Name=obj).filter(School = school)
-                        print ("B")
-                        if (not tf or str(devices) == "<QuerySet []>"):
+                        print(obj)
+                        try:
+                            if tf:
+                                device = Device.objects.filter(School = school).get(Name = obj)
+                            else:
+                                device = Device(Name=obj, Power="NA", Location="None", Number=i, School=school)
+                                device.save()
+                        except:
                             device = Device(Name=obj, Power="NA", Location="None", Room=room, Number=i, School = school)
                             device.save()
-                            devices = Device.objects.filter(Number=i).filter(School = school)
-                        device = devices.first()
                         device.Circuit.add(circuit)
 
                         device.save()
                         #print ("yo")
 
                     except Exception as e:
-                        print(e)
+                        print(obj)
                         try:
-                            device = Device.objects.filter(School=school).get(Name=obj)
-                        except:
                             if tf:
-                                device = Device(Name=obj, Power="NA", Location="None", Number=i, School = school)
+                                device = Device.objects.filter(School=school).get(Name=obj)
+                            else:
+                                device = Device(Name=obj, Power="NA", Location="None", Number=i, School=school)
                                 device.save()
-                        print ("a")
+                        except:
+                            device = Device(Name=obj, Power="NA", Location="None", Number=i, School = school)
+                            device.save()
+                        #print ("a")
                         device.Circuit.add(circuit)
                         device.save()
-                        print ("b")
+                        #print ("b")
 
             circuit.Function = obj
             circuit.save()

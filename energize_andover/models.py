@@ -173,11 +173,9 @@ class Device(models.Model):
         blank=True,
         null=True
     )
-    Associated_Device = models.ForeignKey(
+    Associated_Devices = models.ManyToManyField(
         'self',
-        on_delete=models.CASCADE,
         blank=True,
-        null=True
     )
     Power = models.CharField(max_length=10)
     Location = models.CharField(max_length=30)

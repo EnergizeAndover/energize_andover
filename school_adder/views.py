@@ -112,6 +112,8 @@ def populate(request):
         form = PopulationForm(request.POST, request.FILES)
         if form.is_valid():
             school = School(Name = form.cleaned_data['New_School'])
+            message = "School " + school.Name + " created."
+            update_log(message, school, request)
             school.save()
             usrs = form.cleaned_data['all_users']
             for usr in usrs:

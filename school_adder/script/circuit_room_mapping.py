@@ -1,3 +1,4 @@
+
 import pandas as pd
 import numpy as np
 import traceback
@@ -129,7 +130,3 @@ def parse(file, school):
                     new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path, Notes = description)
 
                 new_panel.save()
-
-
-a = ''
-#parse(a)

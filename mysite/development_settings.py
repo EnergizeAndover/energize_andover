@@ -15,6 +15,7 @@ DATABASES = {
     }
 }
 
+
 # any settings specific to local environment can be overridden in `local_settings.py`
 try:
     from mysite.local_settings import *

@@ -78,9 +78,9 @@ def check_school_edit_privilege(request):
 
 
 def update_log (message, school, request):
-    f = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "r")
+    f = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "r")
     file = str(f.read())
-    w = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "w")
+    w = codecs.open("/var/www/gismap/energize_andover/templates/energize_andover/ChangeLog.html", "w")
     break_pt = file.index("</h1>") + 5
     if not school == None:
         w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[
