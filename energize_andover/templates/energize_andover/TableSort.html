@@ -64,42 +64,76 @@
   <table id="myTable" class="tablesorter">
     <thead>
       <tr>
-        <th>Last Name</th>
-        <th>First Name</th>
-        <th>Email</th>
-        <th>Due</th>
-        <th>Web Site</th>
+        {% if type == "rooms" %}
+          <th>Room Number</th>
+        {% elif type == "devices" %}
+          <th>Name</th>
+        {% elif type == "closets" %}
+          <th>Name</th>
+        {% elif type == "panels" %}
+          <th>Name</th>
+        {% endif %}
+
+        {% if type == "rooms" %}
+          <th>Old Room Number</th>
+        {% elif type == "devices" %}
+          <th>Power</th>
+        {% elif type == "closets" %}
+          <th>Old Name</th>
+        {% elif type == "panels" %}
+          <th>Voltage</th>
+        {% endif %}
+
+        {% if type == "rooms" %}
+          <th>Type</th>
+        {% elif type == "devices" %}
+          <th>Location</th>
+        {% elif type == "panels" %}
+          <th>Path</th>
+        {% endif %}
+
+        {% if type == "devices" %}
+          <th>Room</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Smith</td>
-        <td>John</td>
-        <td>jsmith@gmail.com</td>
-        <td>$50.00</td>
-        <td>http://www.jsmith.com</td>
-      </tr>
-      <tr>
-        <td>Bach</td>
-        <td>Frank</td>
-        <td>fbach@yahoo.com</td>
-        <td>$50.00</td>
-        <td>http://www.frank.com</td>
-      </tr>
-      <tr>
-        <td>Doe</td>
-        <td>Jason</td>
-        <td>jdoe@hotmail.com</td>
-        <td>$100.00</td>
-        <td>http://www.jdoe.com</td>
-      </tr>
-      <tr>
-        <td>Conway</td>
-        <td>Tim</td>
-        <td>tconway@earthlink.net</td>
-        <td>$50.00</td>
-        <td>http://www.timconway.com</td>
-      </tr>
+      {% if type == "panels" %}
+        {% for model in model_obj %}
+        <tr>
+          <td>{{ model.Name }}</td>
+          <td>{{ model.Voltage }}</td>
+          <td>{{ model.FQN }}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+      {% if type == "closets" %}
+        {% for model in model_obj %}
+        <tr>
+          <td>{{ model.Name }}</td>
+          <td>{{ model.Old_Name }}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+      {% if type == "rooms" %}
+        {% for model in model_obj %}
+        <tr>
+          <td>{{ model.Name }}</td>
+          <td>{{ model.OldName }}</td>
+          <td>{{ model.Type }}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+      {% if type == "devices" %}
+        {% for model in model_obj %}
+        <tr>
+          <td>{{ model.Name }}</td>
+          <td>{{ model.Power }}</td>
+          <td>{{ model.Location }}</td>
+          <td>{{ model.Room }}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 
