@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from energize_andover.models import *
 from login.forms import *
 import codecs
+from mysite.settings import TEMPLATES_ROOT
 from datetime import datetime
 
 def login (request):
@@ -78,9 +79,9 @@ def check_school_edit_privilege(request):
 
 
 def update_log (message, school, request):
-    f = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "r")
+    f = codecs.open(TEMPLATES_ROOT + "ChangeLog.html", "r")
     file = str(f.read())
-    w = codecs.open("energize_andover/templates/energize_andover/ChangeLog.html", "w")
+    w = codecs.open(TEMPLATES_ROOT + "ChangeLog.html", "w")
     break_pt = file.index("</h1>") + 5
     if not school == None:
         w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[

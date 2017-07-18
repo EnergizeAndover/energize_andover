@@ -156,7 +156,8 @@ PROJECT_ROOT = BASE_DIR = os.path.dirname(PROJECT_APP_PATH)
 # the name of the directory the project is in to try and use something
 # project specific.
 CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_APP
-
+TEMPLATES_ROOT = os.path.join(PROJECT_ROOT, "energize_andover/templates/energize_andover/")
+PICTURE_ROOT = os.path.join(PROJECT_ROOT, "theme/static/")
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = "/static/"
@@ -165,7 +166,7 @@ STATIC_URL = "/static/"
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL)
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -185,7 +186,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            '/var/www/gismap/energize_andover/templates',
+            PROJECT_ROOT+'/energize_andover/templates',
             os.path.join(PROJECT_ROOT, "templates"),
         ],
         "APP_DIRS": True,

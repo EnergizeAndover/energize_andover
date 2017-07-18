@@ -61,10 +61,11 @@ def save_school (school, request):
     file_name = file_name.replace("devices", "device_relations")
     with open(file_name, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(["Device","Associated Device","Power","Zone"])
+        writer.writerow(["Device","Associated Devices","Power","Zone"])
         for device in devices:
-            if not device.Associated_Device == None:
-                writer.writerow([device.Name, device.Associated_Device.Name, device.Power, device.Location])
-            else:
+            try:
+                for dev in device.Associated_Devices.all():
+                    writer.writerow([device.Name, dev.Name, device.Power, device.Location])
+            except:
                 writer.writerow([device.Name, "", device.Power, device.Location])
 

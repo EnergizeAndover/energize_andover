@@ -8,7 +8,7 @@ from energize_andover.models import *
 
 def parse(file, school):
     df = pd.read_csv(file)
-    df = df.fillna("skip")
+    #df = df.fillna("skip")
     transformer = []
     for i in range(1, len(df['Device']) + 1):
         device = str(df._slice(slice(i - 1, i))['Device'])

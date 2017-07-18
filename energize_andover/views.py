@@ -6,6 +6,7 @@ from login.views import check_status, check_admin, check_school_privilege, updat
 from energize_andover.forms import *
 from school_editing.forms import *
 from school_saver.views import save_school
+from mysite.settings import PICTURE_ROOT
 import os.path
 
 def electrical_mapping(request):
@@ -46,7 +47,7 @@ def school(request, school_id):
     if request.POST.get("Saver"):
         save_school(school_obj, request)
         message = "CSV files created for School " + school_obj.Name
-        update_log(message, school, request)
+        update_log(message, school_obj, request)
     #if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
     Closets = school_obj.closets().order_by('id')
@@ -57,8 +58,11 @@ def school(request, school_id):
     if len(devices) == 0:
         devices = Device.objects.none()
     picture = "energize_andover/" + school_obj.Name + ".jpg"
-    if not os.path.exists("/var/www/gismap/theme/static/" + picture):
-        picture = None
+    if not os.path.exists(PICTURE_ROOT + picture):
+        return render(request, 'energize_andover/School.html',
+                      {'title': 'School Select', 'school': school_obj,
+                       'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices,
+                       'form': form})
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
                    'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture, "svg": picture.replace(".jpg", ".svg"),
@@ -92,11 +96,11 @@ def panel(request, panel_id):
     if check_school_privilege(panel_obj.School, request) == False:
         return HttpResponseRedirect("electric")
     if panel_obj.rooms() is not None:
-        Rooms = panel_obj.rooms()
+        Rooms = panel_obj.rooms().order_by('id')
     if panel_obj.circuits() is not None:
         Circuits = panel_obj.circuits().order_by('id')
     if panel_obj.panels() is not None:
-        Panels = panel_obj.panels()
+        Panels = panel_obj.panels().order_by('id')
     parray = []
     for i in range(0, len(Circuits)):
         parray.append(Circuits[i])
@@ -126,7 +130,7 @@ def panel(request, panel_id):
         Main = Main[0]
 
     picture = "energize_andover/" + panel_obj.Name.replace(" ", "") + ".jpg"
-    if not os.path.exists("/var/www/gismap/theme/static/" + picture):
+    if not os.path.exists(PICTURE_ROOT + picture):
         picture = None
     if request.POST.get("Edit"):
         #print(request)
