@@ -98,7 +98,7 @@ window.onclick = function(event) {
 {% endif %}
 <li>Zone: {{device.Location}}</li>
 {% if not assoc_device.count == 0 %}
-<p>Associated Device:</p>
+<p>Associated Devices:</p>
 {% for ad in assoc_device %}
 <li><a href = "{% url 'energize_andover:device' ad.id %}">{{ad.to_string}}</a></li>
 {% endfor %}

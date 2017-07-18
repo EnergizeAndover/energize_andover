@@ -2,7 +2,7 @@
 
 {% block main %}
 <h1> Search for {{title}}: </h1>
-<p>In {{school}}</p>
+<p>In {{schoo.Name}}</p>
 {% if not panels|length == 0 %}
 <p>Panels:</p>
 {% for panel in panels %}
@@ -43,5 +43,5 @@
   <input type="submit" class="btn btn-default" value="Search">
 </form>
 
-<li><a href="{% url 'energize_andover:school' schoo.pk%}">Return to {{school}}</a></li>
+<li><a href="{% url 'energize_andover:school' schoo.pk%}">Return to {{schoo.Name}}</a></li>
 {% endblock %}

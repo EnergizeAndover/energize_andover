@@ -61,7 +61,7 @@ def school(request, school_id):
         picture = None
     return render(request, 'energize_andover/School.html',
                   {'title': 'School Select', 'school': school_obj,
-                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture,
+                   'Rooms': Rooms, 'Panels': Panels, 'Closets': Closets, 'Devices': devices, 'picture': picture, "svg": picture.replace(".jpg", ".svg"),
                    'form': form})
 
 def device(request, device_id):
