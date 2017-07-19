@@ -32,7 +32,6 @@ class School(models.Model):
         return self.Name
 
 
-
 class Closet(models.Model):
     Name = models.CharField(max_length=30)
     Old_Name = models.CharField(max_length=20, default='')
@@ -76,22 +75,27 @@ class Panel(models.Model):
     )
     Notes = models.CharField(max_length=1000, default = '')
 
-
     def rooms(self):
         return Room.objects.filter(Panels__pk=self.pk)
+
     def circuits(self):
         return Circuit.objects.filter(Panel=self.pk)
+
     def panels(self):
         return Panel.objects.filter(Panels__pk=self.pk)
+
     def fqn(self):
         return self.FQN
+
     def __str__(self):
         return self.Name
-    def to_string (self):
+
+    def to_string(self):
         try:
             return self.FQN + " (" + self.Name + "), Rm. " + self.Closet.Name
         except:
             return self.FQN + " (" + self.Name + ")"
+
 
 class Room(models.Model):
     Name = models.CharField(max_length=30)
@@ -109,12 +113,16 @@ class Room(models.Model):
 
     def panels(self):
         return self.Panels.all()
+
     def school(self):
         return self.School
+
     def circuits(self):
         return Circuit.objects.filter(Rooms__pk=self.pk)
+
     def __str__(self):
         return self.OldName
+
     def to_string(self):
         return self.Name + " / " + self.OldName + " / " + self.Type
 
@@ -142,30 +150,36 @@ class Circuit(models.Model):
 
     def rooms(self):
         return self.Rooms.all()
+
     def devices(self):
         return Device.objects.filter(Circuit__pk=self.pk)
+
     def school (self):
         return self.Panel.School
+
     def __str__(self):
         out = str(self.Panel) + ', circuit ' + str(self.Number) + ': '
         #rooms = self.Rooms.all()
         #for room in rooms:
         #    out += room.__str__()
         return out
+
     def to_string(self):
         to_str = self.FQN + " | " + self.Name
-        if (not len(self.devices()) == 0):
-            dev = " | 1) "  + self.devices()[0].to_string()
+        if not len(self.devices()) == 0:
+            dev = " | 1) " + self.devices()[0].to_string()
             rm = self.devices()[0].Room
-            for i in range (1, len(self.devices())):
+            for i in range(1, len(self.devices())):
                 dev += ("; " + str(i+1) + ") " + self.devices()[i].to_string())
             to_str += (dev)
         return to_str
+
+
 class Device(models.Model):
     Name = models.CharField(max_length=50)
     Circuit = models.ManyToManyField(
         Circuit,
-        blank = True,
+        blank=True,
     )
     School = models.ForeignKey(
         School,
@@ -190,19 +204,22 @@ class Device(models.Model):
 
     def circuits(self):
         return self.Circuit.all()
+
     def rooms(self):
         return self.Room
 
     def __str__(self):
         str = self.Name
-        if (self.Room is not None):
+        if self.Room is not None:
             str+=(", Rm:" + self.Room.Name)
         return str
+
     def to_string(self):
         to_str = self.Name
-        if (self.Room is not None):
+        if self.Room is not None:
             to_str += (", Rm: " + self.Room.Name)
         return to_str
+
 
 class Transformer(models.Model):
     Name = models.CharField(max_length=50, default = '')
@@ -214,9 +231,12 @@ class Transformer(models.Model):
         blank=True,
         null=True
     )
+
     def __str__(self):
         return self.Name
+
+
 class SpecialUser(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
-    Authorized_Schools = models.ManyToManyField(School, blank = True)
-    Notes = models.CharField(max_length=1000, default = '')
+    Authorized_Schools = models.ManyToManyField(School, blank=True)
+    Notes = models.CharField(max_length=1000, default='')

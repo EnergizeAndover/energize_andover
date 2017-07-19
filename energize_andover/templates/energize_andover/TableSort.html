@@ -2,10 +2,30 @@
 
 {% block extra_js %}
     <!-- Pick a theme, load the plugin & initialize plugin -->
+
+    <style>
+	.left { float: left; }
+	.right {
+		float: right;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-ms-user-select: none;
+	}
+	.pager .prev, .pager .next, .pagecount { cursor: pointer; }
+	.pager a {
+		text-decoration: none;
+		color: black;
+	}
+	.pager a.current {
+		color: #0080ff;
+	}
+	</style>
+
 	<script>
 	$(function(){
 		$('table').tablesorter({
-			widgets        : ['zebra', 'columns'],
+			widgets        : ['zebra', 'filter', 'columns'],
 			usNumberFormat : false,
 			sortReset      : true,
 			sortRestart    : true
