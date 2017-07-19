@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from ea_parser.forms import *
-from grapher.script.file_transfer import get_transformed_file, graph_transformed_file
-from django.http import HttpResponse
+from ea_parser.script.file_transfer import get_transformed_file, graph_transformed_file
+from django.http import HttpResponse, HttpResponseRedirect
 def index(request):
+    return HttpResponseRedirect("energize_andover/electrical")
     # Handle file upload
+    """
     if request.method == 'POST' and request.POST.get('parse'):
         print(request.POST)
         form = MetasysUploadForm(request.POST, request.FILES)
@@ -40,3 +42,4 @@ def index(request):
 
 
 # Create your views here.
+"""

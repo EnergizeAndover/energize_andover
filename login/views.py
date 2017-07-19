@@ -15,7 +15,7 @@ def login (request):
     if request.method == "GET":
         form = LoginForm(request.GET, request.FILES)
         if form.is_valid():
-            print(True)
+            #print(True)
             if request.GET.get('username') is None or request.GET.get("password") is None:
                 return HttpResponse(render(request, 'energize_andover/Login.html', {'form': form,
                                                                                     'message': "Login Failed: Missing Username and/or Password"}))
@@ -28,6 +28,8 @@ def login (request):
                 if request.session.get('destination', None) == None:
                     return HttpResponseRedirect('electric')
                 dest_string = request.session['destination']
+                print(1)
+                print(dest_string)
                 request.session['destination'] = None
                 message = "User " + request.session['username'] + " logged in."
                 update_log(message, None, request)
@@ -50,8 +52,10 @@ def logout (request):
 
 def check_status(request):
     if (request.session.get('logged_in', None) == None):
-        req = str(request).replace("/energize_andover", "")
-        request.session['destination'] = req[req.index ("/") + 1: len(req) - 2]
+        if (request.session.get('destination', None) == None or request.session.get('destination', None) == "Login" or request.session.get('destination', None) == "electric"):
+            req = str(request).replace("/energize_andover", "")
+            #print(req[req.index ("/") + 1: len(req) - 2])
+            request.session['destination'] = req[req.index ("/") + 1: len(req) - 2]
         return False
     return True
 

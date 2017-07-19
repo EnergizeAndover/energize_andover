@@ -242,7 +242,6 @@ INSTALLED_APPS = (
     # "mezzanine.mobile",
     "energize_andover",
     "ea_parser",
-    "grapher",
     "school_adder",
     "login",
     "user_management",
