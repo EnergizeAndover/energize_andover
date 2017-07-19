@@ -94,8 +94,8 @@
 {% load static %}
 {% if not picture == None %}
 <div id = "svgDiv">
-    <object id="svgObj" data="{% static svg %}" type="image/svg+xml" width="700px" height="350px">
-        <img src = "{% static svg %}" width="700px" height="350px"/>
+    <object id="svgObj" data="{% static svg %}" type="image/svg+xml" width=1000 height=500>
+        <img src = "{% static svg %}" width=1000 height=500>
     </object>
 </div>
 
@@ -104,11 +104,10 @@
     window.onload=function(){
         obj = document.getElementById("svgObj");
         var svg = obj.contentDocument.documentElement;
-        console.log(svg)
+        //console.log(svg)
         //var svg = intermediate.getElementsByTagNameNS("http://www.w3.org/2000/svg", "svg")[0];
         var panels = document.getElementById("panel_list").options;
         elements = svg.getElementsByTagName("a");
-
         for(i = 0; i < panels.length; i++){
             for (j = 0; j < elements.length; j++){
                 try{
