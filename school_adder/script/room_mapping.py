@@ -11,7 +11,7 @@ def parse(file, school):
     df = df.fillna("")
     rooms = []
     non_rooms = []
-
+    room_qid = 1
     for i in range(1, len(df['Old Number']) + 1):
         new_room_number = df._slice(slice(i - 1, i))['New Number']
         old_room_number = df._slice(slice(i - 1, i))['Old Number']
@@ -20,7 +20,8 @@ def parse(file, school):
         new_number = new_number[new_number.index("   " ) + 4: new_number.index('\n')]
         type = old_number[old_number.index("(") + 1: old_number.index(")")]
         old_number = old_number[old_number.index("   ") + 4: old_number.index("(") - 1]
-        room = Room (Name = new_number, OldName = old_number, Type = type, School = school)
+        room = Room (Name = new_number, OldName = old_number, Type = type, School = school, QID = room_qid)
+        room_qid += 1
 
         try:
             if ('-' in new_number):

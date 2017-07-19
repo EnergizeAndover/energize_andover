@@ -11,6 +11,8 @@ def parse(file, school):
     df = pd.read_csv(file)
     df = df.fillna("skip")
     transformer = []
+    closet_qid = 1
+    panel_qid = 1
     for i in range(1, len(df['path']) + 1):
         path = str(df._slice(slice(i - 1, i))['path'])
         type = str(df._slice(slice(i - 1, i))['type'])
@@ -84,16 +86,19 @@ def parse(file, school):
                     try:
                         #print ("3")
                         closet_name = Room.objects.filter(School=school).get(OldName=room).Name
-                        closet = Closet(Name=closet_name, Old_Name=room, School=school)
+                        closet = Closet(Name=closet_name, Old_Name=room, School=school, QID = closet_qid)
+                        closet_qid += 1
                     except:
                         #print ("4")
-                        closet = Closet(Name="NL", Old_Name=room, School=school)
+                        closet = Closet(Name="NL", Old_Name=room, School=school, QID = closet_qid)
+                        closet_qid += 1
                     closet.save()
                 number = path.count('.')
                 if number == 0:
                     name = path
                     closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
-                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=closet, School = school, FQN = path, Notes = description)
+                    new_panel = Panel(Name = name, Voltage = voltage, Location = "None", Closet=closet, School = school, FQN = path, Notes = description, QID = panel_qid)
+                    panel_qid += 1
                 else:
                     count = 0
                     s1 = -1
@@ -127,6 +132,7 @@ def parse(file, school):
                     except:
                         panel_obj = None
                     closet = Closet.objects.filter(Old_Name = room).filter(School = school).first()
-                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path, Notes = description)
+                    new_panel = Panel(Name=name, Voltage=voltage, Location="None", Panels=panel_obj, School=school, Closet=closet, FQN = path, Notes = description, QID = panel_qid)
+                    panel_qid += 1
 
                 new_panel.save()

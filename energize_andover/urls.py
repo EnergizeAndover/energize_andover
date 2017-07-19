@@ -7,6 +7,7 @@ from login import views as LoginViews
 from user_management import views as UMViews
 from school_editing import views as SEViews
 from table_sorter import views as TableViews
+from qr_codes import views as QRViews
 
 app_name = 'gismap'
 urlpatterns = [
@@ -34,4 +35,7 @@ urlpatterns = [
     url(r'^Management', UMViews.user_management, name = "user_management"),
     url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing"),
     url(r'^TableSorting(?P<school_id>[0-9]+)(?P<type>[-\w]+)', TableViews.list, name='table_sorting'),
+    url(r'^QRCode/Room(?P<qr_id>[0-9]+)', QRViews.qr_rooms_redirect, name='qr_room_redirect'),
+    url(r'^QRCode/Panel(?P<qr_id>[0-9]+)', QRViews.qr_panels_redirect, name='qr_panel_redirect'),
+    url(r'^QRCode/Closet(?P<qr_id>[0-9]+)', QRViews.qr_closets_redirect, name='qr_closet_redirect'),
 ]

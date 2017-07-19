@@ -42,6 +42,7 @@ class Closet(models.Model):
         null=True,
     )
     Notes = models.CharField(max_length=1000, default = '')
+    QID = models.IntegerField(default=0)
 
     def __str__(self):
         return self.Old_Name
@@ -55,6 +56,7 @@ class Panel(models.Model):
     Voltage = models.CharField(max_length=20, default='0')
     Location = models.CharField(max_length=30, default='')
     FQN = models.CharField(max_length=50, default="MWSB")
+    QID = models.IntegerField(default=0)
     Panels = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -110,6 +112,7 @@ class Room(models.Model):
     Panels = models.ManyToManyField(Panel,
                                     blank=True,)
     Notes = models.CharField(max_length=1000, default = '')
+    QID = models.IntegerField(default=0)
 
     def panels(self):
         return self.Panels.all()
