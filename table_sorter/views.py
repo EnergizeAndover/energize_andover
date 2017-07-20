@@ -14,11 +14,11 @@ def list(request, school_id, type):
         return HttpResponseRedirect("electric")
     # if request.GET.get("Adder"):
     #    return render(request, "energize_andover/Adder.html", {'school_choice': school_obj})
-    if type == "closets":
+    if type == "Closets":
         model_obj = school_obj.closets().order_by('id')
-    elif type == "panels":
+    elif type == "Panels":
         model_obj = school_obj.panels().order_by('id')
-    elif type == "rooms":
+    elif type == "Rooms":
         model_obj = school_obj.rooms().order_by('id')
     else:
         model_obj = school_obj.devices().order_by('id')
