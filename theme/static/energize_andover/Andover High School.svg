@@ -1072,7 +1072,7 @@ viewBox="0 0 50000 23386"
    <circle class="fil7 str9" cx="16418" cy="20518" r="161"/>
    <line class="fil0 str0" x1="16418" y1="20518" x2="16766" y2= "20518" />
   </g>
-  <a xlink:href="http://www.schneider-electric.us/en/product-range/61336-powerlogic-em3500-series">
+  <a xlink:href="http://www.schneider-electric.us/en/product-range/61336-powerlogic-em3500-series" target="_parent">
    <rect x="14537" y="20273" width="2717" height="514" fill = "White" fill-opacity="0.0"/>
   </a>
   <text x="18106" y="20724"  class="fil1 fnt11">6 EMs </text>

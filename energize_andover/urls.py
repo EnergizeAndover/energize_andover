@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from . import views
-from grapher import views as GraphViews
 from ea_parser import views as ParseViews
 from school_adder import views as AdderViews
 from login import views as LoginViews
@@ -12,7 +11,6 @@ from qr_codes import views as QRViews
 app_name = 'gismap'
 urlpatterns = [
     url(r'^$', ParseViews.index, name='index'),
-    url(r'^Graph', GraphViews.grapher, name='graph'),
     url(r'^electric', views.electrical_mapping, name='electric'),
     url(r'^School(?P<school_id>[0-9]+)', views.school, name='school'),
     url(r'^Room(?P<room_id>[0-9]+)', views.room, name='room'),
