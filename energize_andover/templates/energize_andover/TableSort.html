@@ -80,27 +80,34 @@
 
 {% block main %}
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <!--<div class="navbar navbar-fixed-top">-->
-        <ul class="nav navbar-nav">
-          <li>
-              <a href="{% url 'energize_andover:table_sorting' school.id 'Devices' %}">Devices</a>
-          </li>
-          <li>
-              <a href="{% url 'energize_andover:table_sorting' school.id 'Rooms' %}">Rooms</a>
-          </li>
-          <li>
-              <a href="{% url 'energize_andover:table_sorting' school.id 'Closets' %}">Closets</a>
-          </li>
-          <li>
-              <a href="{% url 'energize_andover:table_sorting' school.id 'Panels' %}">Panels</a>
-          </li>
-        </ul>
-      <!--</div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-     <!--</div>-->
-  </nav>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tableBar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand"><font size="3">Tables</font></a>
+        </div>
+        <div class="collapse navbar-collapse" id="tableBar">
+          <ul class="nav navbar-nav">
+              <li>
+                  <a href="{% url 'energize_andover:table_sorting' school.id 'Devices' %}">Devices</a>
+              </li>
+              <li>
+                  <a href="{% url 'energize_andover:table_sorting' school.id 'Rooms' %}">Rooms</a>
+              </li>
+              <li>
+                  <a href="{% url 'energize_andover:table_sorting' school.id 'Closets' %}">Closets</a>
+              </li>
+              <li>
+                  <a href="{% url 'energize_andover:table_sorting' school.id 'Panels' %}">Panels</a>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
   <h1>{{ type }}</h1>
   <table id="myTable" class="tablesorter">

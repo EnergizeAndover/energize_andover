@@ -55,28 +55,28 @@
 
 <body id="{% block body_id %}body{% endblock %}">
 
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="{% url 'energize_andover:electric' %}">Energize Andover</a>
-      </div>
-      <!--<div class="navbar navbar-fixed-top">-->
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="{% url 'energize_andover:electric' %}"><font size="1">Electrical Mapping</font></a>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'energize_andover:electric' %}">Electrical Mapping</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+          <li>
+                <a href="http://www.energizeandover.com/">Energize Andover</a>
             </li>
             <li>
-                <a href="http://www.energizeandover.com/"><font size="1">Energize Andover</font></a>
+                <a href="http://projectgle.weebly.com/">Project GLE</a>
             </li>
-            <li>
-                <a href="http://projectgle.weebly.com/"><font size="1">Project GLE</font></a>
-            </li>
-        </ul>
-      <!--</div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-     <!--</div>-->
-  </nav>
-
+      </ul>
+    </div>
+  </div>
+</nav>
 
   <div class="container">
     <div class="row">
