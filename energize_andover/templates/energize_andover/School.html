@@ -13,7 +13,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand"><font size="3">Tables</font></a>
+      <a href="{% url 'energize_andover:school' school.id%}" class="navbar-brand"><font size="3">School</font></a>
     </div>
     <div class="collapse navbar-collapse" id="tableBar">
       <ul class="nav navbar-nav">
@@ -137,21 +137,24 @@
 </script>
 
 {% endif %}
-<form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p>{{ form.entry.label }} {{ form.entry }}</p>
-  <p>{{ form.panels.label }}: {{ form.panels }} (Acceptable Fields are: Name)</p>
-  <p>{{ form.rooms.label }}: {{ form.rooms }} (Acceptable Fields are: Name, Old Name, Type)</p>
-  <p>{{ form.circuits.label }}: {{ form.circuits }} (Acceptable Fields are: Device Name, Circuit Name)</p>
-  <p>{{ form.closets.label }}: {{ form.closets }} (Acceptable Fields are: Name, Old Name)</p>
-  <input type = "hidden" name = "school" value="{{school.id}}">
 
-  <input type="submit" class="btn btn-default" value="Search">
+
+<form action="{% url 'energize_andover:search' %}" method="GET" enctype="multipart/form-data">
+{% csrf_token %}
+<p>{{ form.entry.label }} {{ form.entry }}</p>
+<p>{{ form.panels.label }}: {{ form.panels }} (Acceptable Fields are: Name)</p>
+<p>{{ form.rooms.label }}: {{ form.rooms }} (Acceptable Fields are: Name, Old Name, Type)</p>
+<p>{{ form.circuits.label }}: {{ form.circuits }} (Acceptable Fields are: Device Name, Circuit Name)</p>
+<p>{{ form.closets.label }}: {{ form.closets }} (Acceptable Fields are: Name, Old Name)</p>
+<input type = "hidden" name = "school" value="{{school.id}}">
+<input type="submit" class="btn btn-default" value="Search">
+<p>
 </form>
 <form action="{% url 'energize_andover:adder' %}" method="GET" enctype="multipart/form-data">
     <input type="hidden" name="school_choice" value="{{school.id}}">
     <input type="submit" class="btn btn-default" value="Add New Object to School" name = "Adder">
 </form>
+<p>
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="submit" class="btn btn-default" value="Save School to Requisite CSV Files" name = "Saver">
