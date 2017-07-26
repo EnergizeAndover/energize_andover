@@ -86,15 +86,23 @@ def update_log (message, school, request):
     f = codecs.open(TEMPLATES_ROOT + "ChangeLog.html", "r")
     file = str(f.read())
     w = codecs.open(TEMPLATES_ROOT + "ChangeLog.html", "w")
-    break_pt = file.index("</h1>") + 5
-    if not school == None:
-        w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", School: " + school.Name + ", User: " + request.session[
-            'username'] + ", Description: " + message + "</p>" + file[break_pt:])
+    break_pt = file.index("<!-- login.views.update_log starts here! -->") + 44
+    if school is not None:
+        w.write(file[0:break_pt] + "\n\n<tr>\n<td>" +
+                str(datetime.now()) + "</td>\n<td>" +
+                request.session['username'] + "</td>\n<td>" +
+                message + "</td>\n<td>" +
+                school.Name + "</td>\n</tr>" + file[break_pt:])
     else:
         try:
-            w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", User: " + request.session['username'] + ", Description: " + message + "</p>" + file[break_pt:])
+            w.write(file[0:break_pt] + "\n\n<tr>\n<td>" +
+                    str(datetime.now()) + "</td>\n<td>" +
+                    request.session['username'] + "</td>\n<td>" +
+                    message + "</td>\n<td></td>\n</tr>" + file[break_pt:])
         except:
-            w.write(file[0:break_pt] + "\n<p>Time: " + str(datetime.now()) + ", Description: " + message + "</p>" + file[break_pt:])
+            w.write(file[0:break_pt] + "\n\n<tr>\n<td>" +
+                    str(datetime.now()) + "</td>\n<td></td>\n<td>" +
+                    message + "</td>\n<td></td>\n</tr>" + file[break_pt:])
 """
 ct = ContentType.objects.get_for_model(User)
 permission = Permission.objects.create(codename="can_edit_schools",
