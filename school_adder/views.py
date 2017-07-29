@@ -50,6 +50,7 @@ def adder(request):
             if form.is_valid():
                 new = form.save()
                 new.School = School.objects.get(id=str(request.GET.get("school_choice")))
+                new.QID = len(new.School.closets()) + 1
                 new.save()
                 message = "Closet " + new.Name + " added."
                 update_log(message, new.School, request)
@@ -64,6 +65,7 @@ def adder(request):
                 new = form.save()
                 new.School = School.objects.get(id = str(request.GET.get("school_choice")))
                 new.FQN = new.Name
+                new.QID = len(new.School.panels()) + 1
                 new.save()
                 message = "Panel " + new.Name + " added."
                 update_log(message, new.School, request)
@@ -77,6 +79,7 @@ def adder(request):
             if form.is_valid():
                 new = form.save()
                 new.School = School.objects.get(id = str(request.GET.get("school_choice")))
+                new.QID = len(new.School.rooms()) + 1
                 new.save()
                 message = "Room " + new.Name + " added."
                 update_log(message, new.School, request)

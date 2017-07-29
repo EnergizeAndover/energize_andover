@@ -8,3 +8,5 @@ pytz==2016.4
 six==1.10.0
 matplotlib==1.5.1
 jQuery==3.2.1
+pdfkit==0.6.1
+pyqrcode==1.2.1

@@ -1,0 +1,36 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+<h1>QR Generator</h1>
+
+{% if selected == True %}
+<form action=""  method="POST" enctype="multipart/form-data" name="Generate">
+    {% csrf_token %}
+    <p>Select rooms, panels, or closets to generate codes.</p>
+    <input type="checkbox" value="True" name="Rooms">Rooms<br>
+    <input type="checkbox" value="True" name="Panels">Panels<br>
+    <input type="checkbox" value="True" name="Closets">Closets<br><br>
+    <input type="submit" class="btn-xs" value="Generate" name="Generate">
+</form>
+{% elif generate == True %}
+<p>The QR codes have been generated.</p>
+{% if rooms == True %}
+<a href="QRGenerator/room_codes.pdf" target="_blank">Rooms</a><br>
+{% endif %}
+{% if panels == True %}
+<a href="QRGenerator/panel_codes.pdf" target="_blank">Panels</a><br>
+{% endif %}
+{% if closets == True %}
+<a href="QRGenerator/closet_codes.pdf" target="_blank">Closets</a>
+{% endif %}
+{% else %}
+<form action=""  method="POST" enctype="multipart/form-data" name="Schools">
+        {% csrf_token %}
+        {% for school in schools %}
+            <li><a href="{% url 'energize_andover:school' school.id %}">{{school.Name}}</a> <input type="submit" class="btn-xs" value="Select School" name = "{{school.id}}"></li>
+        {% endfor %}
+</form >
+{% endif %}
+
+
+{% endblock %}

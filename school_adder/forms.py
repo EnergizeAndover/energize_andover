@@ -82,4 +82,10 @@ class PopulationForm(forms.Form):
                                           widget=forms.CheckboxSelectMultiple(),
                                           label="Which Users Can Access: ")
 
+class QRForms(forms.Form):
+
+    Links_File = forms.FileField(
+        label='Select a file to generate codes'
+    )
+
 
