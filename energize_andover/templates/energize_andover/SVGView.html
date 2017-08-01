@@ -1,0 +1,54 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+
+{% load static %}
+
+<p><a href="{% url 'energize_andover:school' school.id %}">Return to School</a></p>
+
+<select id = "panel_list" onchange="location = this.value" hidden="hidden">
+    {% for panel in Panels %}
+        <option id = "{{panel.FQN}}" value="{% url 'energize_andover:panel' panel.id %}">{{panel.FQN}} ({{panel.Name}})</option>
+    {% endfor %}
+</select>
+
+{% if not picture == None %}
+
+<div id = "svgDiv">
+    <object id="svgObj" data="{% static svg %}" type="image/svg+xml" width="1000" height="500">
+        <img src = "{% static svg %}" width="1000" height="500">
+    </object>
+</div>
+
+<script>
+    var obj = null;
+    window.onload=function(){
+        obj = document.getElementById("svgObj");
+        var svg = obj.contentDocument.documentElement;
+        //console.log(svg)
+        //var svg = intermediate.getElementsByTagNameNS("http://www.w3.org/2000/svg", "svg")[0];
+        var panels = document.getElementById("panel_list").options;
+        elements = svg.getElementsByTagName("a");
+        for(i = 0; i < panels.length; i++){
+            for (j = 0; j < elements.length; j++){
+                try{
+                    if (elements[j].id === panels[i].id){
+                        elements[j].setAttribute('xlink:href', panels[i].value);
+
+                        //alert(elements[j].getAttributeNS('http://www.w3.org/2000/xlink', 'xlink:href'));
+                    }
+                }
+                catch(err){
+                    //alert("There was a problem");
+                }
+            }
+
+        }
+    }
+
+
+</script>
+
+{% endif %}
+
+{% endblock %}

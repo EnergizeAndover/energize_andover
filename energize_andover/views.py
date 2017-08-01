@@ -283,12 +283,25 @@ def search(request):
         school_obj = School.objects.filter(Name = current_school).first()
     return HttpResponse(render(request, 'energize_andover/Search.html', context = {'form': form, 'title': "", 'school':current_school, 'schoo': school_obj}))
 
-def dictionary (request):
+
+def dictionary(request):
     return render(request, 'energize_andover/Dictionary.html')
 
 
+def topology(request, school_id):
+    if check_status(request) is False:
+        return HttpResponseRedirect("Login")
+    school_obj = get_object_or_404(School, pk=school_id)
+    if check_school_privilege(school_obj, request) is False:
+        return HttpResponseRedirect("electric")
+    panels = school_obj.panels().order_by('id')
+    picture = "energize_andover/" + school_obj.Name + ".jpg"
+    svg = "energize_andover/" + school_obj.Name + ".svg"
+    return render(request, 'energize_andover/SVGView.html',
+                  {'svg': svg, 'picture': picture, 'school': school_obj, 'Panels': panels})
 
-def changelog (request):
+
+def changelog(request):
     if check_status(request) is False:
         return HttpResponseRedirect("Login")
     if check_admin(request) is False:

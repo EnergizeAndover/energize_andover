@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="700" height="350" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="x200Y200 meet" width="10%" height="10%" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 50000 23386"
  xmlns:xlink="http://www.w3.org/1999/xlink" id="svg_image">
  <defs>
@@ -1620,4 +1620,3 @@ viewBox="0 0 50000 23386"
   </a>
  </g>
 </svg>
-
