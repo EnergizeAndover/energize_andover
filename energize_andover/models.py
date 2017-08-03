@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 # Create your models here.
+
+
 class School(models.Model):
     Name = models.CharField(max_length=30)
-    #Notes = models.CharField(max_length=1000, default='')
+    # Notes = models.CharField(max_length=1000, default='')
 
     def panels(self):
         return Panel.objects.filter(School__pk=self.pk)
@@ -41,7 +42,7 @@ class Closet(models.Model):
         blank=True,
         null=True,
     )
-    Notes = models.CharField(max_length=1000, default = '')
+    Notes = models.CharField(max_length=1000, default='')
     QID = models.IntegerField(default=0)
 
     def __str__(self):
@@ -75,7 +76,7 @@ class Panel(models.Model):
         blank=True,
         null=True,
     )
-    Notes = models.CharField(max_length=1000, default = '')
+    Notes = models.CharField(max_length=1000, default='')
 
     def rooms(self):
         return Room.objects.filter(Panels__pk=self.pk)

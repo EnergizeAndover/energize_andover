@@ -307,5 +307,3 @@ def changelog(request):
     if check_admin(request) is False:
         return HttpResponseRedirect("electric")
     return render(request, 'energize_andover/ChangeLog.html')
-
-print(Closet.objects.all().count())

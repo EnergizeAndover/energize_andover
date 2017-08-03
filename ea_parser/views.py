@@ -2,6 +2,8 @@ from django.shortcuts import render
 from ea_parser.forms import *
 from ea_parser.script.file_transfer import get_transformed_file, graph_transformed_file
 from django.http import HttpResponse, HttpResponseRedirect
+
+
 def index(request):
     return HttpResponseRedirect("energize_andover/electrical")
     # Handle file upload
