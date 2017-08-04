@@ -82,7 +82,12 @@ import mysite.environment as environment
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 # BLOG_USE_FEATURED_IMAGE = True
-
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/New York'
 # If True, the django-modeltranslation will be added to the
 # INSTALLED_APPS setting.
 USE_MODELTRANSLATION = False
@@ -247,7 +252,8 @@ INSTALLED_APPS = (
     "user_management",
     "school_editing",
     "school_saver",
-    "setup"
+    "setup",
+    "bacnet"
 )
 
 # List of middleware classes to use. Order is important; in the request phase,

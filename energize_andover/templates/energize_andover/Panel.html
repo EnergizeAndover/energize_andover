@@ -58,7 +58,7 @@
     {% csrf_token %}
     <p>Closet:</p>
     <select id="id_Closet" name = "Closet">
-        {% for clst in Closets %}apache
+        {% for clst in Closets %}
         
             {% if clst == panel.Closet %}
                 <option value = "{{clst.id}}" selected = 'selected'>{{clst.Name}}</option>

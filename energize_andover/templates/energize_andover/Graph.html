@@ -1,0 +1,154 @@
+{% extends "pages/richtextpage.html" %}
+
+{% block main %}
+
+<canvas id="myChart" width="300" height="300"></canvas>
+<form action=""  method="POST" enctype="multipart/form-data" name="Time">
+    {% csrf_token %}
+    <p>Data Since:</p>
+    <p><input type = "datetime-local" onclick = "resetTime()" id="date" value = "{{date}}" name="Datetime"></p>
+    <p></p>
+    <p>Cost?</p>
+    {% if checked %}
+        <p><input type="number" step = ".01" min = 0 max = 1 name="cost/kW" value="{{cost}}"/><input type="checkbox" value = "True" name = "checkbox" checked="checked"/>
+    {% else %}
+        <p><input type="number" step = ".01" min = 0 max = 1 name="cost/kW" value="{{cost}}"/><input type="checkbox" value = "False" name = "checkbox" />
+    {% endif %}
+    <p><input type="submit" id="btn" class="btn-xs" value="Request New Data" name="request_data" /></p>
+</form>
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var is_checked = {{change_title}};
+if (is_checked === true)
+{
+    var datatype = "$";
+}
+else
+{
+    var datatype = "kWs";
+}
+var myChart = new Chart(ctx, {
+
+    type: 'line',
+    data: {
+        labels: {{times|safe}},
+        datasets: [
+        {
+
+            label: 'Main ' + datatype,
+            data: {{main_kWs}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'DHB ' + datatype,
+            data: {{dhb_kWs}},
+            backgroundColor: [
+                'rgba(30,144,255, 0.2)',
+            ],
+            borderColor: [
+                'rgba(30,144,255,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'DE ' + datatype,
+            data: {{de_kWs}},
+            backgroundColor: [
+                'rgba(0,204,0, 0.2)',
+            ],
+            borderColor: [
+                'rgba(0,204,0,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'DG ' + datatype,
+            data: {{dg_kWs}},
+            backgroundColor: [
+                'rgba(0, 0, 0, 0.2)'
+            ],
+            borderColor: [
+                'rgba(0,0,0,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'DL ' + datatype,
+            data: {{dl_kWs}},
+            backgroundColor: [
+                'rgba(220,0,162, 0.2)',
+            ],
+            borderColor: [
+                'rgba(220,0,162,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'M1 ' + datatype,
+            data: {{m1_kWs}},
+            backgroundColor: [
+                'rgba(255,230,0, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255,230,0,1)',
+            ],
+            borderWidth: 1
+       },
+       {
+            label: 'CC ' + datatype,
+            data: {{amdp_kWs}},
+            backgroundColor: [
+                'rgba(255,119,0, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255,119,0,1)',
+            ],
+            borderWidth: 1
+       }
+       ]
+    },
+
+    options: {
+        scales: {
+
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    },
+    options: {
+        animation: {
+            duration: 0
+        }
+    }
+
+});
+
+var date = document.getElementById("date");
+var dateForReload=date.value;
+//alert(dateForReload);
+window.timer=window.setTimeout(function () {
+   document.getElementById("btn").click()
+}, 9000000); // refresh/redirect after 100 seconds.
+document.getElementById("date").value = dateForReload;
+
+function resetTime()
+{
+    var dateForReload=date.value;
+    //alert(dateForReload);
+    window.clearTimeout(window.timer)
+    window.timer=window.setTimeout(function () {
+       document.getElementById("btn").click()
+    }, 9000000); // refresh/redirect after 100 seconds.
+    document.getElementById("date").value = dateForReload;
+}
+</script>
+{% endblock %}

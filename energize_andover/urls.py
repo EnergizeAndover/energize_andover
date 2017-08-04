@@ -7,6 +7,7 @@ from user_management import views as UMViews
 from school_editing import views as SEViews
 from table_sorter import views as TableViews
 from qr_codes import views as QRViews
+from bacnet import views as BViews
 
 app_name = 'gismap'
 urlpatterns = [
@@ -38,4 +39,5 @@ urlpatterns = [
     url(r'^QRCode/Closet(?P<qr_id>[0-9]+)', QRViews.qr_closets_redirect, name='qr_closet_redirect'),
 
     url(r'^SVG(?P<school_id>[0-9]+)', views.topology, name='SVG'),
+    url(r'^Graph(?P<school_id>[0-9]+)', BViews.return_data, name='graph')
 ]
