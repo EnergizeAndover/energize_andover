@@ -6,7 +6,7 @@ def pull_data():
     s = sched.scheduler(time.time, time.sleep)
     try:
         while(True):
-            s.enter(10, 1, main, ())
+            s.enter(900, 1, main, ())
             s.run()
     except:
         close()

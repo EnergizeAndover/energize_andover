@@ -37,7 +37,6 @@ urlpatterns = [
     url(r'^QRCode/Room(?P<qr_id>[0-9]+)', QRViews.qr_rooms_redirect, name='qr_room_redirect'),
     url(r'^QRCode/Panel(?P<qr_id>[0-9]+)', QRViews.qr_panels_redirect, name='qr_panel_redirect'),
     url(r'^QRCode/Closet(?P<qr_id>[0-9]+)', QRViews.qr_closets_redirect, name='qr_closet_redirect'),
-
     url(r'^SVG(?P<school_id>[0-9]+)', views.topology, name='SVG'),
     url(r'^Graph(?P<school_id>[0-9]+)', BViews.return_data, name='graph')
 ]
