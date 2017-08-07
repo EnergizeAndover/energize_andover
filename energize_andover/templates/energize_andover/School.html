@@ -120,6 +120,7 @@
 <form action="{% url 'energize_andover:SVG' school.id %}" method="GET" enctype="multipart/form-data">
     <input type="submit" class="btn btn-default" value="View Circuit Topology" name = "View SVG">
 </form>
+<p>
 <form action = "Graph{{school.id }}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="submit" class="btn btn-default" value="View Graph of Usage" name = "">
