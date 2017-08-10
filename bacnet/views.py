@@ -7,7 +7,7 @@ from threading import Thread
 from bacnet.script.NAEInteract1 import main, findNAE
 import json
 from datetime import datetime
-
+from random import randint
 
 s = sched.scheduler(time.time, time.sleep)
 def graphing(request):
@@ -113,10 +113,14 @@ def return_data(request, school_id):
                     amdp_kWs.append(data.Value)
                 elif data.Name == "M1 (kW)":
                     m1_kWs.append(data.Value)
+    colors = {}
+    for key in data_dict:
+        colors[key] = [randint(0,255), randint(0,255), randint(0,255)]
     times = json.dumps(times)
     print (data_dict)
     return render(request, "energize_andover/Graph.html", {'times': times,
                                                            'data': data_dict,
+                                                           'colors': colors,
                                                            'main_kWs': main_kWs,
                                                            'dhb_kWs': dhb_kWs,
                                                            'de_kWs': de_kWs,
