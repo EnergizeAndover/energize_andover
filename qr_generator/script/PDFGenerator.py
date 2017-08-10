@@ -18,7 +18,9 @@ def generate():
         html = str(page)
         with open('room_codes.html', 'w') as file:
             file.write(html)
-        pdfkit.from_file('room_codes.html', 'room_codes.pdf')
+        os.chmod('room_codes.html', 0o777)
+        # pdfkit.from_file('room_codes.html', 'room_codes.pdf')
+        os.system('xvfb-run -a wkhtmltopdf room_codes.html room_codes.pdf')
 
         os.chdir("..")
         if os.path.exists("room_codes.pdf"):
@@ -39,7 +41,9 @@ def generate():
         html = str(page)
         with open('panel_codes.html', 'w') as file:
             file.write(html)
-        pdfkit.from_file('panel_codes.html', 'panel_codes.pdf')
+        os.chmod('panel_codes.html', 0o777)
+        # pdfkit.from_file('panel_codes.html', 'panel_codes.pdf')
+        os.system('xvfb-run -a wkhtmltopdf panel_codes.html panel_codes.pdf')
 
         os.chdir("..")
         if os.path.exists("panel_codes.pdf"):
@@ -60,7 +64,9 @@ def generate():
         html = str(page)
         with open('closet_codes.html', 'w') as file:
             file.write(html)
-        pdfkit.from_file('closet_codes.html', 'closet_codes.pdf')
+        os.chmod('closet_codes.html', 0o777)
+        # pdfkit.from_file('closet_codes.html', 'closet_codes.pdf')
+        os.system('xvfb-run -a wkhtmltopdf closet_codes.html closet_codes.pdf')
 
         os.chdir("..")
         if os.path.exists("closet_codes.pdf"):

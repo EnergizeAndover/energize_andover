@@ -7,6 +7,7 @@ from user_management import views as UMViews
 from school_editing import views as SEViews
 from table_sorter import views as TableViews
 from qr_codes import views as QRViews
+from qr_generator import views as QRGeneratorViews
 from bacnet import views as BViews
 
 app_name = 'gismap'
@@ -34,9 +35,13 @@ urlpatterns = [
     url(r'^Management', UMViews.user_management, name = "user_management"),
     url(r'^Editing(?P<user_id>[0-9]+)', UMViews.user_editing, name = "user_editing"),
     url(r'^TableSorting(?P<school_id>[0-9]+)(?P<type>[-\w]+)', TableViews.list, name='table_sorting'),
-    url(r'^QRCode/Room(?P<qr_id>[0-9]+)', QRViews.qr_rooms_redirect, name='qr_room_redirect'),
-    url(r'^QRCode/Panel(?P<qr_id>[0-9]+)', QRViews.qr_panels_redirect, name='qr_panel_redirect'),
-    url(r'^QRCode/Closet(?P<qr_id>[0-9]+)', QRViews.qr_closets_redirect, name='qr_closet_redirect'),
+    url(r'^QRCode/School(?P<school_id>[0-9]+)/Room(?P<qr_id>[0-9]+)', QRViews.qr_rooms_redirect, name='qr_room_redirect'),
+    url(r'^QRCode/School(?P<school_id>[0-9]+)/Panel(?P<qr_id>[0-9]+)', QRViews.qr_panels_redirect, name='qr_panel_redirect'),
+    url(r'^QRCode/School(?P<school_id>[0-9]+)/Closet(?P<qr_id>[0-9]+)', QRViews.qr_closets_redirect, name='qr_closet_redirect'),
+    url(r'^QRGenerator/room_codes.pdf', QRGeneratorViews.open_rooms, name='room_codes'),
+    url(r'^QRGenerator/panel_codes.pdf', QRGeneratorViews.open_panels, name='panel_codes'),
+    url(r'^QRGenerator/closet_codes.pdf', QRGeneratorViews.open_closets, name='closet_codes'),
+    url(r'^QRGenerator', QRGeneratorViews.generator, name='qr_generator'),
     url(r'^SVG(?P<school_id>[0-9]+)', views.topology, name='SVG'),
     url(r'^Graph(?P<school_id>[0-9]+)', BViews.return_data, name='graph')
 ]

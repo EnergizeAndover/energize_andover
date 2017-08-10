@@ -6,7 +6,7 @@ from qr_generator.script import LabelGenerator
 
 def generate(school_id, rooms=False, panels=False, closets=False):
     school_obj = get_object_or_404(School, pk=school_id)
-    os.chdir('qr_generator')
+    os.chdir('/var/www/gismap/qr_generator')
 
     if os.path.exists('room_codes.pdf'):
         os.remove('room_codes.pdf')
@@ -54,4 +54,4 @@ def generate(school_id, rooms=False, panels=False, closets=False):
 
         os.chdir("..")
 
-    LabelGenerator.generate()
+    LabelGenerator.generate(school_id)

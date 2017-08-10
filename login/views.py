@@ -69,6 +69,8 @@ def check_admin(request):
 def check_school_privilege(school, request):
     user = authenticate(username=request.session['username'], password=request.session['password'])
     if user is not None:
+        if Permission.objects.get(codename='master') in user.user_permissions.all():
+            return True
         su = SpecialUser.objects.get(User=user)
         if school not in su.Authorized_Schools.all():
             return False

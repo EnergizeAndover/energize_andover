@@ -128,4 +128,11 @@ def main():
     analog_value_request(3017769, "DL (kW)", "Andover High School")
     analog_value_request(3017441, "M1 (kW)", "Andover High School")
     analog_value_request(3017687, "AMDP (kW)", "Andover High School")
+    analog_value_request(3007361, "Main (kWh)", "Andover High School")
+    analog_value_request(3017360, "DHB (kWh)", "Andover High School")
+    analog_value_request(3017524, "DG (kWh)", "Andover High School")
+    analog_value_request(3017606, "DE (kWh)", "Andover High School")
+    analog_value_request(3017770, "DL (kWh)", "Andover High School")
+    analog_value_request(3017442, "M1 (kWh)", "Andover High School")
+    analog_value_request(3017688, "AMDP (kWh)", "Andover High School")
 

@@ -1,7 +1,7 @@
 {% extends "pages/richtextpage.html" %}
 
 {% block main %}
-
+<h1>Graph of Usage for: {{school}}</h1>
 <canvas id="myChart" width="300" height="300"></canvas>
 <form action=""  method="POST" enctype="multipart/form-data" name="Time">
     {% csrf_token %}
@@ -16,6 +16,7 @@
     {% endif %}
     <p><input type="submit" id="btn" class="btn-xs" value="Request New Data" name="request_data" /></p>
 </form>
+
 <script>
 var ctx = document.getElementById("myChart").getContext('2d');
 var is_checked = {{change_title}};
@@ -33,6 +34,22 @@ var myChart = new Chart(ctx, {
     data: {
         labels: {{times|safe}},
         datasets: [
+
+        {% for key, value in data.items %}
+        {
+
+            label: "{{key}}",
+            data: {{value}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+            ],
+            borderWidth: 1
+        },
+        {% endfor %}
+       /*
         {
 
             label: 'Main ' + datatype,
@@ -110,7 +127,7 @@ var myChart = new Chart(ctx, {
                 'rgba(255,119,0,1)',
             ],
             borderWidth: 1
-       }
+       }*/
        ]
     },
 

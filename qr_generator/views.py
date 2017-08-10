@@ -16,7 +16,7 @@ def generator(request):
                   {'school': school.id, 'selected': True})
     if request.POST.get("Generate"):
         QRGenerator.generate(school.id, rooms=request.POST.get("Rooms"), panels=request.POST.get("Panels"), closets=request.POST.get("Closets"))
-        os.chdir('qr_generator')
+        os.chdir('/var/www/gismap/qr_generator')
         room = False
         panel = False
         closet = False
@@ -31,7 +31,7 @@ def generator(request):
     return render(request, 'energize_andover/QRGenerator.html', {'schools': schools})
 
 def open_rooms(request):
-    os.chdir('qr_generator')
+    os.chdir('/var/www/gismap/qr_generator')
     with open('room_codes.pdf', 'rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'filename=room_codes.pdf'
@@ -39,7 +39,7 @@ def open_rooms(request):
         return response
 
 def open_panels(request):
-    os.chdir('qr_generator')
+    os.chdir('/var/www/gismap/qr_generator')
     with open('panel_codes.pdf', 'rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'filename=panel_codes.pdf'
@@ -47,7 +47,7 @@ def open_panels(request):
         return response
 
 def open_closets(request):
-    os.chdir('qr_generator')
+    os.chdir('/var/www/gismap/qr_generator')
     with open('closet_codes.pdf', 'rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'filename=closet_codes.pdf'

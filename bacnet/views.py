@@ -41,6 +41,24 @@ def return_data(request, school_id):
             date_and_time = ""
             date = datetime.strptime("01-01-01", "%y-%m-%d")
             time = datetime.strptime("00:00", "%H:%M")
+    data_dict = {}
+    previous_value = {}
+    unique_names = []
+    for datapoint in Data_Point.objects.all():
+        if datapoint.Name not in unique_names:
+            unique_names.append(datapoint.Name)
+            data_dict[datapoint.Name]=[datapoint.Value]
+            if "kWh" in datapoint.Name:
+                data_dict[datapoint.Name]=[0]
+                previous_value[datapoint.Name]=datapoint.Value
+        else:
+            if "kWh" in datapoint.Name:
+                data_dict[datapoint.Name].append(datapoint.Value-previous_value[datapoint.Name])
+                previous_value[datapoint.Name] = datapoint.Value
+            else:
+                data_dict[datapoint.Name].append(datapoint.Value)
+
+
     times = []
     main_kWs=[]
     dhb_kWs = []
@@ -55,6 +73,12 @@ def return_data(request, school_id):
         data_time = datetime.strptime(data.Time[index + 1: index + 6], "%H:%M")
         if data_date > date or (data_date == date and data_time >= time):
             if checked:
+                for key in data_dict:
+                    if "(kWh)" in key:
+                        for i in range(0, len(data_dict[key])):
+                            data_dict[key][i] = data_dict[key][i] * float(cost)
+                        data_dict[key.replace("kWh", "$")] = data_dict.pop(key)
+
                 if data.Name == "Main (kW)":
                     print (data.Value)
                     print(cost)
@@ -90,7 +114,9 @@ def return_data(request, school_id):
                 elif data.Name == "M1 (kW)":
                     m1_kWs.append(data.Value)
     times = json.dumps(times)
+    print (data_dict)
     return render(request, "energize_andover/Graph.html", {'times': times,
+                                                           'data': data_dict,
                                                            'main_kWs': main_kWs,
                                                            'dhb_kWs': dhb_kWs,
                                                            'de_kWs': de_kWs,
@@ -101,7 +127,8 @@ def return_data(request, school_id):
                                                            'date': date_and_time,
                                                            'checked': checked,
                                                            'cost': cost,
-                                                           'change_title': str(checked).lower()}
+                                                           'change_title': str(checked).lower(),
+                                                           'school': school}
                   )
 
 
