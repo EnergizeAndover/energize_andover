@@ -135,4 +135,3 @@ def main():
     analog_value_request(3017770, "DL (kWh)", "Andover High School")
     analog_value_request(3017442, "M1 (kWh)", "Andover High School")
     analog_value_request(3017688, "AMDP (kWh)", "Andover High School")
-
