@@ -80,7 +80,7 @@ def return_data(request, school_id):
                         data_dict[key.replace("kWh", "$")] = data_dict.pop(key)
 
                 if data.Name == "Main (kW)":
-                    print (data.Value)
+                    print(data.Value)
                     print(cost)
 
                     main_kWs.append(data.Value * float(cost))
@@ -117,7 +117,7 @@ def return_data(request, school_id):
     for key in data_dict:
         colors[key] = [randint(0,255), randint(0,255), randint(0,255)]
     times = json.dumps(times)
-    print (data_dict)
+    print(data_dict)
     return render(request, "energize_andover/Graph.html", {'times': times,
                                                            'data': data_dict,
                                                            'colors': colors,
